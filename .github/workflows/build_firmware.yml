@@ -1,0 +1,53 @@
+name: Build Firmware
+
+# Wann soll gebaut werden? (Bei Push auf master/main und bei Pull Requests)
+on:
+  push:
+    branches: [ "master", "main" ]
+  pull_request:
+    branches: [ "master", "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Code auschecken
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # 2. Python aufsetzen
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # 3. PlatformIO Caching (Damit es schneller geht)
+      - name: Cache PlatformIO
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.platformio
+            ~/.cache/pip
+          key: ${{ runner.os }}-pio-${{ hashFiles('**/platformio.ini') }}
+          restore-keys: |
+            ${{ runner.os }}-pio-
+
+      # 4. PlatformIO installieren
+      - name: Install PlatformIO
+        run: pip install -U platformio
+
+      # 5. Bauen (Genau wie bei GitLab, erst ins Verzeichnis wechseln!)
+      - name: Run PlatformIO Build
+        run: |
+          cd culfw
+          pio run
+
+      # 6. Artefakte einsammeln und bereitstellen
+      - name: Upload Hex Files
+        uses: actions/upload-artifact@v4
+        with:
+          name: culfw-build-${{ github.run_number }}
+          # Pfad relativ zum Git-Root
+          path: culfw/Devices/**/*.hex
+          if-no-files-found: error

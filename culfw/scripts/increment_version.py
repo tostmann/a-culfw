@@ -24,13 +24,15 @@ def get_base_version():
     return ver_str
 
 def get_and_increment_build_number():
-    # 1. Check: Laufen wir in GitLab CI?
-    # GitLab setzt die Variable CI_PIPELINE_IID automatisch (z.B. 1, 2, 3...)
+    # 1. GitHub Actions (NEU)
+    if "GITHUB_RUN_NUMBER" in os.environ:
+        return int(os.environ["GITHUB_RUN_NUMBER"])
+        
+    # 2. GitLab CI (Alt, kann bleiben)
     if "CI_PIPELINE_IID" in os.environ:
-        print(f"GitLab CI detected: Using Pipeline ID {os.environ['CI_PIPELINE_IID']}")
         return int(os.environ["CI_PIPELINE_IID"])
 
-    # 2. Fallback: Lokal zählen (wie bisher)
+    # 3. Fallback: Lokal zählen (wie bisher)
     num = 1
     if os.path.exists(COUNTER_FILE):
         try:
