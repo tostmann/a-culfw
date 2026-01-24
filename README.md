@@ -93,7 +93,7 @@ Installation (Debian/Ubuntu):
 Flashen:
 
     # 1. Chip löschen (wichtig!)
-    dfu-programmer atmega32u4 erase
+    dfu-programmer atmega32u4 erase --force
 
     # 2. Neue Firmware schreiben
     dfu-programmer atmega32u4 flash Devices/CUL/CUL_V3.hex

@@ -1,54 +1,33 @@
-before_script:
-  - echo "Building a-culfw"
+image: python:3.9
 
-build:a-culfw:
+variables:
+  # Caching-Pfade definieren, damit sie zwischen den Builds erhalten bleiben
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  PLATFORMIO_CACHE_DIR: "$CI_PROJECT_DIR/.cache/platformio"
+  # Damit PlatformIO im Projekt-Ordner cacht
+  PLATFORMIO_CORE_DIR: "$CI_PROJECT_DIR/.cache/platformio"
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .cache/pip
+    - .cache/platformio
+
+stages:
+  - build
+
+build_firmware:
   stage: build
+  before_script:
+    - pip install -U platformio
   script:
-    - export PATH="/opt/gcc-arm-none-eabi-5_4-2016q3/bin:$PATH"
-    - cd culfw
-    - BUILD_TIMESTAMP=`date +'%Y-%m-%d_%H-%M-%S'`
-    - sed -i "s/BUILD_DATE.*/BUILD_DATE \"$BUILD_TIMESTAMP\"/" version.h
-    - sed -i "s/BUILD_NUMBER.*/BUILD_NUMBER \"${CI_BUILD_ID}\"/" version.h
-    - cd Devices
-    - make
-#    - VERSION=`grep "VERSION " ../version.h | cut -d '"' -f 2`
-#    - ZIPNAME=a-culfw_${VERSION}_build_${CI_BUILD_ID}_${CI_BUILD_REF_NAME}.zip
-#    - find . -name "*.hex" -exec zip -u "${ZIPNAME}" {} \;
-#    - find . -name "*.bin" -exec zip -u "${ZIPNAME}" {} \;
-#    - find . -name "README*" -exec zip -u "${ZIPNAME}" {} \;
-#    - find . -name "*.sh" -exec zip -u "${ZIPNAME}" {} \;
+    - echo "Starte Build Prozess..."
+    - pio run
+    - echo "Build abgeschlossen."
+    - ls -R Devices | grep ".hex"
   artifacts:
-    name: a-culfw_build_${CI_BUILD_ID}_${CI_BUILD_REF_NAME}.zip
+    name: "culfw-build-$CI_PIPELINE_IID"
     paths:
-      - culfw/Devices/**/*.hex
-      - culfw/Devices/**/*.bin
-      - culfw/Devices/**/README
-      - culfw/Devices/**/*.sh
-      - CHANGELOG
-      - LICENSE
-      - README.md
-
-deploy-job:
-  stage: deploy
-  script:
-    - echo "Push to mediafire"
-    - cd culfw/Devices
-    - ZIPNAME=a-culfw_${CI_BUILD_REF_NAME}_build_${CI_BUILD_ID}.zip
-    - find . -name "*.hex" -exec zip -u "../../${ZIPNAME}" {} \;
-    - find . -name "*.bin" -exec zip -u "../../${ZIPNAME}" {} \;
-    - find . -name "README*" -exec zip -u "../../${ZIPNAME}" {} \;
-    - find . -name "*.sh" -exec zip -u "../../${ZIPNAME}" {} \;
-    - cd ../../
-    - zip -u ${ZIPNAME} CHANGELOG
-    - zip -u ${ZIPNAME} LICENSE
-    - zip -u ${ZIPNAME} README.md
-#    - cp  ${ZIPNAME} /tmp
-    - mkdir -p tmp
-    - mediafire-fuse tmp
-    - cp -rfv ${ZIPNAME} tmp/builds/a-culfw
-    - sleep 15
-    - fusermount -u tmp
-  dependencies:
-    - build:a-culfw
-  only:
-    - tags
+      # Wildcard sammelt alle Hex-Files aus den Unterordnern (nanoCUL, CUL, etc.)
+      - Devices/**/*.hex
+    expire_in: 4 weeks

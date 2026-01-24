@@ -4,6 +4,9 @@ import datetime
 
 Import("env")
 
+if env.GetOption("clean"):
+    Return()
+
 # Pfade
 VERSION_FILE = os.path.join(env['PROJECT_DIR'], "version.h")
 COUNTER_FILE = os.path.join(env['PROJECT_DIR'], ".build_number")
@@ -21,7 +24,13 @@ def get_base_version():
     return ver_str
 
 def get_and_increment_build_number():
-    """Build-Nummer verwalten"""
+    # 1. Check: Laufen wir in GitLab CI?
+    # GitLab setzt die Variable CI_PIPELINE_IID automatisch (z.B. 1, 2, 3...)
+    if "CI_PIPELINE_IID" in os.environ:
+        print(f"GitLab CI detected: Using Pipeline ID {os.environ['CI_PIPELINE_IID']}")
+        return int(os.environ["CI_PIPELINE_IID"])
+
+    # 2. Fallback: Lokal zählen (wie bisher)
     num = 1
     if os.path.exists(COUNTER_FILE):
         try:
@@ -31,8 +40,8 @@ def get_and_increment_build_number():
                     num = int(content) + 1
         except:
             pass
-    
-    # Speichern
+
+    # Speichern nur lokal sinnvoll
     with open(COUNTER_FILE, 'w') as f:
         f.write(str(num))
     return num
