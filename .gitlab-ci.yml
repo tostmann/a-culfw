@@ -1,10 +1,9 @@
 image: python:3.9
 
 variables:
-  # Caching-Pfade definieren, damit sie zwischen den Builds erhalten bleiben
+  # Caching-Pfade definieren
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
   PLATFORMIO_CACHE_DIR: "$CI_PROJECT_DIR/.cache/platformio"
-  # Damit PlatformIO im Projekt-Ordner cacht
   PLATFORMIO_CORE_DIR: "$CI_PROJECT_DIR/.cache/platformio"
 
 cache:
@@ -21,13 +20,18 @@ build_firmware:
   before_script:
     - pip install -U platformio
   script:
+    - echo "Wechsle in das Projektverzeichnis..."
+    # WICHTIG: Erst in den Unterordner wechseln!
+    - cd culfw
     - echo "Starte Build Prozess..."
     - pio run
-    - echo "Build abgeschlossen."
+    - echo "Build abgeschlossen. Suche Hex-Dateien..."
+    # Optional: Zur Kontrolle auflisten
     - ls -R Devices | grep ".hex"
   artifacts:
     name: "culfw-build-$CI_PIPELINE_IID"
     paths:
-      # Wildcard sammelt alle Hex-Files aus den Unterordnern (nanoCUL, CUL, etc.)
-      - Devices/**/*.hex
+      # WICHTIG: Der Pfad muss vom Git-Root aus angegeben werden!
+      # Also inklusive "culfw/" Präfix.
+      - culfw/Devices/**/*.hex
     expire_in: 4 weeks
