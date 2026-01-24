@@ -1,0 +1,22 @@
+{
+  "build": {
+    "core": "arduino",
+    "extra_flags": "-DARDUINO_AVR_LEONARDO",
+    "f_cpu": "8000000L",
+    "mcu": "atmega32u4",
+    "variant": "leonardo"
+  },
+  "hardware": {
+    "oscillator": "internal",
+    "uart": "usb"
+  },
+  "name": "CUL V3 (ATmega32u4 8MHz)",
+  "upload": {
+    "maximum_ram_size": 2560,
+    "maximum_size": 28672,
+    "protocol": "avr109",
+    "speed": 38400
+  },
+  "url": "http://culfw.de",
+  "vendor": "Busware"
+}

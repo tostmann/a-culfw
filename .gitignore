@@ -45,3 +45,5 @@ Debug/
 .DS_Store
 Thumbs.db
 test/
+.pio
+.build_number
