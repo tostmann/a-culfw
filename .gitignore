@@ -1,0 +1,47 @@
+# --- Build-Artefakte (C / Make) ---
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+*.d
+*.lst
+*.map
+*.sym
+*.lss
+*.eep
+*.srec
+*.dep
+
+# --- Firmware / Binaries ---
+*.hex
+*.bin
+*.elf
+*.exe
+*.out
+
+# --- Spezifische Artefakte aus deinen Ordnern ---
+# (Dateien ohne Endung in Bootloader-Verzeichnissen, die oft kompiliert sind)
+culfw/Devices/*/Bootloader/main
+
+# --- Editor: VI / VIM (Deine Präferenz) ---
+# Temporäre Dateien und Backups, die vi erstellt
+*.swp
+*.swo
+*~
+*.bak
+
+# --- IDE: Eclipse (falls du die Projektdateien nicht versionieren willst) ---
+# Die Ordner Release und Debug enthalten oft Build-Objekte
+Release/
+Debug/
+# Optional: Projekt-Metadaten ignorieren (wenn jeder seine eigene IDE-Config nutzt)
+#.cproject
+#.project
+#.settings/
+
+# --- OS generierte Dateien ---
+.DS_Store
+Thumbs.db
+test/
