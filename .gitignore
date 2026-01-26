@@ -47,3 +47,14 @@ Thumbs.db
 test/
 .pio
 .build_number
+
+# Erstmal alles im binaries-Ordner ignorieren
+binaries/*
+
+# Ausnahmen (Whitelist): Diese Dateien explizit erlauben
+!binaries/manifest.json
+!binaries/*.hex
+!binaries/*.bin
+
+# PlatformIO Build-Ordner im culfw-Unterverzeichnis komplett ignorieren
+culfw/.pio/
