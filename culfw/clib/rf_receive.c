@@ -63,6 +63,8 @@
 uint8_t tx_report;              // global verbose / output-filter
 #endif
 
+packetCheckValues_t packetCheckValues[NUM_SLOWRF];
+
 //////////////////////////
 // With a CUL measured RF timings, in us, high/low sum
 //           Bit zero        Bit one
@@ -601,7 +603,7 @@ void reset_input(void)
 #endif
 #ifdef SAM7
         HAL_timer_set_reload_register(CC_INSTANCE,0);
-#elif defined STM32
+#elif defined STM32 || defined ESP32
       	HAL_timer_set_reload_register(CC_INSTANCE,0xffff);
 #else
         OCR1A = 0;
@@ -628,7 +630,7 @@ ISR(TIMER1_COMPA_vect)
   HAL_timer_set_reload_register(CC_INSTANCE,TWRAP/8*3);    // Wrap Timer
   #endif
 
-#elif defined STM32
+#elif defined STM32 || defined ESP32
   hal_enable_CC_timer_int(CC_INSTANCE,FALSE);       //Disable Interrupt
 
   #ifdef LONG_PULSE
@@ -758,7 +760,7 @@ static void calcOcrValue(bucket_t *b, pulse_t *hightime, pulse_t *lowtime, bool 
 #ifdef SAM7
         ocrVal = ((ocrVal * 100) / 266);
         HAL_timer_set_reload_register(CC_INSTANCE,ocrVal * 16);
-#elif defined STM32
+#elif defined STM32 || defined ESP32
         HAL_timer_set_reload_register(CC_INSTANCE,ocrVal * 16);
 #else
         OCR1A = ocrVal * 16;
@@ -804,7 +806,7 @@ ISR(CC1100_INTVECT)
 #ifdef LONG_PULSE
   #ifdef SAM7
   uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE) / 6;   // catch the time and make it smaller
-  #elif defined STM32
+  #elif defined STM32 || defined ESP32
   uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE)>>4;;
   #else
   uint16_t c = (TCNT1>>4);               // catch the time and make it smaller
@@ -812,7 +814,7 @@ ISR(CC1100_INTVECT)
 #else
   #ifdef SAM7
   uint8_t c = HAL_timer_get_counter_value(CC_INSTANCE) / 6;   // catch the time and make it smaller
-  #elif defined STM32
+  #elif defined STM32 || defined ESP32
   uint8_t c = HAL_timer_get_counter_value(CC_INSTANCE)>>4;
   #else
   uint8_t c = (TCNT1>>4);               // catch the time and make it smaller
@@ -1017,7 +1019,7 @@ retry_sync:
           uint32_t ocrVal = 0;
           ocrVal = ((lowtime[CC_INSTANCE] * 100) / 266);
           HAL_timer_set_reload_register(CC_INSTANCE,(ocrVal - 16) * 16);
-      #elif defined STM32
+      #elif defined STM32 || defined ESP32
           HAL_timer_set_reload_register(CC_INSTANCE,(lowtime[CC_INSTANCE] - 16) * 16); //End of message
       #else
           OCR1A = (lowtime[CC_INSTANCE] - 16) * 16; //End of message
@@ -1064,7 +1066,7 @@ retry_sync:
         }
         #ifdef SAM7
         HAL_timer_set_reload_register(CC_INSTANCE,SILENCE/8*3);
-        #elif defined STM32
+        #elif defined STM32 || defined ESP32
             HAL_timer_set_reload_register(CC_INSTANCE,SILENCE);
         #else
             OCR1A = SILENCE;
@@ -1091,7 +1093,7 @@ retry_sync:
       } else if(b->sync >= 4 ) {          // the one bit at the end of the 0-sync
 #ifdef SAM7
         HAL_timer_set_reload_register(CC_INSTANCE,SILENCE/8*3);
-#elif defined STM32
+#elif defined STM32 || defined ESP32
       	HAL_timer_set_reload_register(CC_INSTANCE,SILENCE);
 #else
         OCR1A = SILENCE;
@@ -1108,7 +1110,7 @@ retry_sync:
           //DU(b->sync,         3);
 #ifdef SAM7
           HAL_timer_set_reload_register(CC_INSTANCE,375);
-#elif defined STM32
+#elif defined STM32 || defined ESP32
           HAL_timer_set_reload_register(CC_INSTANCE,1000);
 #else
           OCR1A = 1000;
@@ -1251,4 +1253,3 @@ rf_isreceiving()
 #endif
   return r;
 }
-

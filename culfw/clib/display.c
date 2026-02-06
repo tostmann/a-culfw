@@ -114,7 +114,7 @@ display_char(char data)
 #endif
 
 #if defined(HAS_UART) || defined(HAS_I2CSLAVE)
-#ifdef ARM
+#if defined(ARM) || defined(ESP32)
   if(!USB_IsConnected && (display_channel & DISPLAY_USB)) {
 #else
   if(display_channel & DISPLAY_USB) {

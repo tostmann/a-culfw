@@ -13,6 +13,7 @@
 #endif
 
 void (*input_handle_func)(uint8_t channel);
+void (*output_flush_func)(void);
 
 
 rb_t TTY_Tx_Buffer;
@@ -24,8 +25,13 @@ uint8_t
 callfn(char *buf)
 {
   for(uint8_t idx = 0; ; idx++) {
+#if defined(ARM) || defined(ESP32)
+    uint8_t n = fntab[idx].name;
+    void (*fn)(char *) = (void (*)(char *))fntab[idx].fn;
+#else
     uint8_t n = __LPM(&fntab[idx].name);
     void (*fn)(char *) = (void (*)(char *))__LPM_word(&fntab[idx].fn);
+#endif
     if(!n)
       break;
     if(buf == 0) {
@@ -105,4 +111,3 @@ analyze_ttydata(uint8_t channel)
   }
   display_channel = odc;
 }
-

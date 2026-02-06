@@ -75,12 +75,14 @@ typedef struct  {
 /*
  * This struct has the bits for receive check
  */
-struct {
+typedef struct {
    uint8_t isrep:1; // 1 Bit for is repeated
    uint8_t isnotrep:1; // 1 Bit for is repeated value
    uint8_t packageOK:1; // Received packet is ok
    // 5 bits free
-} packetCheckValues[NUM_SLOWRF];
+} packetCheckValues_t;
+
+extern packetCheckValues_t packetCheckValues[NUM_SLOWRF];
 
 
 /*
@@ -141,4 +143,3 @@ uint8_t makeavg(uint8_t i, uint8_t j);
 
 
 #endif
-

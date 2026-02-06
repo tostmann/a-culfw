@@ -38,6 +38,10 @@
 #include "mysleep.h"                    // for sleep_time
 #include "multi_CC.h"
 
+#ifdef USE_HAL
+#include "hal.h"
+#endif
+
 uint8_t led_mode = 2;   // Start blinking
 
 #ifdef XLED
@@ -234,6 +238,9 @@ write_eeprom(char *in)
 void
 eeprom_init(void)
 {
+#ifdef USE_HAL
+  hal_eeprom_init();
+#endif
 
   if(erb(EE_MAGIC_OFFSET)   != VERSION_1 ||
      erb(EE_MAGIC_OFFSET+1) != VERSION_2)
@@ -300,7 +307,7 @@ eeprom_factory_reset(char *in)
   EE_write_baud(1,CDC_BAUD_RATE);
 #endif
 
-  if(in[1] != 'x')
+  if(in && in[1] != 'x')
     prepare_boot(0);
 }
 
@@ -346,8 +353,9 @@ prepare_boot(char *in)
   if(in)
     fromhex(in+1, &bl, 1);
 
-  if(bl == 0xff)             // Allow testing
+  if(bl == 0xff) {            // Allow testing
     while(1);
+  }
     
 #ifdef SAM7
 

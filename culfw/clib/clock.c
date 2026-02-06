@@ -38,7 +38,9 @@ uint8_t ir_ticks = 0;
 uint8_t ir_ticks_thrd = 0;
 #endif
 
+#ifndef USE_HAL
 volatile uint32_t ticks;
+#endif
 volatile uint8_t  clock_hsec;
 
 // count & compute in the interrupt, else long runnning tasks would block

@@ -3,8 +3,8 @@
         "platform": "atmelavr",
         "board": "nanoatmega328",
         "mcu": "atmega328p",
-        "version": "1.26.101",
-        "last_build": "2026-01-26 15:10:12",
+        "version": "1.26.32",
+        "last_build": "2026-02-06 00:28:43",
         "artifacts": [
             {
                 "file": "nanoCUL868.hex",
@@ -16,8 +16,8 @@
         "platform": "atmelavr",
         "board": "nanoatmega328",
         "mcu": "atmega328p",
-        "version": "1.26.102",
-        "last_build": "2026-01-26 15:10:14",
+        "version": "1.26.33",
+        "last_build": "2026-02-06 00:28:44",
         "artifacts": [
             {
                 "file": "nanoCUL433.hex",
@@ -29,8 +29,8 @@
         "platform": "atmelavr",
         "board": "cul_v3",
         "mcu": "atmega32u4",
-        "version": "1.26.103",
-        "last_build": "2026-01-26 15:10:18",
+        "version": "1.26.31",
+        "last_build": "2026-02-06 00:28:39",
         "artifacts": [
             {
                 "file": "CUL_V3.hex",
@@ -42,8 +42,8 @@
         "platform": "ststm32",
         "board": "genericSTM32F103CB",
         "mcu": "stm32f103cbt6",
-        "version": "1.26.104",
-        "last_build": "2026-01-26 15:11:53",
+        "version": "1.26.36",
+        "last_build": "2026-02-06 00:30:13",
         "artifacts": [
             {
                 "file": "MapleCUNx4_W5100_BL.bin",
@@ -55,12 +55,46 @@
         "platform": "ststm32",
         "board": "genericSTM32F103CB",
         "mcu": "stm32f103cbt6",
-        "version": "1.26.105",
-        "last_build": "2026-01-26 15:14:17",
+        "version": "1.26.35",
+        "last_build": "2026-02-06 00:29:56",
         "artifacts": [
             {
                 "file": "MapleCUNx4_W5500_BL.bin",
                 "type": "ota"
+            }
+        ]
+    },
+    "ESP32-C3": {
+        "platform": "espressif32",
+        "board": "esp32-c3-devkitm-1",
+        "mcu": "esp32c3",
+        "version": "1.26.48",
+        "last_build": "2026-02-06 01:05:36",
+        "artifacts": [
+            {
+                "file": "ESP32-C3.bin",
+                "type": "ota"
+            },
+            {
+                "file": "ESP32-C3-factory.bin",
+                "type": "factory"
+            }
+        ]
+    },
+    "ESP32-C6": {
+        "platform": "espressif32",
+        "board": "esp32-c6-devkitc-1",
+        "mcu": "esp32c6",
+        "version": "1.26.51",
+        "last_build": "2026-02-06 01:09:50",
+        "artifacts": [
+            {
+                "file": "ESP32-C6.bin",
+                "type": "ota"
+            },
+            {
+                "file": "ESP32-C6-factory.bin",
+                "type": "factory"
             }
         ]
     }
