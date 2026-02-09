@@ -9,7 +9,7 @@
 *   **Target Architectures:** AVR, STM32, ESP32 (RISC-V)
 
 ## 2. Supported Boards & Firmware Versions
-*   **Firmware Version:** 1.26.55 (latest build, automatisch inkrementiert - AI konnte das letzte XIAO-Image mit korrigiertem Pinout aufgrund Build-Problemen nicht selbst erstellen)
+*   **Firmware Version:** 1.26.55 (latest build, automatisch inkrementiert - AI konnte das letzte XIAO-Image mit korrigiertem Pinout aufgrund hartnäckiger Build-Probleme **nicht erfolgreich** erstellen. Der Build-Prozess musste auf den Ursprungszustand zurückgesetzt werden.)
 *   **AVR Targets (Verified):**
     *   `CUL_V3.hex`
     *   `nanoCUL868.hex`
@@ -26,10 +26,10 @@
         *   `ESP32-C6-factory.bin` (Vollständiges Image für `0x0`)
         *   `ESP32-C6.bin` (Nur Applikation für OTA)
         *   **Pinout:** LED=GPIO8 (DevKitC-1 Standard), SPI Pins wie in `board.h` definiert.
-*   **XIAO-ESP32-C3 Target (In Entwicklung - Boot-Problem):**
-    *   `XIAO-ESP32-C3-factory.bin` (Vollständiges Image für `0x0`)
-    *   `XIAO-ESP32-C3.bin` (Nur Applikation für OTA)
-    *   **Aktuelles Pinout (Empfehlung für stabile Boots):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO8 (Pin D8), MISO=GPIO9 (Pin D9), MOSI=GPIO10 (Pin D10), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
+*   **XIAO-ESP32-C3 Target (In Entwicklung - Boot-Problem & Build-Problem):**
+    *   `XIAO-ESP32-C3-factory.bin` (Vollständiges Image für `0x0` - **aktuell nicht durch AI erstellbar**)
+    *   `XIAO-ESP32-C3.bin` (Nur Applikation für OTA - **aktuell nicht durch AI erstellbar**)
+    *   **Empfohlenes Pinout (zum manuellen Anwenden):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO8 (Pin D8), MISO=GPIO9 (Pin D9), MOSI=GPIO10 (Pin D10), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
 
 ## 3. Key Architectural Decisions & Changes
 *   **Build-Prozess (DONE):** Alle ESP32-Targets generieren jetzt automatisch sowohl `factory.bin` (komplettes Image mit Bootloader/Partitionstabelle) als auch `app.bin` (für OTA).
@@ -50,21 +50,98 @@
 *   **Git-Integration (DONE):** Projektänderungen (alle ESP32-Fixes, C3/C6 und XIAO-Targets) in einem neuen Feature-Branch (`feature/esp32-support`) committet und erfolgreich via SSH nach GitHub gepusht. Ein neuer SSH-Key wurde auf dem VPS generiert und dem Benutzer zur Registrierung bei GitHub bereitgestellt, um den Push zu ermöglichen.
 
 ## 4. Known Issues & Next Steps
-*   **XIAO-ESP32-C3 Boot-Problem mit CC1101 (Aktive Untersuchung):**
+*   **XIAO-ESP32-C3 Boot-Problem mit CC1101 (Aktive Untersuchung - Build-Blockade):**
     *   **Problem:** Das XIAO-ESP32-C3-Board bootet nicht zuverlässig, wenn der CC1101 vollständig verkabelt ist (insbesondere mit angeschlossenen CS/GDO-Pins), was zu Abstürzen wie `Guru Meditation Error: Instruction access fault` führt.
     *   **Vermutete Ursache:** Interferenz des CC1101 mit den "Strapping Pins" des ESP32-C3 während des Bootvorgangs. Speziell GPIO 9 (MISO) ist ein kritischer Strapping-Pin, der beim Booten auf HIGH liegen muss. Wenn der CC1101 durch einen nicht initialisierten CS-Pin aktiviert wird, kann er die MISO-Leitung auf LOW ziehen und den ESP32 in einen falschen Boot-Modus zwingen. Auch GPIO 2 ist ein kritischer Strapping-Pin.
-    *   **Debug-Versuche:**
-        *   Erster Versuch: CS auf GPIO 5 (Pin D3). Problem blieb bestehen.
-        *   Zweiter Versuch: Komplette Verlegung der SPI-Pins (SCK=5, MISO=6, MOSI=7, CS=21) zur Vermeidung von GPIO 2, 8, 9. Problem blieb bestehen.
-        *   Dritter Versuch (Aktueller Lösungsansatz): Beibehaltung der Standard-SPI-Pins (SCK=8, MISO=9, MOSI=10) da diese ohne angeschlossene Peripherie stabil funktionieren, und Verlegung der kritischen **CS-Leitung auf GPIO 5 (Pin D3)**. GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2), LED=GPIO21 (Pin D6).
-    *   **KRITISCHES NEUES PROBLEM: PlatformIO Build-Fehler für XIAO-ESP32-C3:** Die automatische Generierung eines funktionierenden Factory-Images für das XIAO-ESP32-C3 mit der *korrekten Pin-Belegung* schlug aufgrund komplexer relativer Pfadprobleme in der `platformio.ini` fehl (Skript-Pfade, Include-Pfade, Quellverzeichnisse wurden nicht korrekt gefunden). Das Build-System wurde vorübergehend instabil, konnte aber auf einen Grundzustand zurückgesetzt werden.
-    *   **Nächste Schritte (für Benutzer):**
-        1.  **Manuelles Update der `platformio.ini`:** Ersetze den kompletten `[env:XIAO-ESP32-C3]`-Block in der Datei `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/Devices/ESP32/platformio.ini` mit dem von der AI bereitgestellten, korrigierten Codeblock (dieser enthält das sichere Pinout und die angepassten Build-Pfade).
-        2.  **Manuelles Builden:** Starte den Build für das XIAO-ESP32-C3 Target lokal (z.B. mit `platformio run -e XIAO-ESP32-C3`).
+    *   **Status des Build-Systems:** Die AI scheiterte daran, die Pin-Konfiguration in der `platformio.ini` automatisch zu aktualisieren und das Image zu bauen. Es traten wiederholt Probleme mit relativen Pfaden (`extra_scripts`, `src_dir`, `build_src_filter`) und dem Auffinden von Quelldateien auf, die PlatformIO in dieser Projektstruktur nicht handhaben konnte. Die `platformio.ini` wurde auf den ursprünglichen Zustand zurückgesetzt.
+    *   **Nächste Schritte (für Benutzer - Manuelle Korrektur erforderlich):**
+        1.  **Manuelles Update der `platformio.ini`:** Ersetze den kompletten `[env:XIAO-ESP32-C3]`-Block in der Datei `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/Devices/ESP32/platformio.ini` mit dem folgenden korrigierten Codeblock (dieser enthält das sichere Pinout und die angepassten Build-Pfade):
+
+        ```ini
+        [env:XIAO-ESP32-C3]
+        platform = espressif32
+        board = seeed_xiao_esp32c3
+        framework = arduino
+        monitor_speed = 115200
+
+        ; Flash settings for better compatibility
+        board_build.flash_mode = dio
+        board_build.f_flash = 40000000L
+
+        extra_scripts =
+            pre:../../scripts/increment_version.py
+            post:../../scripts/merge_bin.py
+            post:../../scripts/collect_binaries.py
+
+        build_flags =
+            -DESP32_C3
+            -DUSE_HAL
+            -DARDUINO_USB_MODE=1
+            -DARDUINO_USB_CDC_ON_BOOT=1
+            -DHAS_CC1100
+            -DBOARD_NAME=\"XIAO-ESP32-C3\"
+            -DBOARD_ID_STR=\"XIAO-ESP32-C3\"
+            ; --- Sicheres Pinout ---
+            -DSPI_SCLK=8
+            -DSPI_MISO=9
+            -DSPI_MOSI=10
+            -DSPI_SS=5
+            -DCC1100_CS_PIN=5
+            -DGDO0_PIN=3
+            -DGDO2_PIN=4
+            -DLED_PIN=21
+            ; --- Korrigierte Include-Pfade ---
+            -I .
+            -I ../../
+            -I ../../clib
+            -I ../../clib/mbus
+
+        build_src_filter =
+            +<main.cpp>
+            +<../../ESP32/hal.cpp>
+            +<../../clib/cc1100.c>
+            +<../../clib/cc1101_pllcheck.c>
+            +<../../clib/clock.c>
+            +<../../clib/display.c>
+            +<../../clib/fastrf.c>
+            +<../../clib/fband.c>
+            +<../../clib/fht.c>
+            +<../../clib/fncollection.c>
+            +<../../clib/hw_autodetect.c>
+            +<../../clib/intertechno.c>
+            +<../../clib/kopp-fc.c>
+            +<../../clib/multi_CC.c>
+            +<../../clib/rf_asksin.c>
+            +<../../clib/rf_maico.c>
+            +<../../clib/rf_mbus.c>
+            +<../../clib/mbus/*.c>
+            +<../../clib/rf_mode.c>
+            +<../../clib/rf_moritz.c>
+            +<../../clib/rf_native.c>
+            +<../../clib/lacrosse.c>
+            +<../../clib/rf_router.c>
+            +<../../clib/rf_receive_bucket.c>
+            +<../../clib/rf_receive_esa.c>
+            +<../../clib/rf_receive_hms.c>
+            +<../../clib/rf_receive_it.c>
+            +<../../clib/rf_receive_revolt.c>
+            +<../../clib/rf_receive_tcm97001.c>
+            +<../../clib/rf_receive_tx3.c>
+            +<../../clib/rf_receive.c>
+            +<../../clib/rf_rwe.c>
+            +<../../clib/rf_send.c>
+            +<../../clib/rf_zwave.c>
+            +<../../clib/ringbuffer.c>
+            +<../../clib/somfy_rts.c>
+            +<../../clib/stringfunc.c>
+            +<../../clib/ttydata.c>
+            +<../../clib/onewire.c>
+        ```
+        2.  **Manuelles Builden:** Starte den Build für das XIAO-ESP32-C3 Target lokal (z.B. mit `platformio run -e XIAO-ESP32-C3` im Verzeichnis `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/Devices/ESP32`).
         3.  **Umverdrahtung der Hardware:** Schließe den CC1101 am XIAO-ESP32-C3 gemäß dem **letzten empfohlenen Pinout** an: SCK=GPIO8, MISO=GPIO9, MOSI=GPIO10, **CS=GPIO5**, GDO0=GPIO3, GDO2=GPIO4, LED=GPIO21.
         4.  **Flashen des Images:** Flashe das manuell erstellte `XIAO-ESP32-C3-factory.bin` auf das Board.
         5.  **Test des Bootvorgangs:** Überprüfe, ob das Board nun stabil bootet.
     *   **Potenzieller weiterer Fix:** Sollte das Problem weiterhin bestehen, wird ein **10kΩ Pull-Up-Widerstand am CS-Pin (GPIO 5)** empfohlen, um den CC1101 während des Bootvorgangs sicher zu deaktivieren.
-*   **CC1101 Funktionstests (Pending):** Sobald das XIAO-ESP32-C3 zuverlässig mit angeschlossener Hardware bootet, werden vollständige Funktionstests des CC1101 (Befehle `C` für Registerausgabe, `V` für Versions-/Frequenzprüfung, `X21` für FS20-Empfang) durchgeführt.
+*   **CC1101 Funktionstests (Pending):** Sobald das XIAO-ESP32-C3 zuverlässig mit angeschlossener Hardware bootet und ein funktionierendes Image geflasht wurde, werden vollständige Funktionstests des CC1101 (Befehle `C` für Registerausgabe, `V` für Versions-/Frequenzprüfung, `X21` für FS20-Empfang) durchgeführt.
 *   **Weitere Entwicklung:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
 ```
