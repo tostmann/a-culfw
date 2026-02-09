@@ -29,7 +29,7 @@
 *   **XIAO-ESP32-C3 Target (In Entwicklung - Boot-Problem & Build-Problem):**
     *   `XIAO-ESP32-C3-factory.bin` (Vollständiges Image für `0x0` - **aktuell nicht durch AI erstellbar**)
     *   `XIAO-ESP32-C3.bin` (Nur Applikation für OTA - **aktuell nicht durch AI erstellbar**)
-    *   **Empfohlenes Pinout (zum manuellen Anwenden):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO8 (Pin D8), MISO=GPIO9 (Pin D9), MOSI=GPIO10 (Pin D10), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
+    *   **Empfohlenes Pinout (zum manuellen Anwenden - aktuell NICHT in `platformio.ini` gesetzt):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO8 (Pin D8), MISO=GPIO9 (Pin D9), MOSI=GPIO10 (Pin D10), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
 
 ## 3. Key Architectural Decisions & Changes
 *   **Build-Prozess (DONE):** Alle ESP32-Targets generieren jetzt automatisch sowohl `factory.bin` (komplettes Image mit Bootloader/Partitionstabelle) als auch `app.bin` (für OTA).
@@ -53,9 +53,9 @@
 *   **XIAO-ESP32-C3 Boot-Problem mit CC1101 (Aktive Untersuchung - Build-Blockade):**
     *   **Problem:** Das XIAO-ESP32-C3-Board bootet nicht zuverlässig, wenn der CC1101 vollständig verkabelt ist (insbesondere mit angeschlossenen CS/GDO-Pins), was zu Abstürzen wie `Guru Meditation Error: Instruction access fault` führt.
     *   **Vermutete Ursache:** Interferenz des CC1101 mit den "Strapping Pins" des ESP32-C3 während des Bootvorgangs. Speziell GPIO 9 (MISO) ist ein kritischer Strapping-Pin, der beim Booten auf HIGH liegen muss. Wenn der CC1101 durch einen nicht initialisierten CS-Pin aktiviert wird, kann er die MISO-Leitung auf LOW ziehen und den ESP32 in einen falschen Boot-Modus zwingen. Auch GPIO 2 ist ein kritischer Strapping-Pin.
-    *   **Status des Build-Systems:** Die AI scheiterte daran, die Pin-Konfiguration in der `platformio.ini` automatisch zu aktualisieren und das Image zu bauen. Es traten wiederholt Probleme mit relativen Pfaden (`extra_scripts`, `src_dir`, `build_src_filter`) und dem Auffinden von Quelldateien auf, die PlatformIO in dieser Projektstruktur nicht handhaben konnte. Die `platformio.ini` wurde auf den ursprünglichen Zustand zurückgesetzt.
-    *   **Nächste Schritte (für Benutzer - Manuelle Korrektur erforderlich):**
-        1.  **Manuelles Update der `platformio.ini`:** Ersetze den kompletten `[env:XIAO-ESP32-C3]`-Block in der Datei `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/Devices/ESP32/platformio.ini` mit dem folgenden korrigierten Codeblock (dieser enthält das sichere Pinout und die angepassten Build-Pfade):
+    *   **Status des Build-Systems:** Die AI scheiterte daran, die Pin-Konfiguration in der `platformio.ini` automatisch zu aktualisieren und das Image zu bauen. Es traten wiederholt hartnäckige Probleme mit der Auflösung relativer Pfade (`extra_scripts`, `src_dir`, `build_src_filter`) und dem Auffinden von Quelldateien durch PlatformIO in dieser Projektstruktur. Alle automatisierten Korrekturversuche schlugen fehl. Die `platformio.ini` wurde daher auf den ursprünglichen Zustand zurückgesetzt. **Aktuell ist das Pinout für XIAO-ESP32-C3 in der `platformio.ini` noch NICHT korrigiert und der Build durch die AI nicht möglich.**
+    *   **Nächste Schritte (für Benutzer - Manuelle Korrektur UNBEDINGT erforderlich):**
+        1.  **Manuelles Update der `platformio.ini`:** Ersetze den kompletten `[env:XIAO-ESP32-C3]`-Block in der Datei `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/Devices/ESP32/platformio.ini` mit dem folgenden korrigierten Codeblock (dieser enthält das sichere Pinout und die angepassten Build-Pfade, die die AI nicht automatisiert anwenden konnte):
 
         ```ini
         [env:XIAO-ESP32-C3]
