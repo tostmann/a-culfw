@@ -1,0 +1,12 @@
+Processing XIAO-ESP32-C3 (platform: espressif32; board: seeed_xiao_esp32c3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*** missing SConscript file 'scripts/increment_version.py'
+File "/root/.platformio/penv/lib/python3.11/site-packages/platformio/builder/main.py", line 167, in <module>
+========================== [FAILED] Took 0.25 seconds ==========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+XIAO-ESP32-C3  FAILED    00:00:00.250
+==================== 1 failed, 0 succeeded in 00:00:00.250 ====================
