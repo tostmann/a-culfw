@@ -632,5 +632,36 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "text": "Und jetzt der letzte Block f\u00fcr den `ESP32-C6`."
+      },
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "[env:ESP32-C6]\nplatform = espressif32\nboard = esp32-c6-devkitc-1\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:../../scripts/increment_version.py\n    post:../../scripts/merge_bin.py\n    post:../../scripts/collect_binaries.py",
+            "path": "culfw/Devices/ESP32/platformio.ini",
+            "original_text": "[env:ESP32-C6]\nplatform = espressif32\nboard = esp32-c6-devkitc-1\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py"
+          }
+        }
+      }
+    ]
   }
 ]
