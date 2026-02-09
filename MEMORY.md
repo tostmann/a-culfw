@@ -1,3 +1,4 @@
+```markdown
 # CULFW32 Project Status
 
 ## 1. General Project Information
@@ -28,7 +29,7 @@
 *   **XIAO-ESP32-C3 Target (In Entwicklung - Boot-Problem):**
     *   `XIAO-ESP32-C3-factory.bin` (Vollständiges Image für `0x0`)
     *   `XIAO-ESP32-C3.bin` (Nur Applikation für OTA)
-    *   **Aktuelles Pinout:** LED=GPIO21 (Pin D6), SPI: SCK=GPIO8 (Pin D8), MISO=GPIO9 (Pin D9), MOSI=GPIO10 (Pin D10), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
+    *   **Aktuelles Pinout (Empfehlung):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO8 (Pin D8), MISO=GPIO9 (Pin D9), MOSI=GPIO10 (Pin D10), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
 
 ## 3. Key Architectural Decisions & Changes
 *   **Build-Prozess (DONE):** Alle ESP32-Targets generieren jetzt automatisch sowohl `factory.bin` (komplettes Image mit Bootloader/Partitionstabelle) als auch `app.bin` (für OTA).
@@ -43,17 +44,18 @@
 *   **ESP32 USB-CDC & Konsole (DONE):**
     *   `ARDUINO_USB_MODE=1` und `ARDUINO_USB_CDC_ON_BOOT=1` für direkte USB-Serial über `Serial`-Objekt aktiviert.
     *   LED-Blinken (3x) beim Booten zur visuellen Rückmeldung.
-    *   Nicht-blockierende I/O (`availableForWrite()`) und robuste Eingabeverarbeitung (`analyze_ttydata`).
-*   **ESP32 Pointer-Handling Fix (DONE):** `ttydata.c` korrigiert, um 32-Bit-Funktionspointer auf ESP32/ARM korrekt zu behandeln, behebt `Instruction access fault`-Abstürze (verursacht durch 16-Bit-AVR-Makro).
+    *   Nicht-blockierende I/O (`availableForWrite()`) und robuste Eingabeverarbeitung (`analyze_ttydata`) durch `Serial.flush()` und `delay(1)` in der Hauptschleife optimiert, um Eingaben zuverlässiger zu verarbeiten und Stabilität zu verbessern.
+*   **ESP32 Pointer-Handling Fix (DONE):** `ttydata.c` korrigiert, um 32-Bit-Funktionspointer auf ESP32/ARM korrekt zu behandeln (Behebung des `Instruction access fault`-Absturzes, verursacht durch 16-Bit-AVR-Makro `__LPM_word` beim Auslesen der `fntab`).
 *   **Flexible Pin-Konfiguration (DONE):** `board.h` (für ESP32) verwendet jetzt `#ifndef`-Guards, wodurch Pin-Definitionen über `build_flags` in `platformio.ini` für spezifische Board-Targets überschrieben werden können.
-*   **Git-Integration (DONE):** Projektänderungen in einem neuen Feature-Branch (`feature/esp32-support`) committet und erfolgreich via SSH nach GitHub gepusht.
+*   **Git-Integration (DONE):** Projektänderungen (alle ESP32-Fixes, C3/C6 und XIAO-Targets) in einem neuen Feature-Branch (`feature/esp32-support`) committet und erfolgreich via SSH nach GitHub gepusht. Ein neuer SSH-Key wurde auf dem VPS generiert und dem Benutzer zur Registrierung bei GitHub bereitgestellt, um den Push zu ermöglichen.
 
 ## 4. Known Issues & Next Steps
 *   **XIAO-ESP32-C3 Boot-Problem mit CC1101 (Aktive Untersuchung):**
-    *   **Problem:** Das XIAO-ESP32-C3-Board bootet nicht, wenn der CC1101 vollständig verkabelt ist, insbesondere wenn CS- und GDO-Pins angeschlossen sind, auch wenn GPIO2 frei ist.
-    *   **Vermutete Ursache:** Interferenz des CC1101 mit den "Strapping Pins" des ESP32-C3 (GPIO 9/MISO und möglicherweise GPIO 8/SCK) während des Bootvorgangs. Wenn die CS-Leitung des CC1101 während des ESP32-Boots nicht zuverlässig auf HIGH (deaktiviert) gehalten wird, kann dies die MISO-Leitung (GPIO 9) auf LOW ziehen und den ESP32 in einen falschen Boot-Modus zwingen.
-    *   **Aktueller Lösungsversuch:** CS wurde auf **GPIO 5 (Pin D3)** verschoben, während SCK, MISO, MOSI auf den Standard-SPI-Pins 8, 9, 10 verbleiben. GDO-Pins sind auf GPIO 3, 4.
-    *   **Nächster Schritt:** Benutzer muss den CC1101 gemäß dem neuen Pinout am XIAO-ESP32-C3 umverdrahten und das neueste `XIAO-ESP32-C3-factory.bin` flashen.
-    *   **Potenzieller weiterer Fix:** Sollte das Problem weiterhin bestehen, wird ein 10kΩ Pull-Up-Widerstand am CS-Pin (GPIO 5) oder das vorübergehende Trennen von MISO (GPIO 9) während des Bootvorgangs getestet, um die Strapping-Pin-Theorie zu bestätigen.
-*   **CC1101 Funktionstests:** Sobald das XIAO-ESP32-C3 zuverlässig mit angeschlossener Hardware bootet, werden vollständige Funktionstests des CC1101 (Befehle `C`, `V`, `X21` für FS20-Empfang) durchgeführt.
+    *   **Problem:** Das XIAO-ESP32-C3-Board bootet nicht zuverlässig, wenn der CC1101 vollständig verkabelt ist, insbesondere wenn CS- und GDO-Pins angeschlossen sind. Der Boot-Vorgang stürzt ab (`Guru Meditation Error: Instruction access fault`).
+    *   **Vermutete Ursache:** Interferenz des CC1101 mit den "Strapping Pins" des ESP32-C3 während des Bootvorgangs. Speziell **GPIO 9 (MISO)** ist ein kritischer Strapping-Pin, der beim Booten auf HIGH liegen muss. Wenn der CC1101 beim Booten (z.B. durch einen schwebenden CS-Pin) aktiviert wird, kann er die MISO-Leitung auf LOW ziehen und den ESP32 in einen falschen Boot-Modus zwingen.
+    *   **Aktueller Lösungsversuch:** Die Standard-SPI-Pins (SCK=8, MISO=9, MOSI=10) werden beibehalten, da sie nachweislich nicht das Booten verhindern, wenn der CC1101 inaktiv ist. Der **CS-Pin wurde auf GPIO 5 (Pin D3)** verschoben, um ihn von den kritischen Strapping-Pins fernzuhalten. GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2) und LED=GPIO21 (Pin D6).
+    *   **Nächster Schritt:** Benutzer muss den CC1101 gemäß dem **neuen Pinout** am XIAO-ESP32-C3 umverdrahten und das neueste `XIAO-ESP32-C3-factory.bin` flashen.
+    *   **Potenzieller weiterer Fix:** Sollte das Problem weiterhin bestehen, wird ein **10kΩ Pull-Up-Widerstand am CS-Pin (GPIO 5)** oder das vorübergehende Trennen von MISO (GPIO 9) während des Bootvorgangs getestet, um die Strapping-Pin-Theorie endgültig zu bestätigen und eine robuste Lösung zu finden.
+*   **CC1101 Funktionstests:** Sobald das XIAO-ESP32-C3 zuverlässig mit angeschlossener Hardware bootet, werden vollständige Funktionstests des CC1101 (Befehle `C` für Registerausgabe, `V` für Versions-/Frequenzprüfung, `X21` für FS20-Empfang) durchgeführt.
 *   **Weitere Entwicklung:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
+```
