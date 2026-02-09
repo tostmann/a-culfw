@@ -1,3 +1,4 @@
+Warning! Ignore unknown configuration option `src_dir` in section [env:ESP32-C3]
 Processing XIAO-ESP32-C3 (platform: espressif32; board: seeed_xiao_esp32c3; framework: arduino)
 --------------------------------------------------------------------------------
 Verbose mode can be enabled via `-v, --verbose` option
@@ -6,9 +7,9 @@ Verbose mode can be enabled via `-v, --verbose` option
 * FIRMWARE VERSION UPDATE                 *
 *******************************************
 * Base Version: 0.00
-* Build Number: 1
-* New Version:  0.00.1
-* Build Date:   2026-02-09 21:45:20
+* Build Number: 2
+* New Version:  0.00.2
+* Build Date:   2026-02-09 21:45:33
 *******************************************
 
 CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
@@ -28,9 +29,9 @@ Found 25 compatible libraries
 Scanning dependencies...
 No dependencies
 Error: Nothing to build. Please put your source code files to the '/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/Devices/ESP32/src' folder
-========================== [FAILED] Took 0.84 seconds ==========================
+========================== [FAILED] Took 0.57 seconds ==========================
 
 Environment    Status    Duration
 -------------  --------  ------------
-XIAO-ESP32-C3  FAILED    00:00:00.842
-==================== 1 failed, 0 succeeded in 00:00:00.842 ====================
+XIAO-ESP32-C3  FAILED    00:00:00.574
+==================== 1 failed, 0 succeeded in 00:00:00.574 ====================
