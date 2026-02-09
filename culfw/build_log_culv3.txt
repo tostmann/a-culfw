@@ -1,0 +1,91 @@
+Processing CUL_V3 (board: cul_v3; platform: atmelavr)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*******************************************
+* FIRMWARE VERSION UPDATE                 *
+*******************************************
+* Base Version: 1.26
+* Build Number: 31
+* New Version:  1.26.31
+* Build Date:   2026-02-06 00:28:38
+*******************************************
+
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelavr/cul_v3.html
+PLATFORM: Atmel AVR (5.1.0) > CUL V3 (ATmega32u4 8MHz)
+HARDWARE: ATMEGA32U4 8MHz, 2.50KB RAM, 28KB Flash
+PACKAGES: 
+ - toolchain-atmelavr @ 1.50400.190710 (5.4.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 0 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/CUL_V3/src/Devices/CUL/CUL.o
+Compiling .pio/build/CUL_V3/src/clib/Descriptors.o
+Compiling .pio/build/CUL_V3/src/clib/belfox.o
+Compiling .pio/build/CUL_V3/src/clib/cc1100.o
+Compiling .pio/build/CUL_V3/src/clib/cc1101_pllcheck.o
+Compiling .pio/build/CUL_V3/src/clib/cdcLUFA.o
+Compiling .pio/build/CUL_V3/src/clib/clock.o
+Compiling .pio/build/CUL_V3/src/clib/delay.o
+Compiling .pio/build/CUL_V3/src/clib/display.o
+Compiling .pio/build/CUL_V3/src/clib/fastrf.o
+Compiling .pio/build/CUL_V3/src/clib/fband.o
+Compiling .pio/build/CUL_V3/src/clib/fht.o
+Compiling .pio/build/CUL_V3/src/clib/fncollection.o
+Compiling .pio/build/CUL_V3/src/clib/helper.o
+Compiling .pio/build/CUL_V3/src/clib/intertechno.o
+Compiling .pio/build/CUL_V3/src/clib/kopp-fc.o
+Compiling .pio/build/CUL_V3/src/clib/lacrosse.o
+Compiling .pio/build/CUL_V3/src/clib/mbus/3outof6.o
+Compiling .pio/build/CUL_V3/src/clib/mbus/crc.o
+Compiling .pio/build/CUL_V3/src/clib/mbus/manchester.o
+Compiling .pio/build/CUL_V3/src/clib/mbus/mbus_packet.o
+Compiling .pio/build/CUL_V3/src/clib/memory.o
+Compiling .pio/build/CUL_V3/src/clib/rf_asksin.o
+Compiling .pio/build/CUL_V3/src/clib/rf_mbus.o
+Compiling .pio/build/CUL_V3/src/clib/rf_moritz.o
+Compiling .pio/build/CUL_V3/src/clib/rf_native.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive_bucket.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive_esa.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive_hms.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive_it.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive_revolt.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive_tcm97001.o
+Compiling .pio/build/CUL_V3/src/clib/rf_receive_tx3.o
+Compiling .pio/build/CUL_V3/src/clib/rf_router.o
+Compiling .pio/build/CUL_V3/src/clib/rf_rwe.o
+Compiling .pio/build/CUL_V3/src/clib/rf_send.o
+Compiling .pio/build/CUL_V3/src/clib/rf_zwave.o
+Compiling .pio/build/CUL_V3/src/clib/ringbuffer.o
+Compiling .pio/build/CUL_V3/src/clib/somfy_rts.o
+Compiling .pio/build/CUL_V3/src/clib/spi.o
+Compiling .pio/build/CUL_V3/src/clib/stringfunc.o
+Compiling .pio/build/CUL_V3/src/clib/ttydata.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/HighLevel/ConfigDescriptor.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/HighLevel/Events.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/HighLevel/USBInterrupt.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/HighLevel/USBTask.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/LowLevel/DevChapter9.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/LowLevel/Endpoint.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/LowLevel/Host.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/LowLevel/HostChapter9.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/LowLevel/LowLevel.o
+Compiling .pio/build/CUL_V3/src/lufa/Drivers/USB/LowLevel/Pipe.o
+Linking .pio/build/CUL_V3/firmware.elf
+Checking size .pio/build/CUL_V3/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [========= ]  89.8% (used 2300 bytes from 2560 bytes)
+Flash: [==========]  97.0% (used 27806 bytes from 28672 bytes)
+Building .pio/build/CUL_V3/firmware.hex
+collect_binaries([".pio/build/CUL_V3/firmware.hex"], [".pio/build/CUL_V3/firmware.elf"])
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/CUL_V3.hex (v1.26.31)
+========================= [SUCCESS] Took 1.20 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+CUL_V3         SUCCESS   00:00:01.196
+========================= 1 succeeded in 00:00:01.196 =========================

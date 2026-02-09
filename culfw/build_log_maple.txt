@@ -1,0 +1,206 @@
+Processing MapleCUNx4_W5500_BL (platform: ststm32; board: genericSTM32F103CB)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*******************************************
+* FIRMWARE VERSION UPDATE                 *
+*******************************************
+* Base Version: 1.26
+* Build Number: 35
+* New Version:  1.26.35
+* Build Date:   2026-02-06 00:29:53
+*******************************************
+
+CONFIGURATION: https://docs.platformio.org/page/boards/ststm32/genericSTM32F103CB.html
+PLATFORM: ST STM32 (19.4.0) > STM32F103CB (20k RAM. 128k Flash)
+HARDWARE: STM32F103CBT6 72MHz, 20KB RAM, 128KB Flash
+DEBUG: Current (blackmagic) External (blackmagic, cmsis-dap, jlink, stlink)
+PACKAGES: 
+ - tool-dfuutil @ 1.11.0 
+ - tool-stm32duino @ 1.0.1 
+ - toolchain-gccarmnoneeabi @ 1.70201.0 (7.2.1)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 0 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Devices/MapleCUN/main.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Devices/MapleCUN/stm32f1xx_hal_msp.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Devices/MapleCUN/stm32f1xx_it.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_dma.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_iwdg.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pwr.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_spi_ex.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_tim_ex.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_uart.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_ll_usb.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/avr/eeprom.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/avr/interrupt.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/avr/wdt.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/hal_gpio.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/hal_spi.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/hal_timer.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/hal_twimaster.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/hal_usart.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/stdio.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/usbd/usb_device.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/usbd/usbd_cdc_if.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/usbd/usbd_conf.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/usbd/usbd_desc.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/util/parity.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/STM32/utility/dbgu.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Wiznet/Ethernet/W5500/w5500.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Wiznet/Ethernet/socket.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Wiznet/Ethernet/wizchip_conf.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Wiznet/Internet/DHCP/dhcp.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Wiznet/Internet/DNS/dns.o
+Wiznet/Ethernet/wizchip_conf.c:166:7: warning: missing braces around initializer [-Wmissing-braces]
+       {
+       ^
+Wiznet/Ethernet/wizchip_conf.c:169:7:
+       wizchip_cris_enter,
+       {
+       wizchip_cris_exit,
+                        }
+       wizchip_cs_select,
+       {
+       wizchip_cs_deselect,
+                          }
+Wiznet/Ethernet/wizchip_conf.c:176:7:
+       wizchip_bus_readdata,
+       {
+       {
+Wiznet/Ethernet/wizchip_conf.c:180:7:
+       };
+       }
+       }
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/Wiznet/Internet/SNTP/sntp.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/cc1100.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/cc1101_pllcheck.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/cdc.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/cdc_uart.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/clock.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/delay.o
+clib/cc1100.c:28:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t CC1100_PA[] = {
+               ^~~~~
+clib/cc1100.c:55:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t CC1100_CFG[EE_CC1100_CFG_SIZE] = {
+               ^~~~~
+clib/cc1100.c:109:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t CC1100_CFG1[EE_CC1100_CFG_SIZE] = {
+               ^~~~~
+clib/cc1100.c:165:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t FASTRF_CFG[EE_CC1100_CFG_SIZE] = {
+               ^~~~~
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/display.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/ethernet_wiznet.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/fastrf.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/fband.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/fht.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/fncollection.o
+clib/fband.c: In function 'readEEpromValue':
+clib/fband.c:24:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   d = erb((uint8_t *)addr);
+           ^
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/hw_autodetect.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/intertechno.o
+clib/fht.c:455:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t fht80b_state_tbl[] = {
+               ^~~~~
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/kopp-fc.o
+clib/fncollection.c: In function 'read_eeprom':
+clib/fncollection.c:158:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     d = erb((uint8_t *)addr);
+             ^
+clib/fncollection.c: In function 'write_eeprom':
+clib/fncollection.c:222:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     ewb((uint8_t*)addr, hb[d-1]);
+         ^
+clib/fncollection.c:232:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+       ewb((uint8_t*)++addr, hb[0]);
+           ^
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/lacrosse.o
+clib/fncollection.c: In function 'eeprom_init':
+clib/fncollection.c:242:3: warning: implicit declaration of function 'hal_eeprom_init'; did you mean 'eeprom_init'? [-Wimplicit-function-declaration]
+   hal_eeprom_init();
+   ^~~~~~~~~~~~~~~
+   eeprom_init
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/mbus/3outof6.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/mbus/crc.o
+clib/intertechno.c:44:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t CC1100_ITCFG[EE_CC1100_CFG_SIZE] = {
+               ^~~~~
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/mbus/manchester.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/mbus/mbus_packet.o
+clib/kopp-fc.c:117:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t CC1100_Kopp_CFG[EE_CC1100_CFG_SIZE] = {
+               ^~~~~
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/multi_CC.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/onewire.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_asksin.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_maico.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_mbus.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_mode.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_moritz.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_native.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive_bucket.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive_esa.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive_hms.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive_it.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive_revolt.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive_tcm97001.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_receive_tx3.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_router.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_rwe.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_send.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/rf_zwave.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/ringbuffer.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/serial.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/somfy_rts.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/stringfunc.o
+Compiling .pio/build/MapleCUNx4_W5500_BL/src/clib/ttydata.o
+clib/somfy_rts.c:67:15: warning: duplicate 'const' declaration specifier [-Wduplicate-decl-specifier]
+ const PROGMEM const uint8_t CC1100_SOMFY_RTS_CFG[EE_CC1100_CFG_SIZE] = {
+               ^~~~~
+Linking .pio/build/MapleCUNx4_W5500_BL/firmware.elf
+Checking size .pio/build/MapleCUNx4_W5500_BL/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [======    ]  63.5% (used 13000 bytes from 20480 bytes)
+Flash: [=====     ]  45.8% (used 60084 bytes from 131072 bytes)
+Building .pio/build/MapleCUNx4_W5500_BL/firmware.bin
+Adding dfu suffix to firmware.bin
+dfu-suffix (dfu-util) 0.11
+
+Copyright 2011-2012 Stefan Schmidt, 2013-2020 Tormod Volden
+This program is Free Software and has ABSOLUTELY NO WARRANTY
+Please report bugs to http://sourceforge.net/p/dfu-util/tickets/
+
+Suffix successfully added to file
+collect_binaries([".pio/build/MapleCUNx4_W5500_BL/firmware.bin"], [".pio/build/MapleCUNx4_W5500_BL/firmware.elf"])
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/MapleCUNx4_W5500_BL.bin (v1.26.35)
+========================= [SUCCESS] Took 2.93 seconds =========================
+
+Environment          Status    Duration
+-------------------  --------  ------------
+MapleCUNx4_W5500_BL  SUCCESS   00:00:02.933
+========================= 1 succeeded in 00:00:02.933 =========================

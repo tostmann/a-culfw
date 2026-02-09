@@ -1,0 +1,157 @@
+Processing nanoCUL868 (board: nanoatmega328; platform: atmelavr)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*******************************************
+* FIRMWARE VERSION UPDATE                 *
+*******************************************
+* Base Version: 1.26
+* Build Number: 32
+* New Version:  1.26.32
+* Build Date:   2026-02-06 00:28:43
+*******************************************
+
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelavr/nanoatmega328.html
+PLATFORM: Atmel AVR (5.1.0) > Arduino Nano ATmega328
+HARDWARE: ATMEGA328P 8MHz, 2KB RAM, 30KB Flash
+DEBUG: Current (avr-stub) External (avr-stub, simavr)
+PACKAGES: 
+ - toolchain-atmelavr @ 1.50400.190710 (5.4.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 0 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/nanoCUL868/src/Devices/nanoCUL/nanoCUL.o
+Compiling .pio/build/nanoCUL868/src/clib/belfox.o
+Compiling .pio/build/nanoCUL868/src/clib/cc1100.o
+Compiling .pio/build/nanoCUL868/src/clib/cc1101_pllcheck.o
+Compiling .pio/build/nanoCUL868/src/clib/clock.o
+Compiling .pio/build/nanoCUL868/src/clib/delay.o
+Compiling .pio/build/nanoCUL868/src/clib/display.o
+Compiling .pio/build/nanoCUL868/src/clib/fastrf.o
+Compiling .pio/build/nanoCUL868/src/clib/fband.o
+Compiling .pio/build/nanoCUL868/src/clib/fht.o
+Compiling .pio/build/nanoCUL868/src/clib/fncollection.o
+Compiling .pio/build/nanoCUL868/src/clib/helper.o
+Compiling .pio/build/nanoCUL868/src/clib/intertechno.o
+Compiling .pio/build/nanoCUL868/src/clib/kopp-fc.o
+Compiling .pio/build/nanoCUL868/src/clib/lacrosse.o
+Compiling .pio/build/nanoCUL868/src/clib/mbus/3outof6.o
+Compiling .pio/build/nanoCUL868/src/clib/mbus/crc.o
+Compiling .pio/build/nanoCUL868/src/clib/mbus/manchester.o
+Compiling .pio/build/nanoCUL868/src/clib/mbus/mbus_packet.o
+Compiling .pio/build/nanoCUL868/src/clib/memory.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_asksin.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_mbus.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_moritz.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_native.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive_bucket.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive_esa.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive_hms.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive_it.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive_revolt.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive_tcm97001.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_receive_tx3.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_rwe.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_send.o
+Compiling .pio/build/nanoCUL868/src/clib/rf_zwave.o
+Compiling .pio/build/nanoCUL868/src/clib/ringbuffer.o
+Compiling .pio/build/nanoCUL868/src/clib/serial.o
+Compiling .pio/build/nanoCUL868/src/clib/somfy_rts.o
+Compiling .pio/build/nanoCUL868/src/clib/spi.o
+Compiling .pio/build/nanoCUL868/src/clib/stringfunc.o
+Compiling .pio/build/nanoCUL868/src/clib/ttydata.o
+Linking .pio/build/nanoCUL868/firmware.elf
+Checking size .pio/build/nanoCUL868/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [===       ]  33.8% (used 693 bytes from 2048 bytes)
+Flash: [=====     ]  46.3% (used 14232 bytes from 30720 bytes)
+Building .pio/build/nanoCUL868/firmware.hex
+collect_binaries([".pio/build/nanoCUL868/firmware.hex"], [".pio/build/nanoCUL868/firmware.elf"])
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/nanoCUL868.hex (v1.26.32)
+========================= [SUCCESS] Took 0.84 seconds =========================
+
+Processing nanoCUL433 (board: nanoatmega328; platform: atmelavr)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*******************************************
+* FIRMWARE VERSION UPDATE                 *
+*******************************************
+* Base Version: 1.26
+* Build Number: 33
+* New Version:  1.26.33
+* Build Date:   2026-02-06 00:28:44
+*******************************************
+
+CONFIGURATION: https://docs.platformio.org/page/boards/atmelavr/nanoatmega328.html
+PLATFORM: Atmel AVR (5.1.0) > Arduino Nano ATmega328
+HARDWARE: ATMEGA328P 8MHz, 2KB RAM, 30KB Flash
+DEBUG: Current (avr-stub) External (avr-stub, simavr)
+PACKAGES: 
+ - toolchain-atmelavr @ 1.50400.190710 (5.4.0)
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 0 compatible libraries
+Scanning dependencies...
+No dependencies
+Building in release mode
+Compiling .pio/build/nanoCUL433/src/Devices/nanoCUL/nanoCUL.o
+Compiling .pio/build/nanoCUL433/src/clib/belfox.o
+Compiling .pio/build/nanoCUL433/src/clib/cc1100.o
+Compiling .pio/build/nanoCUL433/src/clib/cc1101_pllcheck.o
+Compiling .pio/build/nanoCUL433/src/clib/clock.o
+Compiling .pio/build/nanoCUL433/src/clib/delay.o
+Compiling .pio/build/nanoCUL433/src/clib/display.o
+Compiling .pio/build/nanoCUL433/src/clib/fastrf.o
+Compiling .pio/build/nanoCUL433/src/clib/fband.o
+Compiling .pio/build/nanoCUL433/src/clib/fht.o
+Compiling .pio/build/nanoCUL433/src/clib/fncollection.o
+Compiling .pio/build/nanoCUL433/src/clib/helper.o
+Compiling .pio/build/nanoCUL433/src/clib/intertechno.o
+Compiling .pio/build/nanoCUL433/src/clib/kopp-fc.o
+Compiling .pio/build/nanoCUL433/src/clib/lacrosse.o
+Compiling .pio/build/nanoCUL433/src/clib/mbus/3outof6.o
+Compiling .pio/build/nanoCUL433/src/clib/mbus/crc.o
+Compiling .pio/build/nanoCUL433/src/clib/mbus/manchester.o
+Compiling .pio/build/nanoCUL433/src/clib/mbus/mbus_packet.o
+Compiling .pio/build/nanoCUL433/src/clib/memory.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_asksin.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_mbus.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_moritz.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_native.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive_bucket.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive_esa.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive_hms.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive_it.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive_revolt.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive_tcm97001.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_receive_tx3.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_rwe.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_send.o
+Compiling .pio/build/nanoCUL433/src/clib/rf_zwave.o
+Compiling .pio/build/nanoCUL433/src/clib/ringbuffer.o
+Compiling .pio/build/nanoCUL433/src/clib/serial.o
+Compiling .pio/build/nanoCUL433/src/clib/somfy_rts.o
+Compiling .pio/build/nanoCUL433/src/clib/spi.o
+Compiling .pio/build/nanoCUL433/src/clib/stringfunc.o
+Compiling .pio/build/nanoCUL433/src/clib/ttydata.o
+Linking .pio/build/nanoCUL433/firmware.elf
+Checking size .pio/build/nanoCUL433/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [===       ]  34.2% (used 701 bytes from 2048 bytes)
+Flash: [=====     ]  46.7% (used 14340 bytes from 30720 bytes)
+Building .pio/build/nanoCUL433/firmware.hex
+collect_binaries([".pio/build/nanoCUL433/firmware.hex"], [".pio/build/nanoCUL433/firmware.elf"])
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/nanoCUL433.hex (v1.26.33)
+========================= [SUCCESS] Took 0.84 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+nanoCUL868     SUCCESS   00:00:00.839
+nanoCUL433     SUCCESS   00:00:00.845
+========================= 2 succeeded in 00:00:01.684 =========================

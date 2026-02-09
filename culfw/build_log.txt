@@ -1,0 +1,599 @@
+Processing ESP32-C3 (platform: espressif32; board: esp32-c3-devkitm-1; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*******************************************
+* FIRMWARE VERSION UPDATE                 *
+*******************************************
+* Base Version: 1.26
+* Build Number: 30
+* New Version:  1.26.30
+* Build Date:   2026-02-06 00:28:28
+*******************************************
+
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/esp32-c3-devkitm-1.html
+PLATFORM: Espressif 32 (2024.12.30) > Espressif ESP32-C3-DevKitM-1
+HARDWARE: ESP32C3 160MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.1.0+sha.35321e8b 
+ - tool-esptoolpy @ 4.8.4 
+ - tool-mklittlefs @ 3.2.0 
+ - tool-riscv32-esp-elf-gdb @ 14.2.0+20240403 
+ - tool-xtensa-esp-elf-gdb @ 14.2.0+20240403 
+ - toolchain-atmelavr @ 1.50400.190710 (5.4.0) 
+ - toolchain-riscv32-esp @ 13.2.0+20240530
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 25 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- EEPROM @ 3.1.0
+|-- SPI @ 3.1.0
+Building in release mode
+Compiling .pio/build/ESP32-C3/src/Devices/ESP32/main.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/ESP32/hal.cpp.o
+Compiling .pio/build/ESP32-C3/src/clib/cc1100.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/cc1101_pllcheck.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/clock.c.o
+Compiling .pio/build/ESP32-C3/src/clib/display.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
+   84 | #define sei()          portENABLE_INTERRUPTS()
+      | 
+In file included from clib/clock.c:2:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+    9 | #define sei()
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
+   85 | #define cli()          portDISABLE_INTERRUPTS()
+      | 
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+   12 | #define cli()
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/clock.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/fastrf.c.o
+Compiling .pio/build/ESP32-C3/src/clib/fband.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/fht.c.o
+clib/fband.c: In function 'readEEpromValue':
+clib/fband.c:24:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   24 |   d = erb((uint8_t *)addr);
+      |           ^
+Compiling .pio/build/ESP32-C3/src/clib/fncollection.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/hw_autodetect.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/cc1100.h:13,
+                 from clib/fastrf.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/cc1100.h:10:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/intertechno.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/fncollection.c:6:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
+   84 | #define sei()          portENABLE_INTERRUPTS()
+      | 
+In file included from clib/fncollection.c:4:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+    9 | #define sei()
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
+   85 | #define cli()          portDISABLE_INTERRUPTS()
+      | 
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+   12 | #define cli()
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/fncollection.c:5:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+clib/fncollection.c: In function 'read_eeprom':
+clib/fncollection.c:158:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+  158 |     d = erb((uint8_t *)addr);
+      |             ^
+clib/fncollection.c: In function 'write_eeprom':
+clib/fncollection.c:222:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+  222 |     ewb((uint8_t*)addr, hb[d-1]);
+      |         ^
+clib/fncollection.c:232:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+  232 |       ewb((uint8_t*)++addr, hb[0]);
+      |           ^
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/cc1100.h:13,
+                 from clib/hw_autodetect.c:2:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/cc1100.h:10:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/kopp-fc.c.o
+Compiling .pio/build/ESP32-C3/src/clib/lacrosse.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/intertechno.c:11:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
+   84 | #define sei()          portENABLE_INTERRUPTS()
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/mbus/3outof6.c.o
+In file included from clib/intertechno.c:7:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+    9 | #define sei()
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
+   85 | #define cli()          portDISABLE_INTERRUPTS()
+      | 
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+   12 | #define cli()
+      | 
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/mbus/crc.c.o
+Compiling .pio/build/ESP32-C3/src/clib/mbus/manchester.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/mbus/mbus_packet.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/multi_CC.c.o
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/kopp-fc.c:66:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/kopp-fc.c:62:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/onewire.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_asksin.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_maico.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_mbus.c.o
+Compiling .pio/build/ESP32-C3/src/clib/rf_mode.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_moritz.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_native.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_asksin.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/rf_asksin.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive.c.o
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_mbus.c:11:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/rf_mbus.c:7:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive_bucket.c.o
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_moritz.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/rf_moritz.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_native.c:15:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/rf_native.c:11:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive_esa.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive_hms.c.o
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/rf_receive.c:25:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
+   84 | #define sei()          portENABLE_INTERRUPTS()
+      | 
+In file included from clib/rf_receive.c:24:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+    9 | #define sei()
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
+   85 | #define cli()          portDISABLE_INTERRUPTS()
+      | 
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+   12 | #define cli()
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive_it.c.o
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive_revolt.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive_tcm97001.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_receive_tx3.c.o
+Compiling .pio/build/ESP32-C3/src/clib/rf_router.c.o
+ESP32/hal.cpp:9:30: warning: 'ticks' initialized and declared 'extern'
+    9 | extern "C" volatile uint32_t ticks = 0;
+      |                              ^~~~~
+ESP32/hal.cpp:10:20: warning: 'SREG' initialized and declared 'extern'
+   10 | extern "C" uint8_t SREG = 0;
+      |                    ^~~~
+ESP32/hal.cpp:11:20: warning: 'TIMSK0' initialized and declared 'extern'
+   11 | extern "C" uint8_t TIMSK0 = 0;
+      |                    ^~~~~~
+ESP32/hal.cpp: In function 'void onTickTimer()':
+ESP32/hal.cpp:25:5: warning: '++' expression of 'volatile'-qualified type is deprecated [-Wvolatile]
+   25 |     ticks++;
+      |     ^~~~~
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_rwe.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/rf_send.c.o
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/rf_receive_revolt.c:28:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/rf_receive.h:4,
+                 from clib/rf_receive_bucket.h:30,
+                 from clib/rf_receive_revolt.h:29,
+                 from clib/rf_receive_revolt.c:21:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+Compiling .pio/build/ESP32-C3/src/clib/rf_zwave.c.o
+Compiling .pio/build/ESP32-C3/src/clib/ringbuffer.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/somfy_rts.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/stringfunc.c.o
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_rwe.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/rf_rwe.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/src/clib/ttydata.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/rf_send.c:8:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
+   84 | #define sei()          portENABLE_INTERRUPTS()
+      | 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_zwave.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
+  111 | #define _BV(b) (1UL << (b))
+      | 
+In file included from clib/rf_send.c:7:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+    9 | #define sei()
+      | 
+In file included from clib/rf_zwave.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+   12 | #define _BV(bit) (1UL << (bit))
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
+   85 | #define cli()          portDISABLE_INTERRUPTS()
+      | 
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+   12 | #define cli()
+      | 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/somfy_rts.c:31:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
+   84 | #define sei()          portENABLE_INTERRUPTS()
+      | 
+In file included from clib/somfy_rts.c:30:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+    9 | #define sei()
+      | 
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
+   85 | #define cli()          portDISABLE_INTERRUPTS()
+      | 
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+   12 | #define cli()
+      | 
+Compiling .pio/build/ESP32-C3/libda1/EEPROM/EEPROM.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+clib/ttydata.c: In function 'callfn':
+clib/ttydata.c:29:26: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   29 |     void (*fn)(char *) = (void (*)(char *))__LPM_word(&fntab[idx].fn);
+      |                          ^
+Compiling .pio/build/ESP32-C3/liba96/SPI/SPI.cpp.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/ColorFormat.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/Esp.cpp.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/FirmwareMSC.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/FunctionalInterrupt.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/HEXBuilder.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/HWCDC.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/HardwareSerial.cpp.o
+Archiving .pio/build/ESP32-C3/libda1/libEEPROM.a
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Indexing .pio/build/ESP32-C3/libda1/libEEPROM.a
+Compiling .pio/build/ESP32-C3/FrameworkArduino/IPAddress.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Archiving .pio/build/ESP32-C3/liba96/libSPI.a
+Indexing .pio/build/ESP32-C3/liba96/libSPI.a
+Compiling .pio/build/ESP32-C3/FrameworkArduino/MD5Builder.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/MacAddress.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/Print.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/SHA1Builder.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/Stream.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/StreamString.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/Tone.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/USB.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/USBCDC.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/USBMSC.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/WMath.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/WString.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/base64.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/cbuf.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-adc.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-bt.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-cpu.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-dac.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-gpio.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-i2c-slave.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-i2c.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-ledc.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-matrix.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-misc.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-periman.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-psram.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-rgb-led.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-rmt.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-sigmadelta.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-spi.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-time.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-timer.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-tinyusb.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-touch-ng.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-touch.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/esp32-hal-uart.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/firmware_msc_fat.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/freertos_stats.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/libb64/cdecode.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/libb64/cencode.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/main.cpp.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Compiling .pio/build/ESP32-C3/FrameworkArduino/stdlib_noniso.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/wiring_pulse.c.o
+Compiling .pio/build/ESP32-C3/FrameworkArduino/wiring_shift.c.o
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+<command-line>: warning: "ESP32" redefined
+<command-line>: note: this is the location of the previous definition
+Archiving .pio/build/ESP32-C3/libFrameworkArduino.a
+Indexing .pio/build/ESP32-C3/libFrameworkArduino.a
+Linking .pio/build/ESP32-C3/firmware.elf
+Retrieving maximum program size .pio/build/ESP32-C3/firmware.elf
+Checking size .pio/build/ESP32-C3/firmware.elf
+Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
+RAM:   [          ]   3.1% (used 10036 bytes from 327680 bytes)
+Flash: [=         ]  12.1% (used 158728 bytes from 1310720 bytes)
+Building .pio/build/ESP32-C3/firmware.bin
+esptool.py v4.8.4
+Creating esp32c3 image...
+Merged 1 ELF section
+Successfully created esp32c3 image.
+collect_binaries([".pio/build/ESP32-C3/firmware.bin"], [".pio/build/ESP32-C3/firmware.elf"])
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/ESP32-C3.bin (v1.26.30)
+========================= [SUCCESS] Took 6.14 seconds =========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+ESP32-C3       SUCCESS   00:00:06.144
+========================= 1 succeeded in 00:00:06.144 =========================
