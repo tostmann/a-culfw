@@ -51,7 +51,7 @@
 
 #define STATE_RESET   0
 
-#define SILENCE    20000       // End of message (20ms for stability)
+#define SILENCE    50000       // End of message (50ms for stability)
 
 
 #if defined(HAS_REVOLT) || defined (HAS_IT) || defined (HAS_TCM97001)
