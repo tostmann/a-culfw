@@ -125,10 +125,10 @@ void setup() {
     Serial.println("Ready.");
 }
 
-static uint32_t last_isr_count = 0;
-static unsigned long last_debug_print = 0;
-
 void loop() {
+    static uint32_t last_isr_count = 0;
+    static unsigned long last_debug_print = 0;
+
     if (millis() - last_debug_print > 1000) {
         if (gdo_isr_count != last_isr_count) {
              Serial.print("ISR Count: ");
