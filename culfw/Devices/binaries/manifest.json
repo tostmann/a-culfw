@@ -3,8 +3,8 @@
         "platform": "espressif32",
         "board": "seeed_xiao_esp32c3",
         "mcu": "esp32c3",
-        "version": "0.00.7",
-        "last_build": "2026-02-10 10:28:34",
+        "version": "0.00.10",
+        "last_build": "2026-02-10 10:29:07",
         "artifacts": [
             {
                 "file": "XIAO-ESP32-C3.bin",
@@ -12,6 +12,23 @@
             },
             {
                 "file": "XIAO-ESP32-C3-factory.bin",
+                "type": "factory"
+            }
+        ]
+    },
+    "ESP32-C3": {
+        "platform": "espressif32",
+        "board": "esp32-c3-devkitm-1",
+        "mcu": "esp32c3",
+        "version": "0.00.9",
+        "last_build": "2026-02-10 10:29:01",
+        "artifacts": [
+            {
+                "file": "ESP32-C3.bin",
+                "type": "ota"
+            },
+            {
+                "file": "ESP32-C3-factory.bin",
                 "type": "factory"
             }
         ]
