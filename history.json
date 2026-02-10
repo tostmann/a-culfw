@@ -1123,5 +1123,111 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/rf_send.c"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "/* \n * Copyright by R.Koenig\n * Inspired by code from Dirk Tostmann\n * License: GPL v2\n */\n\n#include <avr/interrupt.h>              // for cli, sei\n#include <avr/pgmspace.h>               // for PSTR\n#include <avr/io.h>                     // for _BV\n#include <stdint.h>                     // for int8_t\n#include <util/parity.h>                // for parity_even_bit\n\n#include \"board.h\"                      // for HAS_MORITZ, HAS_RAWSEND, etc\n#include \"cc1100.h\"                     // for CC1100_CLEAR_OUT, etc\n#include \"delay.h\"                      // for my_delay_us, my_delay_ms\n#include \"display.h\"                    // for DS_P\n#include \"led.h\"                        // for LED_OFF, LED_ON\n#include \"rf_receive.h\"                 // for cksum1, cksum2, cksum3, etc\n#include \"rf_send.h\"\n#include \"stringfunc.h\"                 // for fromhex\n#include \"rf_mode.h\"\n#include \"i2cslave.h\"\t\t\t\t\t\t\t\t\t\t// for TWCR_INIT, TWCR_OFF\n\n#ifdef HAS_DMX\n#include \"dmx.h\"                        // for dmx_fs20_emu\n#endif\n\n#ifdef HAS_HELIOS\n#include \"helios.h\"                     // for helios_fs20_emu\n#endif\n\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"                  // for moritz_on, rf_moritz_init\n#endif\n\n// For FS20 we time the complete message, for KS300 the rise-fall distance\n// FS20  NULL: 400us high, 400us low\n// FS20  ONE:  600us high, 600us low\n// KS300 NULL  854us high, 366us low\n// KS300 ONE:  366us high, 854us low\n\n#define FS20_ZERO      400     //   400uS\n#define FS20_ONE       600     //   600uS\n#define FS20_PAUSE      10     // 10000mS\n#define EM_ONE         800     //   800uS\n#define EM_ZERO        400     //   400uS\n\n#if defined(HAS_HOERMANN_SEND)\n#define HRM_ZERO_H         992 //us\n#define HRM_ZERO_L         448 //us\n#define HRM_ONE_H          528 //us\n#define HRM_ONE_L          928 //us\n#define HRM_EXTRA_SYNC_H  4000 //us  measured with CUL raw read output\n#define HRM_EXTRA_SYNC_L   600 //us  measured with CUL raw read output\n#endif\n\nuint16_t credit_10ms;\n\n#define TMUL(x) (x<<4)\n#define TDIV(x) (x>>4)\n\n\n#if defined(HAS_RAWSEND) || defined(HAS_HOERMANN_SEND)\n\n#  define MAX_SNDMSG 12\n#  define MAX_SNDRAW 12\n\n  static uint8_t zerohigh, zerolow, onehigh, onelow;\n\n  static void\n  send_bit(uint8_t bit)\n  {\n    CC1100_SET_OUT;         // High\n    my_delay_us(bit ? TMUL(onehigh) : TMUL(zerohigh));\n\n    CC1100_CLEAR_OUT;       // Low\n    my_delay_us(bit ? TMUL(onelow) : TMUL(zerolow));\n  }\n\n#else\n\n#  define MAX_SNDMSG 6    // FS20: 4 or 5 + CRC, FHT: 5+CRC\n#  define MAX_SNDRAW 7    // MAX_SNDMSG*9/8 (parity bit)\n\n  static void\n  send_bit(uint8_t bit)\n  {\n    CC1100_SET_OUT;         // High\n    my_delay_us(bit ? FS20_ONE : FS20_ZERO);\n\n    CC1100_CLEAR_OUT;       // Low\n    my_delay_us(bit ? FS20_ONE : FS20_ZERO);\n  }\n\n#endif\n\n// msg is with parity/checksum already added\nstatic void\nsendraw(uint8_t *msg, uint8_t sync, uint8_t nbyte, uint8_t bitoff,\n                uint8_t repeat, uint8_t pause, uint8_t addH, uint8_t addL)\n{\n  // 12*800+1200+nbyte*(8*1000)+(bits*1000)+800+10000 \n  // message len is < (nbyte+2)*repeat in 10ms units.\n  int8_t i, j, sum = (nbyte+2)*repeat + addH + addL;\n  if (credit_10ms < sum) {\n    DS_P(PSTR(\"LOVF\\r\\n\"));\n    return;\n  }\n  credit_10ms -= sum;\n\n  LED_ON();\n\n#if defined (HAS_IRRX) || defined (HAS_IRTX) || defined (HAS_I2CSLAVE) // Block IR_Reception\n  cli();\n#  if defined (HAS_I2CSLAVE) // Disable I2C\n    TWCR_OFF;\n#  endif\t\t\n#endif\n\n#ifdef USE_RF_MODE\n  change_RF_mode(RF_mode_slow);\n#else\n#ifdef HAS_MORITZ\n  uint8_t restore_moritz = 0;\n  if(moritz_on) {\n    restore_moritz = 1;\n    moritz_on = 0;\n    set_txreport(\"21\");\n  }\n#endif\n  if(!cc_on)\n    set_ccon();\n#endif\n  ccTX();                                       // Enable TX \n  do {\n\n    if(addH>0 || addL>0) {\n      CC1100_SET_OUT;         // High\n      my_delay_us(TMUL(addH));\n\n      CC1100_CLEAR_OUT;       // Low\n      my_delay_us(TMUL(addL));\n    }\n\n    for(i = 0; i < sync; i++)                   // sync\n      send_bit(0);\n    if(sync)\n      send_bit(1);\n    \n    for(j = 0; j < nbyte; j++) {                // whole bytes\n      for(i = 7; i >= 0; i--)\n        send_bit(msg[j] & _BV(i));\n    }\n    for(i = 7; i > bitoff; i--)                 // broken bytes\n      send_bit(msg[j] & _BV(i));\n\n    my_delay_ms(pause);                         // pause\n\n  } while(--repeat > 0);\n\n  if(TX_REPORT) {                               // Enable RX\n    ccRX();\n  } else {\n    ccStrobe(CC1100_SIDLE);\n  }\n\n#if defined (HAS_IRRX) || defined (HAS_IRTX) || defined(HAS_I2CSLAVE) // Activate IR_Reception\n  sei(); \n#  if defined (HAS_I2CSLAVE) // Enable TWI again\n    TWCR_INIT;\n#  endif\t\t\t\t\n#endif\n\n#ifdef USE_RF_MODE\n  restore_RF_mode();\n#else\n#ifdef HAS_MORITZ\n  if(restore_moritz)\n    rf_moritz_init();\n#endif\n#endif\n\n  LED_OFF();\n}\n\nstatic int\nabit(uint8_t b, uint8_t *obuf, uint8_t *obyp, uint8_t obi)\n{\n  uint8_t oby = * obyp;\n  if(b)\n    obuf[oby] |= _BV(obi);\n  if(obi-- == 0) {\n    oby++;\n    if(oby < MAX_SNDRAW)\n      *obyp = oby;\n    obi = 7; obuf[oby] = 0;\n  }\n  return obi;\n}\n\nvoid\naddParityAndSendData(uint8_t *hb, uint8_t hblen,\n                uint8_t startcs, uint8_t repeat)\n{\n  uint8_t iby, obuf[MAX_SNDRAW], oby;\n  int8_t ibi, obi;\n\n  hb[hblen] = cksum1(startcs, hb, hblen);\n  hblen++;\n\n  // Copy the message and add parity-bits\n  iby=oby=0;\n  ibi=obi=7;\n  obuf[oby] = 0;\n\n  while(iby<hblen) {\n    obi = abit(hb[iby] & _BV(ibi), obuf, &oby, obi);\n    if(ibi-- == 0) {\n      obi = abit(parity_even_bit(hb[iby]), obuf, &oby, obi);\n      ibi = 7; iby++;\n    }\n  }\n  if(obi-- == 0) {                   // Trailing 0 bit: no need for a check\n    oby++; obi = 7;\n  }\n\n#if defined(HAS_RAWSEND) || defined(HAS_HOERMANN_SEND)\n  zerohigh = zerolow = TDIV(FS20_ZERO);\n  onehigh = onelow = TDIV(FS20_ONE);\n#endif\n  sendraw(obuf, 12, oby, obi, repeat, FS20_PAUSE, 0, 0);\n}\n\nvoid\naddParityAndSend(char *in, uint8_t startcs, uint8_t repeat)\n{\n  uint8_t hb[MAX_SNDMSG], hblen;\n  hblen = fromhex(in+1, hb, MAX_SNDMSG-1);\n  addParityAndSendData(hb, hblen, startcs, repeat);\n}\n\n\nvoid\nfs20send(char *in)\n{\n#ifdef HAS_DMX\n  if(dmx_fs20_emu( in ))\n    return;\n#endif\n#ifdef HAS_HELIOS\n  if (helios_fs20_emu( in ))\n    return;\n#endif\n  addParityAndSend(in, 6, 3);\n}\n\n#ifdef HAS_RAWSEND\n//G0843E540202040A78DE81D80\n//G0843E540202040A78DE80F80\n\nvoid\nrawsend(char *in)\n{\n  uint8_t hb[16]; // 33/2: see ttydata.c\n  uint8_t nby, nbi, pause, repeat, sync;\n\n  fromhex(in+1, hb, sizeof(hb));\n  sync = hb[0];\n  nby = (hb[1] >> 4);\n  nbi = (hb[1] & 0xf);\n  pause = (hb[2] >> 4);\n  repeat = (hb[2] & 0xf);\n  zerohigh = hb[3];\n  zerolow  = hb[4];\n  onehigh  = hb[5];\n  onelow   = hb[6];\n  sendraw(hb+7, sync, nby, nbi, repeat, pause, 0, 0);\n}\n\n\n// E0205E7000000000000\nvoid\nem_send(char *in)\n{\n  uint8_t iby, obuf[MAX_SNDRAW], oby;\n  int8_t  ibi, obi;\n  uint8_t hb[MAX_SNDMSG];\n\n  uint8_t hblen = fromhex(in+1, hb, MAX_SNDMSG-1);\n\n  // EM is always 9 bytes payload!\n  if (hblen != 9) {\n//  DS_P(PSTR(\"LENERR\\r\\n\"));\n    return;\n  }\n  \n  onehigh = zerohigh = zerolow = TDIV(EM_ZERO);\n  onelow  = TDIV(EM_ONE);\n\n  // calc checksum\n  hb[hblen] = cksum2( hb, hblen );\n  hblen++;\n\n  // Copy the message and add parity-bits\n  iby=oby=0;\n  ibi=obi=7;\n  obuf[oby] = 0;\n  \n  while(iby<hblen) {\n    obi = abit(hb[iby] & _BV(7-ibi), obuf, &oby, obi);\n    if(ibi-- == 0) {\n      obi = abit(1, obuf, &oby, obi); // always 1\n      ibi = 7; iby++;\n    }\n  }\n  if(obi-- == 0) {                   // Trailing 0 bit: indicating EOM\n    oby++; obi = 7;\n  }\n\n  sendraw(obuf, 12, oby, obi, 3, FS20_PAUSE, 0, 0);\n}\n\nvoid\nks_send(char *in)\n{\n  uint8_t iby, obuf[MAX_SNDRAW], oby;\n  int8_t  ibi, obi;\n  uint8_t hb[MAX_SNDMSG];\n\n  uint8_t hblen = fromhex(in+1, hb, MAX_SNDMSG-1);\n\n//  KS may have different length - TODO: byte padding for some sensor types\n//  if (hblen != 9) {\n//  DS_P(PSTR(\"KS send\\r\\n\"));\n//    return;\n//  }\n\n  zerohigh = TDIV(855); \n  zerolow  = TDIV(366);\n  onehigh  = TDIV(366); \n  onelow   = TDIV(855);\n\n  // calc checksum\n  hb[hblen] = cksum3( hb, hblen );\n  hblen++;\n\n  // Copy the message and add parity-bits\n  iby=oby=0;\n  ibi=obi=7;\n  obuf[oby] = 0;\n\n  while(iby<hblen) {\n\n    for (ibi=0; ibi<4; ibi++)\n      obi = abit(hb[iby] & _BV(ibi), obuf, &oby, obi);\n\n    obi = abit(1, obuf, &oby, obi); // always 1\n\n    for (ibi=4; ibi<8; ibi++)\n      obi = abit(hb[iby] & _BV(ibi), obuf, &oby, obi);\n\n    obi = abit(1, obuf, &oby, obi); // always 1\n\n    iby++;\n  }\n\n  sendraw(obuf, 10, oby, obi, 3, FS20_PAUSE, 0, 0);\n}\n\n#endif\n\n#ifdef HAS_UNIROLL\n//G0031E368232368hhhhdc1\n//16 bit group-address 4 bit channel-address 4 bit command 1 1-bit\n\nvoid\nur_send(char *in)\n{\n  uint8_t hb[4];\n\n  fromhex(in+1, hb, 3);\n  zerohigh = TDIV(1700);\n  zerolow  = TDIV(590);\n  onehigh  = TDIV(540);\n  onelow   = TDIV(1700);\n  hb[3] = 0x80;     //10000000\n  sendraw(hb, 0, 3, 6, 3, 15, 0, 0);\n}\n#endif\n\n#ifdef HAS_HOERMANN_SEND\nvoid\nhm_send(char *in)\n{\n  uint8_t hb[MAX_SNDMSG];\n  uint8_t hblen = fromhex(in + 2, hb, MAX_SNDMSG - 1);\n\n  if(hblen != 5)       // LENERR\n    return;\n  zerohigh = TDIV(HRM_ZERO_H);\n  zerolow = TDIV(HRM_ZERO_L);\n  onehigh = TDIV(HRM_ONE_H);\n  onelow = TDIV(HRM_ONE_L);\n\n  sendraw(hb, 8, 4, 4, 5, 0, TDIV(HRM_EXTRA_SYNC_H), TDIV(HRM_EXTRA_SYNC_L));\n}\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include <SPI.h>\n#include <EEPROM.h>\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n#include \"board.h\"\n#include \"esp_timer.h\"\n\nextern \"C\" {\n  volatile uint32_t ticks = 0;\n  uint8_t SREG = 0;\n  uint8_t TIMSK0 = 0;\n}\nvolatile uint32_t gdo_isr_count = 0;\nvolatile uint32_t gdo_high_count = 0;\nvolatile uint32_t gdo_low_count = 0;\nvolatile uint32_t last_isr_time_val = 0;\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"rf_receive.h\"\n\n// Forward declarations of CULFW functions\nvoid rf_receive_TimerElapsedCallback(void);\nvoid CC1100_in_callback(void);\nvoid clock_TimerElapsedCallback(void);\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler();\n\n// Timer for RF Silence timeout\nstatic hw_timer_t * rf_hw_timer = NULL;\nstatic volatile uint32_t rf_reload_val = 4000;\nstatic volatile bool rf_timer_enabled = false;\n\nvoid IRAM_ATTR onRfTimer() {\n    rf_receive_TimerElapsedCallback();\n}\n\nvoid hal_timer_init(void) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    rf_hw_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer);\n#else\n    rf_hw_timer = timerBegin(1, 80, true); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer, true);\n#endif\n}\n\nuint32_t hal_get_ticks(void) {\n    return ticks;\n}\n\nvoid hal_timer_task(void) {\n    static uint32_t last_tick_ms = 0;\n    uint32_t now = millis();\n    if (now - last_tick_ms >= 8) { // 125Hz approx\n        last_tick_ms = now;\n        clock_TimerElapsedCallback();\n    }\n}\n\n// RF Timer HAL\nvoid IRAM_ATTR hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {\n    if (enable) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerRestart(rf_hw_timer);\n        timerAlarm(rf_hw_timer, rf_reload_val, false, 0);\n#else\n        timerAlarmWrite(rf_hw_timer, rf_reload_val, false);\n        timerAlarmEnable(rf_hw_timer);\n        timerWrite(rf_hw_timer, 0);\n#endif\n        rf_timer_enabled = true;\n    } else {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerStop(rf_hw_timer);\n#else\n        timerAlarmDisable(rf_hw_timer);\n#endif\n        rf_timer_enabled = false;\n    }\n}\n\nuint32_t HAL_timer_get_reload_register(uint8_t instance) {\n    return rf_reload_val;\n}\n\nvoid HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {\n    rf_reload_val = value;\n    if (rf_timer_enabled) {\n        hal_enable_CC_timer_int(instance, true);\n    }\n}\n\nstatic uint32_t rf_counter_offset = 0;\nuint32_t IRAM_ATTR HAL_timer_get_counter_value(uint8_t instance) {\n    return (uint32_t)esp_timer_get_time() - rf_counter_offset;\n}\n\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {\n    rf_counter_offset = (uint32_t)esp_timer_get_time() - value;\n}\n\nvoid IRAM_ATTR HAL_timer_reset_counter_value(uint8_t instance) {\n    rf_counter_offset = (uint32_t)esp_timer_get_time();\n}\n\n// GPIO stuff\nvoid HAL_LED_Init(void) {\n    pinMode(LED_PIN, OUTPUT);\n}\n\nvoid HAL_LED_Set(LED_List led, LED_State state) {\n    digitalWrite(LED_PIN, state == LED_on ? HIGH : LOW);\n}\n\nvoid HAL_LED_Toggle(LED_List led) {\n    digitalWrite(LED_PIN, !digitalRead(LED_PIN));\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler() {\n    last_isr_time_val = (uint32_t)esp_timer_get_time();\n    gdo_isr_count++;\n    if (digitalRead(GDO0_PIN)) gdo_high_count++;\n    else gdo_low_count++;\n    if (rf_timer_enabled) {\n        timerWrite(rf_hw_timer, 0);\n    }\n    CC1100_in_callback();\n}\n\nvoid hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(CC1100_CS_PIN, OUTPUT);\n    digitalWrite(CC1100_CS_PIN, HIGH);\n    \n    pinMode(GDO0_PIN, INPUT); \n    pinMode(GDO2_PIN, INPUT);\n}\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {\n    if (enable) {\n        pinMode(GDO0_PIN, INPUT); \n        attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n    } else {\n        detachInterrupt(digitalPinToInterrupt(GDO0_PIN));\n    }\n}\n\nvoid hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {\n    if (pin == CC_Pin_CS) {\n        digitalWrite(CC1100_CS_PIN, state);\n    } else if (pin == CC_Pin_Out) {\n        pinMode(GDO0_PIN, OUTPUT);\n        digitalWrite(GDO0_PIN, state);\n    }\n}\n\nuint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {\n    if (pin == CC_Pin_In) {\n        return digitalRead(GDO0_PIN);\n    }\n    return 0;\n}\n\n// SPI stuff\nvoid spi_init(void) {\n    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);\n    SPI.setFrequency(2000000); // 2MHz for stability\n    pinMode(SPI_SS, OUTPUT);\n    digitalWrite(SPI_SS, HIGH);\n}\n\nuint8_t spi_send(uint8_t data) {\n    return SPI.transfer(data);\n}\n\n// Delay\nextern \"C\" void my_delay_ms(uint8_t ms) {\n    delay(ms);\n}\n\nextern \"C\" void my_delay_us(uint16_t us) {\n    delayMicroseconds(us);\n}\n\n// EEPROM emulation\nextern \"C\" void hal_eeprom_init(void) {\n    if (!EEPROM.begin(512)) {\n    }\n}\n\nextern \"C\" uint8_t eeprom_read_byte(uint8_t *addr) {\n    return EEPROM.read((size_t)addr);\n}\n\nextern \"C\" void eeprom_write_byte(uint8_t *addr, uint8_t value) {\n    EEPROM.write((size_t)addr, value);\n    EEPROM.commit();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 26013 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nesptool.py v4.9.0\nSHA digest in image updated\nWrote 0x55570 bytes to file /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin, ready to flash to offset 0x0\nFactory Image erfolgreich erstellt: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin\ncollect_binaries([\".pio/build/XIAO-ESP32-C3/firmware.bin\"], [\".pio/build/XIAO-ESP32-C3/firmware.elf\"])\n[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.144)\n========================= [SUCCESS] Took 23.34 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:23.337\n========================= 1 succeeded in 00:00:23.337 =========================\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "*   **Protokoll-Unterst\u00fctzung (DONE):** Die Flags `HAS_IT`, `HAS_INTERTECHNO`, `HAS_HMS`, `HAS_ESA`, `HAS_TCM97001`, `HAS_SOMFY_RTS` wurden in `culfw/Devices/ESP32/board.h` f\u00fcr die ESP32-Targets aktiviert. Der `i`-Befehl f\u00fcr Intertechno wurde in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt mit `it_func` verkn\u00fcpft, ebenso `Y` f\u00fcr Somfy RTS.\n*   **GDO0 Pin Mode Handling for TX Bit-Banging (DONE):** `hal.cpp` wurde aktualisiert, um den `pinMode` von `GDO0_PIN` dynamisch zwischen `INPUT` (f\u00fcr RX) und `OUTPUT` (f\u00fcr TX Bit-Banging) umzuschalten. Dies erm\u00f6glicht Protokollen wie Intertechno und Somfy RTS, das GDO0-Signal f\u00fcr ASK-Modulation korrekt zu treiben, w\u00e4hrend die Empfangsf\u00e4higkeit f\u00fcr SlowRF erhalten bleibt. `hal_CC_Pin_Set` schaltet nun bei Zugriff auf `CC_Pin_Out` automatisch auf `OUTPUT`, w\u00e4hrend `hal_enable_CC_GDOin_int` und `hal_CC_GDO_init` den Pin auf `INPUT` zur\u00fccksetzen.\n*   **Compiler Warning Reduction (DONE):** Einsatz von `#pragma GCC system_header` in den AVR-Kompatibilit\u00e4ts-Headern (`io.h`, `interrupt.h`), um massenhafte Redefinition-Warnungen zu unterdr\u00fccken und den Build-Output zu bereinigen.\n*   **Linker Fixes (DONE):** Korrekte Verwendung von `extern \"C\"` Bl\u00f6cken in `hal.cpp` f\u00fcr globale Variablen (`ticks`, `SREG`, `TIMSK0`), um Verkn\u00fcpfungsfehler zwischen C- und C++-Modulen zu vermeiden.",
+            "path": "MEMORY.md",
+            "original_text": "*   **Protokoll-Unterst\u00fctzung (DONE):** Die Flags `HAS_IT`, `HAS_INTERTECHNO`, `HAS_HMS`, `HAS_ESA`, `HAS_TCM97001` wurden in `culfw/Devices/ESP32/board.h` f\u00fcr die ESP32-Targets aktiviert. Der `i`-Befehl f\u00fcr Intertechno wurde in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt mit `it_func` verkn\u00fcpft."
+          }
+        }
+      }
+    ]
   }
 ]
