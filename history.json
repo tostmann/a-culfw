@@ -1047,5 +1047,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "const uint8_t PROGMEM ASKSIN_CFG[] = {\n     0x00, 0x2e,\n     0x02, 0x07,\n     0x03, 0x0d,\n",
+            "path": "culfw/clib/rf_asksin.c",
+            "original_text": "const uint8_t PROGMEM ASKSIN_CFG[] = {\n     0x00, 0x07,\n     0x02, 0x2e,\n     0x03, 0x0d,\n"
+          }
+        }
+      }
+    ]
   }
 ]
