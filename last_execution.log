@@ -6,9 +6,9 @@ Verbose mode can be enabled via `-v, --verbose` option
 * FIRMWARE VERSION UPDATE                 *
 *******************************************
 * Base Version: 1.26
-* Build Number: 116
-* New Version:  1.26.116
-* Build Date:   2026-02-10 15:47:42
+* Build Number: 117
+* New Version:  1.26.117
+* Build Date:   2026-02-10 15:49:23
 *******************************************
 
 CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
@@ -109,7 +109,6 @@ ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/fht.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
 ESP32/hal.cpp:10:30: warning: 'ticks' initialized and declared 'extern'
  extern "C" volatile uint32_t ticks = 0;
                               ^~~~~
@@ -119,6 +118,7 @@ ESP32/hal.cpp:11:20: warning: 'SREG' initialized and declared 'extern'
 ESP32/hal.cpp:12:20: warning: 'TIMSK0' initialized and declared 'extern'
  extern "C" uint8_t TIMSK0 = 0;
                     ^~~~~~
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/hw_autodetect.c.o
 In file included from ESP32/avr/avr/pgmspace.h:3,
                  from clib/fncollection.c:6:
@@ -174,6 +174,7 @@ ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/lacrosse.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/3outof6.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/intertechno.c:11:
@@ -194,7 +195,6 @@ In file included from clib/intertechno.c:7:
 ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
  #define cli()
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/3outof6.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/crc.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
@@ -262,7 +262,6 @@ In file included from clib/rf_native.c:11:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_bucket.c.o
 In file included from ESP32/avr/avr/pgmspace.h:3,
                  from clib/rf_receive.c:25:
 /root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
@@ -281,7 +280,6 @@ In file included from clib/rf_receive.c:24:
 ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
  #define cli()
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_esa.c.o
 clib/rf_receive.c: In function 'CC1100_in_callback':
 clib/rf_receive.c:1186:25: warning: passing argument 2 of 'calcOcrValue' discards 'volatile' qualifier from pointer target type [-Wdiscarded-qualifiers]
          calcOcrValue(b, &hightime[CC_INSTANCE], &lowtime[CC_INSTANCE], false);
@@ -295,13 +293,13 @@ clib/rf_receive.c:1186:49: warning: passing argument 3 of 'calcOcrValue' discard
 clib/rf_receive.c:752:67: note: expected 'pulse_t *' {aka 'short unsigned int *'} but argument is of type 'volatile pulse_t *' {aka 'volatile short unsigned int *'}
  static void calcOcrValue(bucket_t *b, pulse_t *hightime, pulse_t *lowtime, bool syncHighTime) {
                                                           ~~~~~~~~~^~~~~~~
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_bucket.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_esa.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_hms.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_it.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_revolt.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tcm97001.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tx3.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_router.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_rwe.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/rf_receive_revolt.c:28:
@@ -315,9 +313,10 @@ In file included from clib/rf_receive.h:4,
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_router.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_rwe.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_send.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_zwave.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/ringbuffer.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -355,7 +354,6 @@ In file included from clib/rf_send.c:18:
 clib/rf_receive.h:33:25: note: expected 'char *' but argument is of type 'const char *'
  void set_txreport(char *in);
                    ~~~~~~^~
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/somfy_rts.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -367,6 +365,8 @@ In file included from clib/rf_zwave.c:1:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/ringbuffer.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/somfy_rts.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/stringfunc.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/ttydata.c.o
 In file included from ESP32/avr/avr/pgmspace.h:3,
@@ -441,8 +441,8 @@ Linking .pio/build/XIAO-ESP32-C3/firmware.elf
 Retrieving maximum program size .pio/build/XIAO-ESP32-C3/firmware.elf
 Checking size .pio/build/XIAO-ESP32-C3/firmware.elf
 Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
-RAM:   [=         ]   5.6% (used 18476 bytes from 327680 bytes)
-Flash: [==        ]  20.6% (used 270124 bytes from 1310720 bytes)
+RAM:   [=         ]   5.6% (used 18484 bytes from 327680 bytes)
+Flash: [==        ]  20.6% (used 270256 bytes from 1310720 bytes)
 Building .pio/build/XIAO-ESP32-C3/firmware.bin
 esptool.py v4.9.0
 Creating esp32c3 image...
@@ -453,10 +453,10 @@ merge_bin([".pio/build/XIAO-ESP32-C3/firmware.bin"], [".pio/build/XIAO-ESP32-C3/
 Ausführung: /root/.platformio/penv/bin/python /root/.platformio/packages/tool-esptoolpy/esptool.py --chip esp32c3 merge_bin -o /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/bootloader.bin 0x8000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/partitions.bin 0xe000 /root/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin 0x10000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/firmware.bin
 esptool.py v4.9.0
 SHA digest in image updated
-Wrote 0x553d0 bytes to file /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin, ready to flash to offset 0x0
+Wrote 0x55470 bytes to file /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin, ready to flash to offset 0x0
 Factory Image erfolgreich erstellt: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin
 collect_binaries([".pio/build/XIAO-ESP32-C3/firmware.bin"], [".pio/build/XIAO-ESP32-C3/firmware.elf"])
-[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.116)
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.117)
 Configuring upload protocol...
 AVAILABLE: cmsis-dap, esp-bridge, esp-builtin, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
 CURRENT: upload_protocol = esptool
@@ -482,38 +482,38 @@ Flash will be erased from 0x00010000 to 0x00055fff...
 SHA digest in image updated
 Compressed 12464 bytes to 9064...
 Writing at 0x00000000... (100 %)
-Wrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 448.8 kbit/s)...
+Wrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 441.1 kbit/s)...
 Hash of data verified.
 Compressed 3072 bytes to 146...
 Writing at 0x00008000... (100 %)
-Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 491.0 kbit/s)...
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 472.2 kbit/s)...
 Hash of data verified.
 Compressed 8192 bytes to 47...
 Writing at 0x0000e000... (100 %)
-Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 789.1 kbit/s)...
+Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 752.8 kbit/s)...
 Hash of data verified.
-Compressed 283600 bytes to 158713...
+Compressed 283760 bytes to 158731...
 Writing at 0x00010000... (10 %)
-Writing at 0x0001b0b8... (20 %)
-Writing at 0x000230a8... (30 %)
-Writing at 0x0002a1fc... (40 %)
-Writing at 0x00030182... (50 %)
-Writing at 0x000363e8... (60 %)
-Writing at 0x0003c311... (70 %)
-Writing at 0x00043fad... (80 %)
-Writing at 0x0004ab8d... (90 %)
-Writing at 0x00050c2c... (100 %)
-Wrote 283600 bytes (158713 compressed) at 0x00010000 in 2.2 seconds (effective 1036.9 kbit/s)...
+Writing at 0x0001b0c1... (20 %)
+Writing at 0x000230ec... (30 %)
+Writing at 0x0002a244... (40 %)
+Writing at 0x000301d8... (50 %)
+Writing at 0x0003642c... (60 %)
+Writing at 0x0003c35a... (70 %)
+Writing at 0x0004400d... (80 %)
+Writing at 0x0004abef... (90 %)
+Writing at 0x00050c9c... (100 %)
+Wrote 283760 bytes (158731 compressed) at 0x00010000 in 2.2 seconds (effective 1034.1 kbit/s)...
 Hash of data verified.
 
 Leaving...
 Hard resetting via RTS pin...
-========================= [SUCCESS] Took 15.35 seconds =========================
+========================= [SUCCESS] Took 20.38 seconds =========================
 
 Environment    Status    Duration
 -------------  --------  ------------
-XIAO-ESP32-C3  SUCCESS   00:00:15.346
-========================= 1 succeeded in 00:00:15.346 =========================
+XIAO-ESP32-C3  SUCCESS   00:00:20.383
+========================= 1 succeeded in 00:00:20.383 =========================
 Opening /dev/ttyACM0...
 Opening /dev/ttyACM1...
 Waiting for ESP32 Ready...
@@ -525,940 +525,800 @@ Waiting for ESP32 Ready...
 [ESP32 Startup] ISR H/L/T: 0/0/0, Ticks: 739, BucketUsed: 0
 Warning: 'Ready.' not found, but continuing...
 Setting ESP32 to X1F...
-[ESP32 Init] SC.!r255 f158
+[ESP32 Init] SC.!r506 f125
 Sending FS20 from REF...
 Send 1/5
-[ESP32] !r255 f31356
-[ESP32] S!r24 f24
+[ESP32] !r506 f31387
+[ESP32] S!r27 f24
+[ESP32] !r26 f26
+[ESP32] !r24 f25
+[ESP32] !r25 f25
+[ESP32] !r25 f26
+[ESP32] !r25 f25
+[ESP32] !r24 f25
+[ESP32] !r24 f26
+[ESP32] !r24 f26
+[ESP32] !r24 f26
+[ESP32] C.!r39 f37
+[ESP32] !r24 f25
+[ESP32] S!r24 f28
+[ESP32] !r37 f25
+[ESP32] S!r26 f36
+[ESP32] S!r25 f26
+[ESP32] !r37 f24
+[ESP32] S!r26 f36
+[ESP32] S!r24 f26
+[ESP32] !r24 f26
+[ESP32] !r24 f27
+[ESP32] C.!r37 f38
+[ESP32] !r534 f39
+[ESP32] S!r23 f26
+[ESP32] S!r36 f39
+[ESP32] S!r24 f26
+[ESP32] !r26 f26
+[ESP32] S!r35 f39
+[ESP32] S!r25 f27
+[ESP32] !r24 f24
+[ESP32] !r24 f26
+[ESP32] !r26 f25
+[ESP32] !r26 f25
+[ESP32] !r26 f26
+[ESP32] C.!r37 f37
+[ESP32] !r536 f38
+[ESP32] S!r26 f24
+[ESP32] !r23 f26
+[ESP32] !r35 f28
+[ESP32] S!r24 f39
+[ESP32] S!r24 f26
+[ESP32] !r24 f26
+[ESP32] SS!r25 f25
+[ESP32] !r25 f25
+[ESP32] S!r37 f38
+[ESP32] S!r24 f25
+[ESP32] S!r38 f37
+[ESP32] !r37 f38
+[ESP32] !r37 f38
+[ESP32] !r24 f37
+[ESP32] C.!r536 f26
+[ESP32] !r23 f39
+[ESP32] !r25 f652
+[ESP32] S!r24 f27
+[ESP32] !r24 f26
+[ESP32] !r24 f26
+[ESP32] !r24 f28
+[ESP32] !r23 f26
+[ESP32] !r25 f24
+[ESP32] !r25 f26
+[ESP32] !r25 f25
+[ESP32] !r26 f25
+[ESP32] !r37 f25
+[ESP32] C.!r523 f39
+[ESP32] S!r24 f26
+[ESP32] !r24 f25
+[ESP32] S!r37 f37
+[ESP32] S!r25 f25
+[ESP32] !r24 f25
+[ESP32] S!r38 f39
+[ESP32] S!r26 f24
+[ESP32] !r24 f26
+[ESP32] !r24 f25
+[ESP32] C.!r537 f38
+[ESP32] !r24 f35
+[ESP32] S!r35 f28
+[ESP32] S!r27 f38
+[ESP32] S!r25 f26
+[ESP32] !r37 f24
+[ESP32] S!r24 f38
+[ESP32] S!r25 f26
+[ESP32] !r23 f28
+[ESP32] !r25 f24
+[ESP32] !r25 f25
+[ESP32] !r23 f28
+[ESP32] C.!r535 f37
+[ESP32] !r25 f38
+[ESP32] S!r24 f26
+[ESP32] !r25 f26
+[ESP32] S!r37 f36
+[ESP32] S!r24 f27
+[ESP32] !r26 f25
+[ESP32] !r26 f26
+[ESP32] S!r24 f37
+[ESP32] S!r26 f27
+[ESP32] !r37 f24
+[ESP32] S!r24 f37
+[ESP32] S!r36 f27
+[ESP32] S!r36 f38
+[ESP32] !r37 f38
+[ESP32] !r38 f37
+[ESP32] C.!r25 f25
+[ESP32] !r26 f37
+[ESP32] !r26 f651
+[ESP32] S!r25 f27
+[ESP32] !r26 f25
+[ESP32] !r27 f24
+[ESP32] !r25 f26
+[ESP32] !r24 f25
+[ESP32] !r25 f27
+[ESP32] !r23 f25
 [ESP32] !r24 f26
 [ESP32] !r23 f28
-[ESP32] !r25 f25
-[ESP32] !r24 f26
+[ESP32] !r26 f25
+[ESP32] C.!r36 f38
+[ESP32] !r525 f25
+[ESP32] S!r25 f25
+[ESP32] !r37 f26
+[ESP32] S!r24 f37
+[ESP32] S!r25 f25
+[ESP32] !r37 f27
+[ESP32] S!r24 f38
+[ESP32] S!r25 f25
 [ESP32] !r24 f25
-[ESP32] !r24 f26
 [ESP32] !r25 f26
+[ESP32] C.!r36 f37
+[ESP32] !r537 f38
+[ESP32] S!r24 f25
+[ESP32] S!r38 f38
+[ESP32] S!r24 f26
 [ESP32] !r25 f26
-[ESP32] !r24 f25
-[ESP32] C.!r38 f37
-[ESP32] !r25 f25
-[ESP32] S!r26 f25
-[ESP32] !r35 f25
-[ESP32] S!r24 f39
-[ESP32] S!r24 f28
-[ESP32] !r35 f26
-[ESP32] S!rS25 f26
-[ESP32] !r25 f25
-[ESP32] !r25 f26
-[ESP32] !r25 f25
-[ESP32] C.!r37 f36
-[ESP32] !r287 f38
-[ESP32] S!r25 f26
-[ESP32] S!r37 f37
-[ESP32] S!r25 f24
-[ESP32] !r25 f26
-[ESP32] S!r36 f37
-[ESP32] S!r25 f26
-[ESP32] !r24 f26
-[ESP32] !r25 f26
+[ESP32] S!r36 f39
+[ESP32] S!r24 f25
 [ESP32] !r24 f28
+[ESP32] !r26 f25
+[ESP32] !r25 f24
+[ESP32] !r27 f25
+[ESP32] !r26 f25
+[ESP32] C.!r38 f38
+[ESP32] !r536 f36
+[ESP32] S!r24 f28
 [ESP32] !r24 f26
 [ESP32] !r38 f25
-[ESP32] C.!r38 f38
-[ESP32] !r286 f37
+[ESP32] S!r24 f38
+[ESP32] S!r27 f25
+[ESP32] !r24 f26
+[ESP32] SS!r24 f26
+[ESP32] !r24 f26
+[ESP32] S!r37 f38
 [ESP32] S!r24 f26
-[ESP32] !r25 f24
-[ESP32] !r35 f27
+[ESP32] S!r37 f37
+[ESP32] !r36 f40
+[ESP32] !r37 f39
+[ESP32] !r24 f36
+[ESP32] C.!r535 f26
+[ESP32] !r24 f39
+[ESP32] ISR H/L/T: 201/190/391, Ticks: 864, BucketUsed: 0
+Send 2/5
+[ESP32] !r24 f20741
+[ESP32] S!r28 f26
+[ESP32] !r22 f28
+[ESP32] !r23 f27
+[ESP32] !r24 f27
+[ESP32] !r23 f26
+[ESP32] !r24 f27
+[ESP32] !r25 f27
+[ESP32] !r23 f26
+[ESP32] !r24 f26
+[ESP32] !r24 f28
+[ESP32] C.!r34 f39
+[ESP32] !r24 f28
+[ESP32] S!r24 f25
+[ESP32] !r37 f26
 [ESP32] S!r25 f39
 [ESP32] S!r24 f26
-[ESP32] !r24 f25
-[ESP32] SS!r25 f26
-[ESP32] !r24 f25
-[ESP32] S!r38 f37
-[ESP32] S!r24 f25
-[ESP32] S!r39 f38
-[ESP32] !r36 f39
-[ESP32] !r37 f38
-[ESP32] !r23 f38
-[ESP32] C.!r286 f27
-[ESP32] !r24 f38
-[ESP32] !r25 f652
+[ESP32] !r36 f26
+[ESP32] S!r24 f38
 [ESP32] S!r24 f26
 [ESP32] !r24 f26
-[ESP32] !r24 f25
-[ESP32] !r25 f27
+[ESP32] !r24 f27
+[ESP32] C.!r35 f39
+[ESP32] !r535 f38
+[ESP32] S!r24 f28
+[ESP32] S!r35 f37
+[ESP32] S!r24 f28
+[ESP32] !r24 f26
+[ESP32] S!r36 f38
+[ESP32] S!r23 f27
+[ESP32] !r24 f27
+[ESP32] !r24 f28
+[ESP32] !r24 f26
+[ESP32] !r24 f28
+[ESP32] !r37 f25
+[ESP32] C.!r37 f37
+[ESP32] !r535 f38
+[ESP32] S!r24 f27
+[ESP32] !r23 f26
+[ESP32] !r38 f26
+[ESP32] S!r26 f36
+[ESP32] S!r23 f26
+[ESP32] !r24 f28
+[ESP32] SS!r24 f27
+[ESP32] !r24 f26
+[ESP32] S!r35 f38
+[ESP32] S!r25 f28
+[ESP32] S!r34 f39
+[ESP32] !r35 f40
+[ESP32] !r36 f39
+[ESP32] !r24 f38
+[ESP32] C.!r533 f28
+[ESP32] !r23 f39
+[ESP32] !r25 f654
+[ESP32] S!r25 f24
+[ESP32] !r26 f25
 [ESP32] !r26 f24
 [ESP32] !r25 f25
-[ESP32] !r25 f26
-[ESP32] !r25 f25
 [ESP32] !r24 f25
-[ESP32] !r38 f26
-[ESP32] C.!r274 f37
-[ESP32] S!r27 f25
-[ESP32] !r25 f24
-[ESP32] S!r37 f39
+[ESP32] !r26 f26
+[ESP32] !r25 f25
+[ESP32] !r26 f25
+[ESP32] !r25 f25
+[ESP32] !r39 f24
+[ESP32] C.!r525 f36
+[ESP32] S!r26 f23
+[ESP32] !r26 f26
+[ESP32] S!r35 f39
 [ESP32] S!r25 f26
-[ESP32] !r24 f25
-[ESP32] S!r37 f37
-[ESP32] S!r24 f27
-[ESP32] !r25 f26
-[ESP32] !r24 f25
-[ESP32] C.!r287 f37
-[ESP32] !r24 f38
-[ESP32] S!r36 f26
-[ESP32] S!r24 f38
-[ESP32] S!r25 f25
-[ESP32] S!r26 fS37
-[ESP32] !r24 f26
-[ESP32] !r23 f26
-[ESP32] !r25 f26
-[ESP32] !r24 f26
-[ESP32] !r24 f26
-[ESP32] C.!r286 f38
-[ESP32] !r24 f38
-[ESP32] S!r24 f26
+[ESP32] !r24 f27
+[ESP32] S!r36 f37
+[ESP32] S!r25 f26
 [ESP32] !r25 f25
-[ESP32] S!r37 f38
-[ESP32] S!r24 f27
-[ESP32] !r24 f26
-[ESP32] !r36 f26
-[ESP32] S!r24 f38
-[ESP32] S!r24 f26
-[ESP32] !r36 f26
+[ESP32] !r24 f25
+[ESP32] C.!r538 f36
+[ESP32] !r26 f37
+[ESP32] S!r39 f23
 [ESP32] S!r24 f37
-[ESP32] S!r37 f28
-[ESP32] S!r37 f38
-[ESP32] !r37 f37
-[ESP32] !r35 f39
-[ESP32] !r37 f37
-[ESP32] C.!r24 f26
-[ESP32] !r286 f37
-[ESP32] !r25 f654
 [ESP32] S!r25 f25
+[ESP32] !r35 f26
+[ESP32] S!r25 f38
+[ESP32] S!r26 f25
+[ESP32] !r25 f27
+[ESP32] !r26 f25
+[ESP32] !r27 f24
+[ESP32] !r26 f25
+[ESP32] C.!r536 f38
+[ESP32] !r26 f37
+[ESP32] S!r25 f25
+[ESP32] !r25 f26
+[ESP32] S!r37 f37
+[ESP32] S!r25 f25
+[ESP32] !r26 f26
+[ESP32] !r38 f23
+[ESP32] S!r38 f38
+[ESP32] S!r24 f25
+[ESP32] !r38 f25
+[ESP32] S!r26 f38
+[ESP32] S!r38 f25
+[ESP32] S!r38 f36
+[ESP32] !r37 f37
+[ESP32] !r37 f37
+[ESP32] C.!r25 f24
+[ESP32] !r26 f36
+[ESP32] !r26 f652
+[ESP32] S!r24 f26
+[ESP32] !r24 f27
 [ESP32] !r24 f25
-[ESP32] !r25 f25
+[ESP32] !r23 f27
+[ESP32] !r24 f26
+[ESP32] !r26 f26
 [ESP32] !r24 f25
-[ESP32] !r25 f25
-[ESP32] !r27 f25
+[ESP32] !r25 f27
 [ESP32] !r24 f26
-[ESP32] !r25 f25
+[ESP32] C.!r24 f65513
+[ESP32] !r535 f39
+[ESP32] S!r24 f26
 [ESP32] !r24 f26
+[ESP32] !r38 f27
+[ESP32] S!r25 f37
+[ESP32] S!r25 f25
+[ESP32] !r37 f25
+[ESP32] S!r26 f37
+[ESP32] S!r25 f27
+[ESP32] !r24 f25
+[ESP32] !r24 f26
+[ESP32] C.!r36 f39
+[ESP32] !r536 f37
+[ESP32] S!r25 f25
+[ESP32] S!r37 f38
+[ESP32] S!r26 f24
+[ESP32] !r25 f27
+[ESP32] S!r37 f36
+[ESP32] S!r26 f25
+[ESP32] !r27 f24
+[ESP32] !r24 f24
+[ESP32] !r23 f26
+[ESP32] !r25 f25
+[ESP32] !r25 f26
+[ESP32] C.!r36 f38
+[ESP32] !r537 f37
+[ESP32] S!r25 f25
+[ESP32] !r25 f26
+[ESP32] !r35 f27
+[ESP32] S!r25 f38
+[ESP32] S!r25 f26
+[ESP32] !r25 f25
+[ESP32] SS!r26 f24
+[ESP32] !r24 f28
+[ESP32] S!r35 f39
+[ESP32] S!r25 f24
+[ESP32] S!r38 f37
+[ESP32] !r36 f38
+[ESP32] !r38 f37
+[ESP32] !r24 f37
+[ESP32] C.!r536 f25
+[ESP32] !r26 f37
+Send 3/5
+[ESP32] !r26 f20742
+[ESP32] S!r27 f23
+[ESP32] !r24 f26
+[ESP32] !r25 f26
+[ESP32] !r24 f28
+[ESP32] !r24 f26
+[ESP32] !r24 f26
+[ESP32] !r26 f25
+[ESP32] !r25 f25
+[ESP32] !r26 f24
+[ESP32] !r25 f24
+[ESP32] C.!r38 f38
+[ESP32] !r26 f26
+[ESP32] S!r25 f26
+[ESP32] !r37 f26
+[ESP32] S!r25 f36
+[ESP32] S!r25 f27
+[ESP32] !r38 f24
+[ESP32] S!r26 f36
+[ESP32] S!r25 f26
+[ESP32] !r24 f28
+[ESP32] !r25 f25
+[ESP32] C.!r37 f38
+[ESP32] !r535 f37
+[ESP32] S!r24 f26
+[ESP32] S!r36 f39
+[ESP32] S!r24 f25
+[ESP32] !r25 f27
+[ESP32] S!r35 f39
+[ESP32] S!r24 f27
+[ESP32] !r25 f25
+[ESP32] !r25 f26
+[ESP32] !r26 f24
+[ESP32] !r24 f25
 [ESP32] !r24 f26
 [ESP32] C.!r37 f37
-[ESP32] !r25 f26
+[ESP32] !r536 f39
 [ESP32] S!r24 f26
-[ESP32] !r35 f26
-[ESP32] S!r26 f39
-[ESP32] S!r24 f25
-[ESP32] !r36 f26
-[ESP32] S!r24 f38
-[ESP32] S!r26 f24
+[ESP32] !r24 f25
+[ESP32] !r35 f28
+[ESP32] S!r25 f37
+[ESP32] S!r24 f27
+[ESP32] !r24 f25
+[ESP32] SS!r25 f26
+[ESP32] !r25 f25
+[ESP32] S!r37 f37
+[ESP32] S!r25 f26
+[ESP32] S!r37 f37
+[ESP32] !r35 f37
+[ESP32] !r37 f39
+[ESP32] !r26 f38
+[ESP32] C.!r536 f25
+[ESP32] !r24 f38
+[ESP32] !r25 f651
+[ESP32] S!r25 f25
+[ESP32] !r24 f26
 [ESP32] !r24 f26
 [ESP32] !r23 f27
-[ESP32] C.!r35 f39
-[ESP32] !r288 f36
-[ESP32] S!r25 f26
-[ESP32] S!r36 f37
-[ESP32] S!r23 f28
-[ESP32] !r24 f26
-[ESP32] S!r36 f38
-[ESP32] S!r24 f25
-[ESP32] !r24 f28
-[ESP32] !r24 f26
-[ESP32] !r24 f25
-[ESP32] !r25 f27
-[ESP32] !r37 f25
-[ESP32] C.!r37 f37
-[ESP32] !r286 f37
-[ESP32] S!r24 f28
-[ESP32] !r24 f25
-[ESP32] !r37 f27
-[ESP32] S!r24 f38
-[ESP32] S!r25 f25
-[ESP32] !r24 f26
-[ESP32] SS!r25 f26
-[ESP32] !r24 f25
-[ESP32] S!r37 f39
-[ESP32] S!r25 f25
-[ESP32] S!r36 f40
-[ESP32] !r38 f38
-[ESP32] !r36 f37
-[ESP32] !r24 f38
-[ESP32] C.!r285 f27
-[ESP32] !r25 f37
-[ESP32] ISR H/L/T: 197/181/378, Ticks: 864, BucketUsed: 0
-Send 2/5
-[ESP32] !r25 f20745
-[ESP32] S!r27 f26
-[ESP32] !r24 f26
-[ESP32] !r25 f25
-[ESP32] !r24 f28
-[ESP32] !r23 f28
-[ESP32] !r23 f26
 [ESP32] !r25 f26
-[ESP32] !r24 f27
-[ESP32] !r25 f24
-[ESP32] !r25 f25
-[ESP32] C.!r37 f38
-[ESP32] !r273 f26
-[ESP32] S!r25 f27
-[ESP32] !r38 f25
-[ESP32] S!r24 f36
-[ESP32] S!r25 f26
-[ESP32] !r38 f25
-[ESP32] S!r26 f36
-[ESP32] S!r25 f25
-[ESP32] !r25 f25
-[ESP32] !r27 f25
-[ESP32] C.!r36 f39
-[ESP32] !r284 f38
-[ESP32] S!r24 f26
-[ESP32] S!r36 f38
-[ESP32] S!r24 f26
-[ESP32] !r24 f26
-[ESP32] S!r36 f37
-[ESP32] S!r25 f26
-[ESP32] !r25 f24
-[ESP32] !r24 f26
-[ESP32] !r25 f25
 [ESP32] !r25 f25
 [ESP32] !r25 f27
-[ESP32] C.!r36 f37
-[ESP32] !r286 f39
-[ESP32] S!r25 f26
+[ESP32] !r25 f26
 [ESP32] !r24 f25
 [ESP32] !r36 f27
-[ESP32] S!r25 f37
-[ESP32] S!r24 f26
-[ESP32] !r24 f25
-[ESP32] SS!r26 f26
-[ESP32] !r24 f25
-[ESP32] S!r38 f36
-[ESP32] S!r25 f25
-[ESP32] S!r37 f39
-[ESP32] !r36 f38
-[ESP32] !r36 f38
-[ESP32] !r27 f38
-[ESP32] C.!r286 f25
-[ESP32] !r24 f38
-[ESP32] !r25 f651
-[ESP32] S!r25 f27
-[ESP32] !r25 f25
-[ESP32] !r24 f26
-[ESP32] !r25 f27
-[ESP32] !r25 f24
-[ESP32] !r25 f25
-[ESP32] !r24 f28
-[ESP32] !r25 f26
-[ESP32] !r25 f25
-[ESP32] !r36 f26
-[ESP32] C.!r274 f38
-[ESP32] S!r24 f25
+[ESP32] C.!r525 f37
+[ESP32] S!r25 f26
 [ESP32] !r24 f26
 [ESP32] S!r36 f39
-[ESP32] S!r25 f25
-[ESP32] !r24 f26
-[ESP32] S!r37 f37
-[ESP32] S!r24 f26
-[ESP32] !r25 f26
-[ESP32] !r24 f27
-[ESP32] !r38 f25
-[ESP32] C.!r287 f37
-[ESP32] !r25 f35
-[ESP32] S!r35 f26
-[ESP32] S!r24 f39
-[ESP32] S!r25 f26
-[ESP32] !r37 f26
-[ESP32] S!r24 f38
-[ESP32] S!r24 f25
-[ESP32] !r26 f25
-[ESP32] !r26 f25
-[ESP32] !r25 f24
-[ESP32] !r24 f26
-[ESP32] C.!r284 f38
-[ESP32] !r24 f40
-[ESP32] S!r25 f26
-[ESP32] !r25 f26
-[ESP32] S!r37 f36
-[ESP32] S!r24 f27
-[ESP32] !r25 f25
-[ESP32] !r25 f26
-[ESP32] S!r36 f38
-[ESP32] S!r25 f26
-[ESP32] !r36 f24
-[ESP32] S!r25 f37
-[ESP32] S!r36 f27
-[ESP32] S!r36 f37
-[ESP32] !r36 f39
-[ESP32] !r36 f38
-[ESP32] C.!r24 f25
-[ESP32] !r24 f38
-[ESP32] !r24 f652
-[ESP32] S!r25 f26
-[ESP32] !r25 f24
-[ESP32] !r25 f26
-[ESP32] !r24 f25
-[ESP32] !r25 f26
-[ESP32] !r24 f27
-[ESP32] !r24 f26
-[ESP32] !r24 f26
-[ESP32] !r24 f28
-[ESP32] !r24 f25
-[ESP32] C.!r38 f38
-[ESP32] !r275 f25
-[ESP32] S!r25 f24
-[ESP32] !r35 f27
-[ESP32] S!r25 f38
-[ESP32] S!r25 f25
-[ESP32] !r36 f26
-[ESP32] S!r24 f37
-[ESP32] S!r24 f27
-[ESP32] !r24 f25
-[ESP32] !r25 f27
-[ESP32] C.!r35 f38
-[ESP32] !r287 f37
-[ESP32] S!r25 f25
-[ESP32] S!r37 f38
-[ESP32] S!r24 f25
-[ESP32] !r26 f25
-[ESP32] S!r38 f38
-[ESP32] S!r24 f25
-[ESP32] !r24 f28
-[ESP32] !r24 f25
-[ESP32] !r26 f24
-[ESP32] !r24 f27
-[ESP32] !r24 f25
-[ESP32] C.!r36 f39
-[ESP32] !r286 f37
-[ESP32] S!r26 f26
-[ESP32] !r24 f25
-[ESP32] !r37 f26
-[ESP32] S!r24 f37
-[ESP32] S!r24 f26
-[ESP32] !r24 f25
-[ESP32] SS!r24 f24
-[ESP32] !r25 f25
-[ESP32] S!r36 f39
-[ESP32] S!r25 f25
-[ESP32] S!r37 f37
-[ESP32] !r37 f39
-[ESP32] !r37 f37
-[ESP32] !r24 f39
-[ESP32] C.!r284 f26
-[ESP32] !r24 f39
-Send 3/5
-[ESP32] !r24 f20738
-[ESP32] S!r27 f26
-[ESP32] !r24 f27
-[ESP32] !r22 f28
-[ESP32] !r24 f26
-[ESP32] !r23 f28
-[ESP32] !r23 f26
-[ESP32] !r24 f26
-[ESP32] !r24 f28
-[ESP32] !r23 f26
-[ESP32] !r25 f26
-[ESP32] C.!r37 f37
-[ESP32] !r24 f26
-[ESP32] S!r24 f26
-[ESP32] !r37 f26
-[ESP32] S!r24 f36
-[ESP32] S!r23 f27
-[ESP32] !r37 f26
-[ESP32] S!r24 f37
-[ESP32] S!r24 f25
-[ESP32] !r25 f27
-[ESP32] !r23 f26
-[ESP32] C.!r36 f39
-[ESP32] !r285 f39
 [ESP32] S!r23 f26
-[ESP32] S!r37 f39
-[ESP32] S!r24 f26
-[ESP32] !r24 f27
-[ESP32] S!r34 f39
-[ESP32] S!r24 f28
-[ESP32] !r24 f25
-[ESP32] !r24 f25
-[ESP32] !r25 f27
-[ESP32] !r24 f27
-[ESP32] !r24 f28
-[ESP32] C.!r35 f39
-[ESP32] !r285 f39
-[ESP32] S!r24 f26
-[ESP32] !r24 f25
-[ESP32] !r35 f27
-[ESP32] S!r24 f38
-[ESP32] S!r24 f27
 [ESP32] !r24 f26
-[ESP32] SS!r23 f26
-[ESP32] !r24 f26
-[ESP32] S!r36 f38
-[ESP32] S!r24 f26
-[ESP32] S!r35 f39
-[ESP32] !r35 f40
-[ESP32] !r37 f38
-[ESP32] !r24 f38
-[ESP32] C.!r286 f26
-[ESP32] !r23 f38
-[ESP32] !r25 f651
-[ESP32] S!r26 f25
-[ESP32] !r24 f25
-[ESP32] !r25 f25
-[ESP32] !r25 f26
-[ESP32] !r25 f25
-[ESP32] !r24 f25
-[ESP32] !r26 f25
-[ESP32] !r24 f26
-[ESP32] !r25 f27
-[ESP32] !r38 f24
-[ESP32] C.!r274 f38
-[ESP32] S!r25 f26
-[ESP32] !r25 f25
-[ESP32] S!r36 f39
-[ESP32] S!r24 f25
-[ESP32] !r26 f25
-[ESP32] S!r38 f38
-[ESP32] S!r26 f24
-[ESP32] !r24 f26
-[ESP32] !r25 f25
-[ESP32] C.!r286 f37
-[ESP32] !r26 f36
-[ESP32] S!r37 f25
-[ESP32] S!r26 f38
-[ESP32] S!r25 f24
-[ESP32] !r38 f25
-[ESP32] S!r25 f36
-[ESP32] S!r24 f25
-[ESP32] !r25 f26
-[ESP32] !r26 f25
-[ESP32] !r24 f24
-[ESP32] !r25 f24
-[ESP32] C.!r285 f38
-[ESP32] !r26 f37
-[ESP32] S!r24 f26
-[ESP32] !r25 f25
-[ESP32] S!r37 f35
-[ESP32] S!r25 f27
-[ESP32] !r25 f26
-[ESP32] !r25 f26
-[ESP32] S!r25 f36
-[ESP32] S!r24 f27
-[ESP32] !r37 f25
-[ESP32] S!r25 f37
-[ESP32] S!r36 f26
-[ESP32] S!r36 f38
-[ESP32] !r38 f38
-[ESP32] !r38 f37
-[ESP32] C.!r26 f24
-[ESP32] !r25 f38
-[ESP32] !r25 f653
-[ESP32] S!r25 f26
-[ESP32] !r24 f25
-[ESP32] !r25 f26
-[ESP32] !r24 f26
-[ESP32] !r24 f26
-[ESP32] !r24 f28
-[ESP32] !r25 f25
-[ESP32] !r25 f26
-[ESP32] !r24 f26
-[ESP32] !r25 f26
-[ESP32] C.!r35 f38
-[ESP32] !r276 f25
-[ESP32] S!r24 f26
-[ESP32] !r35 f27
-[ESP32] S!r24 f38
-[ESP32] S!r24 f26
-[ESP32] !r37 f27
-[ESP32] S!r24 f37
-[ESP32] S!r24 f25
-[ESP32] !r24 f26
-[ESP32] !r24 f26
-[ESP32] C.!r35 f39
-[ESP32] !r286 f37
-[ESP32] S!r25 f26
-[ESP32] S!r39 f36
-[ESP32] S!r24 f26
-[ESP32] !r24 f27
-[ESP32] S!r37 f38
-[ESP32] S!r25 f25
-[ESP32] !r24 f26
-[ESP32] !r24 f25
-[ESP32] !r25 f25
-[ESP32] !r25 f27
-[ESP32] !r24 f25
-[ESP32] C.!r38 f37
-[ESP32] !r286 f36
-[ESP32] S!r24 f28
-[ESP32] !r25 f25
-[ESP32] !r37 f25
-[ESP32] S!r24 f37
-[ESP32] S!r24 f28
-[ESP32] !r24 f25
-[ESP32] SS!r25 f24
-[ESP32] !r25 f25
-[ESP32] S!r38 f37
-[ESP32] S!r24 f26
-[ESP32] S!r37 f38
-[ESP32] !r36 f39
-[ESP32] !r37 f38
-[ESP32] !r24 f37
-[ESP32] C.!r286 f26
-[ESP32] !r24 f37
-[ESP32] ISR H/L/T: 551/535/1086, Ticks: 989, BucketUsed: 0
-Send 4/5
-[ESP32] !r24 f20868
-[ESP32] S!r27 f24
-[ESP32] !r25 f26
-[ESP32] !r24 f25
-[ESP32] !r25 f26
-[ESP32] !r25 f26
-[ESP32] !r25 f25
-[ESP32] !r25 f24
-[ESP32] !r25 f26
-[ESP32] !r24 f25
-[ESP32] !r25 f25
-[ESP32] C.!r38 f38
-[ESP32] !r273 f25
-[ESP32] S!r25 f26
-[ESP32] !r37 f26
-[ESP32] S!r25 f36
-[ESP32] S!r25 f26
-[ESP32] !r38 f24
-[ESP32] S!r26 f36
-[ESP32] S!r25 f25
-[ESP32] !r25 f26
-[ESP32] !r26 f25
-[ESP32] C.!r38 f36
-[ESP32] !r287 f36
-[ESP32] S!r25 f26
 [ESP32] S!r37 f37
-[ESP32] S!r24 f25
-[ESP32] !r25 f27
-[ESP32] S!r36 f37
-[ESP32] S!r26 f26
-[ESP32] !r24 f24
-[ESP32] !r25 f25
-[ESP32] !r26 f25
-[ESP32] !r25 f25
-[ESP32] !r25 f26
-[ESP32] C.!r36 f37
-[ESP32] !r286 f38
-[ESP32] S!r27 f24
-[ESP32] !r25 f25
-[ESP32] !r35 f27
-[ESP32] S!r26 f38
-[ESP32] S!r24 f26
-[ESP32] !r25 f25
-[ESP32] SS!r25 f27
-[ESP32] !r25 f26
-[ESP32] S!r37 f38
-[ESP32] S!r24 f25
-[ESP32] S!r38 f38
-[ESP32] !r36 f37
-[ESP32] !r38 f37
-[ESP32] !r27 f37
-[ESP32] C.!r287 f24
-[ESP32] !r25 f38
-[ESP32] !r25 f650
 [ESP32] S!r24 f27
-[ESP32] !r24 f25
-[ESP32] !r24 f27
-[ESP32] !r24 f28
-[ESP32] !r24 f25
-[ESP32] !r24 f25
-[ESP32] !r24 f28
-[ESP32] !r25 f25
-[ESP32] !r25 f25
+[ESP32] !r26 f26
+[ESP32] !r24 f26
 [ESP32] !r37 f25
-[ESP32] C.!r274 f37
-[ESP32] S!r25 f25
-[ESP32] !r25 f25
-[ESP32] S!r37 f38
-[ESP32] S!r24 f26
-[ESP32] !r23 f26
-[ESP32] S!r37 f38
-[ESP32] S!r25 f25
-[ESP32] !r24 f27
-[ESP32] !r25 f26
-[ESP32] !r36 f25
-[ESP32] C.!r285 f39
-[ESP32] !r24 f37
-[ESP32] S!r35 f27
-[ESP32] S!r24 f38
+[ESP32] C.!r538 f37
+[ESP32] !r24 f35
+[ESP32] S!r34 f28
+[ESP32] S!r24 f39
 [ESP32] S!r24 f28
-[ESP32] !r37 f25
-[ESP32] S!r25 f38
+[ESP32] !r38 f25
+[ESP32] S!r25 f39
 [ESP32] S!r25 f24
-[ESP32] !r25 f27
-[ESP32] !r25 f25
+[ESP32] !r24 f27
 [ESP32] !r24 f25
+[ESP32] !r24 f26
 [ESP32] !r25 f26
-[ESP32] C.!r284 f38
-[ESP32] !r25 f39
-[ESP32] S!r24 f26
-[ESP32] !r25 f26
+[ESP32] C.!r536 f39
+[ESP32] !r24 f38
+[ESP32] S!r24 f28
+[ESP32] !r24 f25
 [ESP32] S!r37 f36
 [ESP32] S!r24 f27
-[ESP32] !r24 f25
-[ESP32] !r34 f28
-[ESP32] S!r34 f39
-[ESP32] S!r25 f27
-[ESP32] !r36 f25
-[ESP32] S!r24 f38
-[ESP32] S!r35 f27
-[ESP32] S!r35 f38
-[ESP32] !r37 f38
-[ESP32] !r37 f38
+[ESP32] !r26 f25
+[ESP32] !r37 f25
+[ESP32] S!r37 f36
+[ESP32] S!r24 f27
+[ESP32] !r35 f25
+[ESP32] S!r26 f38
+[ESP32] S!r36 f26
+[ESP32] S!r36 f37
+[ESP32] !r37 f37
+[ESP32] !r38 f38
 [ESP32] C.!r24 f26
-[ESP32] !r24 f37
-[ESP32] !r24 f653
-[ESP32] S!r25 f26
-[ESP32] !r24 f26
-[ESP32] !r24 f26
-[ESP32] !r24 f25
-[ESP32] !r24 f25
-[ESP32] !r25 f27
-[ESP32] !r24 f25
+[ESP32] !r25 f37
+[ESP32] !r25 f652
+[ESP32] S!r24 f25
+[ESP32] !r25 f25
+[ESP32] !r26 f27
 [ESP32] !r24 f26
 [ESP32] !r24 f26
 [ESP32] !r24 f26
-[ESP32] C.!r37 f38
-[ESP32] !r275 f25
-[ESP32] S!r25 f26
+[ESP32] !r24 f27
+[ESP32] !r24 f27
+[ESP32] !r23 f27
+[ESP32] !r24 f27
+[ESP32] C.!r36 f38
+[ESP32] !r524 f27
+[ESP32] S!r25 f25
+[ESP32] !r35 f27
+[ESP32] S!r25 f38
+[ESP32] S!r25 f24
 [ESP32] !r35 f26
 [ESP32] S!r24 f39
-[ESP32] S!r25 f25
-[ESP32] !r35 f27
-[ESP32] S!r25 f38
 [ESP32] S!r24 f27
-[ESP32] !r24 f26
-[ESP32] !r24 f26
-[ESP32] C.!r36 f38
-[ESP32] !r286 f38
-[ESP32] S!r24 f26
-[ESP32] S!r37 f38
-[ESP32] S!r25 f24
+[ESP32] !r25 f25
+[ESP32] !r24 f27
+[ESP32] C.!r36 f37
+[ESP32] !r536 f38
+[ESP32] S!r25 f26
+[ESP32] S!r37 f37
+[ESP32] S!r25 f25
 [ESP32] !r25 f26
-[ESP32] S!r37 f38
+[ESP32] S!r38 f37
 [ESP32] S!r25 f25
 [ESP32] !r24 f27
 [ESP32] !r26 f25
-[ESP32] !r25 f24
-[ESP32] !r26 f25
+[ESP32] !r24 f25
+[ESP32] !r25 f26
 [ESP32] !r24 f26
-[ESP32] C.!r36 f39
-[ESP32] !r287 f36
+[ESP32] C.!r36 f40
+[ESP32] !r536 f36
 [ESP32] S!r25 f27
-[ESP32] !r23 f26
-[ESP32] !r37 f26
-[ESP32] S!r24 f38
+[ESP32] !r25 f25
+[ESP32] !r36 f26
+[ESP32] S!r24 f39
 [ESP32] S!r25 f25
 [ESP32] !r24 f25
-[ESP32] SS!r25 f24
-[ESP32] !r24 f25
+[ESP32] SS!r24 f25
+[ESP32] !r25 f25
 [ESP32] S!r37 f38
-[ESP32] S!r24 f25
-[ESP32] S!r38 f37
+[ESP32] S!r25 f24
+[ESP32] S!r37 f38
 [ESP32] !r38 f38
 [ESP32] !r39 f37
 [ESP32] !r24 f36
-[ESP32] C.!r286 f27
+[ESP32] C.!r536 f27
 [ESP32] !r25 f37
-Send 5/5
-[ESP32] !r25 f20741
-[ESP32] S!r28 f25
-[ESP32] !r25 f26
-[ESP32] !r23 f26
-[ESP32] !r23 f26
-[ESP32] !r23 f28
-[ESP32] !r23 f26
-[ESP32] !r22 f28
-[ESP32] !r23 f28
-[ESP32] !r22 f26
-[ESP32] !r25 f26
-[ESP32] C.!r37 f39
-[ESP32] !r271 f27
+[ESP32] ISR H/L/T: 556/544/1100, Ticks: 989, BucketUsed: 0
+Send 4/5
+[ESP32] !r25 f20431
+[ESP32] S!r27 f24
+[ESP32] !r24 f26
+[ESP32] !r24 f25
+[ESP32] !r24 f25
+[ESP32] !r24 f28
+[ESP32] !r26 f25
+[ESP32] !r24 f26
+[ESP32] !r24 f25
+[ESP32] !r24 f25
+[ESP32] !r25 f25
+[ESP32] C.!r37 f37
+[ESP32] !r523 f27
+[ESP32] S!r25 f26
+[ESP32] !r38 f25
+[ESP32] S!r24 f37
 [ESP32] S!r25 f26
 [ESP32] !r36 f26
-[ESP32] S!r23 f37
-[ESP32] S!r24 f27
-[ESP32] !r37 f26
-[ESP32] S!r24 f37
-[ESP32] S!r24 f25
+[ESP32] S!r25 f38
+[ESP32] S!r25 f24
+[ESP32] !r25 f26
 [ESP32] !r24 f26
-[ESP32] !r24 f26
-[ESP32] C.!r37 f37
-[ESP32] !r285 f37
-[ESP32] S!r26 f24
-[ESP32] S!r37 f39
-[ESP32] S!r25 f26
-[ESP32] !r24 f27
+[ESP32] C.!r36 f39
+[ESP32] !r536 f37
+[ESP32] S!r25 f25
+[ESP32] S!r37 f37
+[ESP32] S!r25 f25
+[ESP32] !r24 f28
 [ESP32] S!r35 f38
-[ESP32] S!r24 f27
+[ESP32] S!r24 f28
+[ESP32] !r26 f26
+[ESP32] !r26 f24
+[ESP32] !r27 f25
 [ESP32] !r24 f26
 [ESP32] !r24 f26
-[ESP32] !r26 f25
-[ESP32] !r24 f25
-[ESP32] !r28 f25
-[ESP32] C.!r36 f37
-[ESP32] !r286 f38
+[ESP32] C.!r36 f38
+[ESP32] !r536 f38
 [ESP32] S!r24 f26
+[ESP32] !r25 f25
+[ESP32] !r35 f28
+[ESP32] S!r24 f38
+[ESP32] S!r24 f27
+[ESP32] !r24 f25
+[ESP32] SS!r25 f24
+[ESP32] !r25 f26
+[ESP32] S!r35 f40
+[ESP32] S!r24 f25
+[ESP32] S!r38 f37
+[ESP32] !r37 f37
+[ESP32] !r37 f37
+[ESP32] !r24 f37
+[ESP32] C.!r536 f26
+[ESP32] !r25 f38
+[ESP32] !r26 f651
+[ESP32] S!r25 f26
+[ESP32] !r25 f25
+[ESP32] !r24 f27
+[ESP32] !r25 f26
 [ESP32] !r26 f25
-[ESP32] !r35 f26
+[ESP32] !r25 f25
+[ESP32] !r25 f26
+[ESP32] !r25 f25
+[ESP32] !r26 f24
+[ESP32] !r36 f25
+[ESP32] C.!r523 f38
+[ESP32] S!r24 f26
+[ESP32] !r24 f28
+[ESP32] S!r37 f38
+[ESP32] S!r24 f25
+[ESP32] !r24 f25
+[ESP32] S!r38 f38
+[ESP32] S!r24 f26
+[ESP32] !r24 f28
+[ESP32] !r24 f25
+[ESP32] !r37 f27
+[ESP32] C.!r537 f38
+[ESP32] !r24 f35
+[ESP32] S!r35 f28
 [ESP32] S!r24 f38
 [ESP32] S!r24 f28
-[ESP32] !r24 f25
-[ESP32] SS!r24 f25
-[ESP32] !r25 f25
-[ESP32] S!r38 f37
-[ESP32] S!r26 f24
-[ESP32] S!r37 f37
-[ESP32] !r35 f40
-[ESP32] !r38 f37
-[ESP32] !r24 f38
-[ESP32] C.!r285 f26
-[ESP32] !r24 f39
-[ESP32] !r25 f651
+[ESP32] !r37 f26
+[ESP32] S!r23 f39
 [ESP32] S!r24 f27
-[ESP32] !r24 f26
-[ESP32] !r24 f25
-[ESP32] !r24 f27
+[ESP32] !r23 f28
 [ESP32] !r25 f25
-[ESP32] !r24 f25
+[ESP32] !r25 f25
+[ESP32] !r25 f25
+[ESP32] C.!r534 f38
+[ESP32] !r26 f38
+[ESP32] S!r24 f27
 [ESP32] !r25 f26
-[ESP32] !r25 f26
-[ESP32] C.!r274 f65512
+[ESP32] S!r37 f36
+[ESP32] S!r24 f27
+[ESP32] !r25 f25
+[ESP32] !r24 f28
+[ESP32] S!r34 f39
+[ESP32] S!r26 f26
 [ESP32] !r37 f24
 [ESP32] S!r24 f38
-[ESP32] S!r24 f26
+[ESP32] S!r36 f27
+[ESP32] S!r36 f37
+[ESP32] !r37 f37
+[ESP32] !r37 f38
+[ESP32] C.!r24 f27
+[ESP32] !r25 f39
+[ESP32] !r25 f652
+[ESP32] S!r25 f25
 [ESP32] !r24 f25
-[ESP32] S!r39 f37
-[ESP32] S!r25 f24
+[ESP32] !r24 f28
+[ESP32] !r24 f25
+[ESP32] !r24 f28
+[ESP32] !r24 f26
+[ESP32] !r24 f25
+[ESP32] !r26 f25
 [ESP32] !r25 f25
+[ESP32] !r25 f26
+[ESP32] C.!r37 f37
+[ESP32] !r523 f27
+[ESP32] S!r27 f25
+[ESP32] !r36 f25
+[ESP32] S!r25 f38
+[ESP32] S!r25 f24
+[ESP32] !r36 f26
+[ESP32] S!r24 f38
+[ESP32] S!r24 f25
+[ESP32] !r25 f27
+[ESP32] !r24 f25
+[ESP32] C.!r38 f38
+[ESP32] !r536 f39
+[ESP32] S!r23 f26
 [ESP32] S!r38 f38
 [ESP32] S!r24 f25
+[ESP32] !r26 f26
+[ESP32] S!r35 f38
+[ESP32] S!r25 f25
+[ESP32] !r25 f26
+[ESP32] !r24 f25
+[ESP32] !r25 f25
 [ESP32] !r25 f26
 [ESP32] !r24 f26
-[ESP32] !r37 f25
-[ESP32] C.!r287 f38
-[ESP32] !r24 f36
-[ESP32] S!r34 f28
-[ESP32] S!r24 f40
-[ESP32] S!r25 f27
-[ESP32] !r37 f25
-[ESP32] S!r24 f37
-[ESP32] S!r25 f25
+[ESP32] C.!r37 f38
+[ESP32] !r536 f37
+[ESP32] S!r25 f26
+[ESP32] !r24 f26
+[ESP32] !r38 f25
+[ESP32] S!r24 f38
+[ESP32] S!r24 f25
+[ESP32] !r24 f25
+[ESP32] SS!r26 f25
 [ESP32] !r24 f27
-[ESP32] !r24 f24
-[ESP32] !r24 f26
-[ESP32] !r25 f25
-[ESP32] C.!r287 f36
-[ESP32] !r24 f38
-[ESP32] S!r25 f27
-[ESP32] !r24 f25
-[ESP32] S!r38 f36
+[ESP32] S!r36 f39
 [ESP32] S!r24 f26
-[ESP32] !r26 f26
-[ESP32] !r24 f26
-[ESP32] S!r36 f38
-[ESP32] S!r24 f28
-[ESP32] !r35 f25
-[ESP32] S!r24 f39
-[ESP32] S!r35 f26
-[ESP32] S!r35 f39
+[ESP32] S!r35 f38
+[ESP32] !r38 f38
 [ESP32] !r38 f37
-[ESP32] !r37 f36
-[ESP32] C.!r24 f24
-[ESP32] !r25 f38
-[ESP32] !r25 f653
-[ESP32] S!r25 f25
-[ESP32] !r25 f24
-[ESP32] !r26 f26
-[ESP32] !r25 f25
+[ESP32] !r38 f37
+[ESP32] C.!r26 f25
+[ESP32] !r24 f38
+Send 5/5
+[ESP32] !r24 f20373
+[ESP32] S!r26 f28
+[ESP32] !r22 f28
+[ESP32] !r22 f28
+[ESP32] !r23 f27
+[ESP32] !r23 f29
+[ESP32] !r22 f27
+[ESP32] !r23 f28
 [ESP32] !r24 f26
-[ESP32] !r25 f25
-[ESP32] !r25 f25
-[ESP32] !r24 f25
-[ESP32] !r25 f25
-[ESP32] !r25 f25
-[ESP32] C.!r37 f37
-[ESP32] !r276 f24
+[ESP32] !r23 f28
+[ESP32] !r24 f26
+[ESP32] C.!r35 f40
+[ESP32] !r523 f26
+[ESP32] S!r25 f26
+[ESP32] !r36 f65512
+[ESP32] S!r25 f37
+[ESP32] S!r24 f25
+[ESP32] !r38 f27
+[ESP32] S!r24 f37
+[ESP32] S!r24 f27
+[ESP32] !r24 f27
+[ESP32] !r24 f26
+[ESP32] C.!r37 f38
+[ESP32] S!r24 f26
+[ESP32] SS!r24 f26
+[ESP32] !r24 f27
+[ESP32] S!r35 f39
+[ESP32] S!r23 f28
+[ESP32] !r23 f26
+[ESP32] !r25 f26
+[ESP32] !r27 f24
+[ESP32] !r25 f26
+[ESP32] !r24 f28
+[ESP32] C.!r35 f38
+[ESP32] !r536 f38
 [ESP32] S!r25 f25
-[ESP32] !r37 f26
-[ESP32] S!r25 f36
-[ESP32] S!r26 f25
+[ESP32] !r24 f25
+[ESP32] !r36 f26
+[ESP32] S!r23 f38
+[ESP32] S!r26 f27
+[ESP32] !r25 f25
 [ESP32] !r37 f26
 [ESP32] S!r25 f37
 [ESP32] S!r24 f25
-[ESP32] !r26 f24
-[ESP32] !r24 f26
-[ESP32] C.!r37 f37
-[ESP32] !r286 f38
-[ESP32] S!r26 f23
-[ESP32] S!r39 f36
+[ESP32] SS!r25 f25
+[ESP32] S!r40 f37
+[ESP32] !r35 f37
+[ESP32] !r35 f38
+[ESP32] !r38 f37
+[ESP32] C.!r25 f25
+[ESP32] !r537 f37
+[ESP32] !r27 f650
 [ESP32] S!r25 f27
 [ESP32] !r24 f25
-[ESP32] S!r39 f36
-[ESP32] S!r25 f24
-[ESP32] !r26 f26
-[ESP32] !r25 f24
-[ESP32] !r26 f24
-[ESP32] !r26 f27
+[ESP32] !r26 f25
+[ESP32] !r25 f26
 [ESP32] !r24 f25
-[ESP32] C.!r38 f37
-[ESP32] !r288 f34
+[ESP32] !r26 f23
+[ESP32] !r26 f26
+[ESP32] !r26 f25
+[ESP32] !r25 f26
+[ESP32] !r37 f25
+[ESP32] C.!r525 f37
+[ESP32] !r25 f25
+[ESP32] S!r24 f25
+[ESP32] SS!r26 f24
+[ESP32] !r25 f26
+[ESP32] S!r37 f38
+[ESP32] S!r26 f23
+[ESP32] !r24 f27
+[ESP32] !r25 f25
+[ESP32] !r37 f26
+[ESP32] C.!r536 f37
+[ESP32] !r25 f37
+[ESP32] S!r37 f27
+[ESP32] S!r24 f38
+[ESP32] S!r26 f26
+[ESP32] !r36 f25
+[ESP32] S!r24 f39
+[ESP32] S!r25 f25
+[ESP32] !r25 f26
+[ESP32] !r25 f24
+[ESP32] !r26 f25
+[ESP32] !r25 f26
+[ESP32] !r38 f25
+[ESP32] C.!r536 f37
+[ESP32] !r25 f37
+[ESP32] S!r26 f25
+[ESP32] !r25 f25
+[ESP32] SS!r25 f28
+[ESP32] !r25 f24
+[ESP32] !r25 f27
+[ESP32] S!r35 f37
+[ESP32] S!r26 f26
+[ESP32] !r37 f23
+[ESP32] S!r25 f37
+[ESP32] S!r36 f26
+[ESP32] S!r36 f37
+[ESP32] !r39 f38
+[ESP32] !r37 f36
+[ESP32] C.!r26 f25
+[ESP32] !r26 f37
+[ESP32] S!r26 f24
+[ESP32] !r25 f26
+[ESP32] !r27 f25
+[ESP32] !r25 f24
+[ESP32] !r24 f25
+[ESP32] !r25 f26
+[ESP32] !r24 f27
+[ESP32] !r27 f25
+[ESP32] !r25 f26
+[ESP32] !r25 f26
+[ESP32] C.!r34 f39
+[ESP32] !r525 f25
+[ESP32] S!r23 f26
+[ESP32] !r36 f28
+[ESP32] S!r24 f38
+[ESP32] S!r25 f25
+[ESP32] !r35 f28
+[ESP32] S!r24 f38
+[ESP32] S!r23 f27
+[ESP32] !r24 f26
+[ESP32] !r24 f26
+[ESP32] C.!r36 f38
+[ESP32] S!r24 f26
+[ESP32] SS!r24 f26
+[ESP32] !r25 f26
+[ESP32] S!r36 f39
+[ESP32] S!r24 f25
+[ESP32] !r24 f28
+[ESP32] !r24 f25
+[ESP32] !r25 f25
+[ESP32] !r26 f26
+[ESP32] !r24 f25
+[ESP32] C.!r38 f38
+[ESP32] !r536 f36
 [ESP32] S!r25 f26
 [ESP32] !r25 f25
-[ESP32] !r37 f24
-[ESP32] S!r27 f38
-[ESP32] S!r25 f24
 [ESP32] !r25 f24
-[ESP32] SS!r24 f25
-[ESP32] !r24 f25
-[ESP32] S!r38 f36
-[ESP32] S!r25 f25
-[ESP32] S!r36 f40
-[ESP32] !r38 f37
-[ESP32] !r38 f36
-[ESP32] !r25 f36
-[ESP32] C.!r285 f26
-[ESP32] !r25 f37
-[ESP32] ISR H/L/T: 906/890/1796, Ticks: 1115, BucketUsed: 0
+[ESP32] S!r37 f40
+[ESP32] S!r24 f25
+[ESP32] !r24 f27
+[ESP32] !r37 f27
+[ESP32] S!r24 f37
+[ESP32] S!r24 f25
+[ESP32] SS!r25 f24
+[ESP32] S!r37 f38
+[ESP32] !r37 f37
+[ESP32] !r37 f38
+[ESP32] !r36 f37
+[ESP32] C.!r26 f26
+[ESP32] !r534 f39
+[ESP32] ISR H/L/T: 911/898/1809, Ticks: 1115, BucketUsed: 0
 Requesting debug info (y)...
-[ESP32 Debug] GDO0_INT_COUNT: 1796
-[ESP32 Debug] TICKS: 1124
+[ESP32 Debug] GDO0_INT_COUNT: 1809
+[ESP32 Debug] TICKS: 1122
 [ESP32 Debug] BUCKET_USED: 0
-[ESP32 Debug] !r22 f58270
-[ESP32 Debug] !r2 f741
-[ESP32 Debug] !r2 f140
-[ESP32 Debug] S!r4 f54
-[ESP32 Debug] S!r30 f35
-[ESP32 Debug] S!r19 f48
-[ESP32 Debug] !r9 f58
-[ESP32 Debug] SS!r2 f3
-[ESP32 Debug] SS!r1 f14
-[ESP32 Debug] S!r33 f31
-[ESP32 Debug] S!r38 f39
-[ESP32 Debug] !r23 f39
-[ESP32 Debug] S!r22 f30
-[ESP32 Debug] !r33 f27
-[ESP32 Debug] S!r34 f40
-[ESP32 Debug] !r25 f37
-[ESP32 Debug] S!r23 f28
-[ESP32 Debug] !r25 f27
-[ESP32 Debug] S!r41 f37
-[ESP32 Debug] !r26 f37
-[ESP32 Debug] S!r21 f75
-[ESP32 Debug] SS!r5 f14
-[ESP32 Debug] S!r2 f60
-[ESP32 Debug] SS!r4 f7
-[ESP32 Debug] S!r4 f32
-[ESP32 Debug] SS!r5 f35
-[ESP32 Debug] SS!r9 f1
-[ESP32 Debug] S!r23 f28
-[ESP32 Debug] S!r25 f27
-[ESP32 Debug] !r24 f27
-[ESP32 Debug] !r24 f22
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] !r24 f27
-[ESP32 Debug] !r35 f27
-[ESP32 Debug] C.!r290 f37
-[ESP32 Debug] !r290 f38
-[ESP32 Debug] S!r34 f37
-[ESP32 Debug] S!r26 f25
-[ESP32 Debug] !r24 f26
-[ESP32 Debug] !r35 f28
-[ESP32 Debug] S!r24 f38
-[ESP32 Debug] S!r27 f20
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] !r26 f25
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] !r26 f21
-[ESP32 Debug] !r27 f25
-[ESP32 Debug] !r26 f25
-[ESP32 Debug] !r21 f25
-[ESP32 Debug] !r27 f25
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] C.!r275 f25
-[ESP32 Debug] S!r36 f41
-[ESP32 Debug] !r25 f37
-[ESP32 Debug] S!r27 f26
-[ESP32 Debug] !r35 f26
-[ESP32 Debug] S!r35 f36
-[ESP32 Debug] !r21 f43
-[ESP32 Debug] S!r25 f26
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] S!r36 f42
-[ESP32 Debug] !r25 f37
-[ESP32 Debug] S!r25 f26
-[ESP32 Debug] S!r37 f36
-[ESP32 Debug] !r22 f40
-[ESP32 Debug] S!r27 f26
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] S!r36 f41
-[ESP32 Debug] !r27 f35
-[ESP32 Debug] S!r27 f24
-[ESP32 Debug] S!r37 f36
-[ESP32 Debug] !r25 f35
-[ESP32 Debug] S!r25 f26
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] !r27 f25
-[ESP32 Debug] !r21 f25
-[ESP32 Debug] !r27 f25
-[ESP32 Debug] !r27 f26
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] !r25 f25
-[ESP32 Debug] !r25 f22
-[ESP32 Debug] !r26 f25
-[ESP32 Debug] C.!r286 f41
-[ESP32 Debug] !r37 f35
-[ESP32 Debug] S!r21 f41
-[ESP32 Debug] S!r25 f26
-[ESP32 Debug] !r26 f24
-[ESP32 Debug] S!r26 f35
-[ESP32 Debug] S!r25 f26
-[ESP32 Debug] !r20 f26
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] !r24 f27
-[ESP32 Debug] !r20 f26
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] !r20 f26
-[ESP32 Debug] !r25 f27
-[ESP32 Debug] C.!r269 f27
-[ESP32 Debug] S!r35 f36
-[ESP32 Debug] !r25 f37
-[ESP32 Debug] S!r26 f26
-[ESP32 Debug] S!r42 f37
-[ESP32 Debug] !r25 f36
-[ESP32 Debug] S!r20 f26
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] S!r41 f36
-[ESP32 Debug] S!r25 f26
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] S!r37 f36
-[ESP32 Debug] !r25 f43
-[ESP32 Debug] S!r20 f26
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] S!r36 f42
-[ESP32 Debug] S!r26 f27
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] S!r37 f36
-[ESP32 Debug] S!r26 f26
-[ESP32 Debug] !r20 f26
-[ESP32 Debug] !r26 f25
-[ESP32 Debug] !r26 f26
-[ESP32 Debug] !r25 f25
-[ESP32 Debug] !r19 f27
-[ESP32 Debug] !r25 f27
-[ESP32 Debug] !r24 f27
-[ESP32 Debug] !r25 f27
-[ESP32 Debug] !r25 f26
-[ESP32 Debug] !r20 f26
-[ESP32 Debug] C.!r42 f36
-[ESP32 Debug] !r35 f37
-[ESP32 Debug] S!r25 f42
-[ESP32 Debug] S!r26 f27
-[ESP32 Debug] !r24 f27
-[ESP32 Debug] S!r24 f43
-[ESP32 Debug] ISR H/L/T: 1074/1059/2133, Ticks: 1240, BucketUsed: 0
+[ESP32 Debug] ISR H/L/T: 911/898/1809, Ticks: 1240, BucketUsed: 0
