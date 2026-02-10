@@ -975,5 +975,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "uint32_t HAL_timer_get_counter_value(uint8_t instance) {\n    return (uint32_t)esp_timer_get_time() - rf_counter_offset;\n}\n\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {\n    rf_counter_offset = (uint32_t)esp_timer_get_time() - value;\n}\n\nvoid HAL_timer_reset_counter_value(uint8_t instance) {\n    rf_counter_offset = (uint32_t)esp_timer_get_time();\n}\n",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "uint32_t HAL_timer_get_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    return (uint32_t)timerRead(rf_timer) - rf_counter_offset;\n#else\n    return timerRead(rf_timer) - rf_counter_offset;\n#endif\n}\n\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    rf_counter_offset = (uint32_t)timerRead(rf_timer) - value;\n#else\n    rf_counter_offset = timerRead(rf_timer) - value;\n#endif\n}\n\nvoid HAL_timer_reset_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    timerWrite(rf_timer, 0);\n#else\n    timerWrite(rf_timer, 0);\n#endif\n    rf_counter_offset = 0;\n}\n"
+          }
+        }
+      }
+    ]
   }
 ]

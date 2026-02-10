@@ -97,28 +97,15 @@ void HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {
 
 static uint32_t rf_counter_offset = 0;
 uint32_t HAL_timer_get_counter_value(uint8_t instance) {
-#if ESP_ARDUINO_VERSION_MAJOR >= 3
-    return (uint32_t)timerRead(rf_timer) - rf_counter_offset;
-#else
-    return timerRead(rf_timer) - rf_counter_offset;
-#endif
+    return (uint32_t)esp_timer_get_time() - rf_counter_offset;
 }
 
 void HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {
-#if ESP_ARDUINO_VERSION_MAJOR >= 3
-    rf_counter_offset = (uint32_t)timerRead(rf_timer) - value;
-#else
-    rf_counter_offset = timerRead(rf_timer) - value;
-#endif
+    rf_counter_offset = (uint32_t)esp_timer_get_time() - value;
 }
 
 void HAL_timer_reset_counter_value(uint8_t instance) {
-#if ESP_ARDUINO_VERSION_MAJOR >= 3
-    timerWrite(rf_timer, 0);
-#else
-    timerWrite(rf_timer, 0);
-#endif
-    rf_counter_offset = 0;
+    rf_counter_offset = (uint32_t)esp_timer_get_time();
 }
 
 // GPIO stuff
