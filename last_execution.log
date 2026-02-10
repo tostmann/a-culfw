@@ -1,4 +1,6 @@
---- Terminal on /dev/ttyACM0 | 115200 8-N-1
---- Available filters and text transformations: debug, default, direct, hexlify, log2file, nocontrol, printable, send_on_enter, time
---- More details at https://bit.ly/pio-monitor-filters
---- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+ESP-ROM:esp32c3-api1-20210207
+Build:Feb  7 2021
+rst:0x15 (USB_UART_CHIP_RESET),boot:0x0 (USB_BOOT)
+Saved PC:0x400462dc
+wait usb download
+

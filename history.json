@@ -1285,5 +1285,137 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/main.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include \"board.h\"\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"clock.h\"\n#include \"rf_receive.h\"\n#include \"rf_send.h\"\n#include \"cc1100.h\"\n#include \"ttydata.h\"\n#include \"ringbuffer.h\"\n#include \"fncollection.h\"\n#include \"display.h\"\n#include \"fastrf.h\"\n#include \"fband.h\"\n#include \"rf_mode.h\"\n#include \"version.h\"\n#include \"fht.h\"\n\nextern volatile uint32_t gdo_isr_count;\n\n#ifdef HAS_ASKSIN\n#include \"rf_asksin.h\"\n#endif\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"\n#endif\n#ifdef HAS_RWE\n#include \"rf_rwe.h\"\n#endif\n#ifdef HAS_RFNATIVE\n#include \"rf_native.h\"\n#endif\n#ifdef HAS_INTERTECHNO\n#include \"intertechno.h\"\n#endif\n#ifdef HAS_SOMFY_RTS\n#include \"somfy_rts.h\"\n#endif\n#ifdef HAS_MBUS\n#include \"rf_mbus.h\"\n#endif\n\nvoid eeprom_init(void);\n\n// Function table\nextern const t_fntab fntab[];\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n\n// Function table definition\nextern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_INTERTECHNO\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n  { 'A', asksin_func },\n#endif\n#ifdef HAS_MORITZ\n  { 'Z', moritz_func },\n#endif\n#ifdef HAS_RFNATIVE\n  { 'N', native_func },\n#endif\n#ifdef HAS_RWE\n  { 'E', rwe_func },\n#endif\n  { 'R', read_eeprom },\n  { 'T', fhtsend },\n  { 'V', version },\n  { 'W', write_eeprom },\n  { 'X', set_txreport },\n  { 'e', eeprom_factory_reset },\n#ifdef HAS_FASTRF\n  { 'f', fastrf_func },\n#endif\n  { 'l', ledfunc },\n  { 't', gettime },\n  { 'x', ccsetpa },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n#ifdef HAS_SOMFY_RTS\n  { 'Y', somfy_rts_func },\n#endif\n  { 0, 0 },\n};\n\n#if !ARDUINO_USB_CDC_ON_BOOT\n#define Serial USBSerial\n#endif\n\nvoid setup() {\n    Serial.begin(115200);\n    \n    long start = millis();\n    while (!Serial && millis() - start < 5000); \n\n    Serial.println(\"\\r\\n!!! CULFW32 BOOT START !!!\");\n    Serial.println(\"Serial started.\");\n    \n    Serial.println(\"Timer Init...\");\n    hal_timer_init();\n    Serial.println(\"EEPROM Init...\");\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    Serial.println(\"SPI Init...\");\n    spi_init();\n    Serial.println(\"CC1101 Init...\");\n    ccInitChip(EE_CC1100_CFG);\n    Serial.println(\"TX Init...\");\n    tx_init();\n    \n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}\n\nvoid loop() {\n    static uint32_t last_isr_count = 0;\n    static unsigned long last_debug_print = 0;\n\n    if (millis() - last_debug_print > 1000) {\n        Serial.print(\"Heartbeat. ISR Count: \");\n        Serial.println(gdo_isr_count);\n        last_isr_count = gdo_isr_count;\n        last_debug_print = millis();\n    }\n\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    RfAnalyze_Task();\n    \n#ifdef HAS_FASTRF\n    FastRF_Task();\n#endif\n#ifdef HAS_ASKSIN\n    rf_asksin_task();\n#endif\n#ifdef HAS_MORITZ\n    rf_moritz_task();\n#endif\n#ifdef HAS_RWE\n    rf_rwe_task();\n#endif\n#ifdef HAS_MBUS\n    rf_mbus_task();\n#endif\n#ifdef HAS_RFNATIVE\n    native_task();\n#endif\n\n    // 4. Write from Tx Buffer to Serial\n    while (!rb_is_empty(&TTY_Tx_Buffer)) {\n        if (Serial.availableForWrite() > 0) {\n            Serial.write(rb_get(&TTY_Tx_Buffer));\n        } else {\n            // Check if we are connected, otherwise discard to prevent hang\n            // On ESP32 USB CDC, availableForWrite() might return 0 if no host is listening\n            break; \n        }\n    }\n    \n    // Allow ESP32 system tasks (Watchdog, etc)\n    yield();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 --target upload --upload-port /dev/ttyACM0"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 24742 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nFlash will be erased from 0x0000e000 to 0x0000ffff...\nFlash will be erased from 0x00010000 to 0x00055fff...\nSHA digest in image updated\nCompressed 12464 bytes to 9064...\nWriting at 0x00000000... (100 %)\nWrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 457.3 kbit/s)...\nHash of data verified.\nCompressed 3072 bytes to 146...\nWriting at 0x00008000... (100 %)\nWrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 482.9 kbit/s)...\nHash of data verified.\nCompressed 8192 bytes to 47...\nWriting at 0x0000e000... (100 %)\nWrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 753.1 kbit/s)...\nHash of data verified.\nCompressed 283808 bytes to 158425...\nWriting at 0x00010000... (10 %)\nWriting at 0x0001b121... (20 %)\nWriting at 0x00023182... (30 %)\nWriting at 0x0002a4e9... (40 %)\nWriting at 0x000303c2... (50 %)\nWriting at 0x000365ae... (60 %)\nWriting at 0x0003c45e... (70 %)\nWriting at 0x00044233... (80 %)\nWriting at 0x0004adbe... (90 %)\nWriting at 0x00050efe... (100 %)\nWrote 283808 bytes (158425 compressed) at 0x00010000 in 2.2 seconds (effective 1032.5 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n========================= [SUCCESS] Took 17.22 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:17.221\n========================= 1 succeeded in 00:00:17.221 =========================\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "timeout 10s /root/.platformio/penv/bin/pio device monitor -p /dev/ttyACM0 -b 115200"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 124\nOutput:\n--- Terminal on /dev/ttyACM0 | 115200 8-N-1\n--- Available filters and text transformations: debug, default, direct, hexlify, log2file, nocontrol, printable, send_on_enter, time\n--- More details at https://bit.ly/pio-monitor-filters\n--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/python3 -c \"import serial; ser=serial.Serial('/dev/ttyACM0', 115200, timeout=2); ser.dtr=False; ser.rts=False; import time; time.sleep(0.1); ser.dtr=True; ser.rts=True; time.sleep(1); print(ser.read_all().decode(errors='ignore'))\""
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\nESP-ROM:esp32c3-api1-20210207\r\nBuild:Feb  7 2021\r\nrst:0x15 (USB_UART_CHIP_RESET),boot:0x0 (USB_BOOT)\r\nSaved PC:0x400462dc\r\nwait usb download\r\n\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "    -DSPI_SCLK=6\n    -DSPI_MISO=7\n    -DSPI_MOSI=10\n    -DSPI_SS=5\n    -DCC1100_CS_PIN=5\n    -DGDO0_PIN=3\n    -DGDO2_PIN=4\n    -DLED_PIN=21",
+            "path": "culfw/Devices/ESP32/platformio.ini",
+            "original_text": "    -DSPI_SCLK=8\n    -DSPI_MISO=9\n    -DSPI_MOSI=10\n    -DSPI_SS=5\n    -DCC1100_CS_PIN=5\n    -DGDO0_PIN=3\n    -DGDO2_PIN=4\n    -DLED_PIN=21"
+          }
+        }
+      }
+    ]
   }
 ]
