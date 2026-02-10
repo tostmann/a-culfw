@@ -46,6 +46,7 @@
     *   Doppelte Initialisierungen im `setup()` wurden entfernt.
     *   `Serial` wird konditional zu `USBSerial` definiert, um sicherzustellen, dass die USB-CDC-Schnittstelle verwendet wird.
     *   `Serial.setTxTimeoutMs(0)` wurde für nicht-blockierende serielle Ausgaben hinzugefügt.
+    *   Explizite Nutzung von `USBSerial` im Minimal-Sketch für Debugging versucht, jedoch ohne Erfolg bei der Ausgabe.
 *   **ESP32 Pointer-Handling Fix (DONE):** `ttydata.c` korrigiert, um 32-Bit-Funktionspointer auf ESP32/ARM korrekt zu behandeln (Behebung des `Instruction access fault`-Absturzes, verursacht durch 16-Bit-AVR-Makro `__LPM_word` beim Auslesen der `fntab`).
 *   **Flexible Pin-Konfiguration (DONE):** `board.h` (für ESP32) verwendet jetzt `#ifndef`-Guards, wodurch Pin-Definitionen über `build_flags` in `platformio.ini` für spezifische Board-Targets überschrieben werden können.
 *   **PlatformIO Build-System-Fixes & Pfad-Standardisierung für ESP32-Targets (DONE):**
@@ -64,25 +65,31 @@
     *   `time_t` in `clib/ntp.h` wird nun nur bedingt definiert, um Konflikte zu vermeiden: `#ifndef ARM` wurde um `#if !defined(ESP32) && !defined(STM32)` erweitert.
     *   `struct tm` in `clib/ntp.h` wurde in `struct ntp_tm` umbenannt, um Konflikte mit dem Standard-`time.h` zu vermeiden. Entsprechende Anpassungen in `clib/ntp.c` und `clib/clock.c` wurden vorgenommen.
     *   Die `_BV` redefinition warning bleibt weiterhin bestehen, hat aber keine Auswirkungen auf die Funktionalität.
-*   **Initialer Upload auf XIAO-ESP32-C3 (DONE):** Das neu erstellte Binary (v1.26.70) wurde nun *mehrmals* erfolgreich auf den XIAO-ESP32-C3 geflasht.
-*   **CLI Serial Test Script (DONE):** Ein Python-basiertes Skript (`cul_test.py`) wurde entwickelt, um serielle Kommunikation zu testen. Es wurde erfolgreich mit einem Legacy CUL868 (`/dev/ttyACM1`) verifiziert.
+*   **Initialer Upload auf XIAO-ESP32-C3 (DONE):** Das neu erstellte Binary (v1.26.70 und Minimal-Sketches) wurde nun *mehrmals* erfolgreich auf den XIAO-ESP32-C3 geflasht.
+*   **CLI Serial Test Script (DONE):** Ein Python-basiertes Skript (`cul_test.py`) wurde entwickelt, um serielle Kommunikation zu testen. Es wurde erfolgreich mit einem Legacy CUL868 (`/dev/ttyACM1`) verifiziert und zur Diagnose des XIAO-ESP32-C3 verwendet.
 
 ## 4. Known Issues & Next Steps
 *   **XIAO-ESP32-C3 Boot- & Serial-Output-Problem (CRITICAL - In Progress):**
-    *   **Problem:** Nach dem Flashen der Firmware (sowohl einer vollständigen CULFW-Version als auch eines minimalistischen "Hello World"-Sketches) bootet der XIAO-ESP32-C3 nicht in die Applikation. Stattdessen verbleibt er im "wait usb download"-Modus, und es wird keine serielle Ausgabe empfangen, weder im `pio device monitor` noch mit direkten `pyserial`-Skripten.
-    *   **Identifizierte Hauptursache:** Es besteht der dringende Verdacht eines **Strapping-Pin-Konflikts**. GPIO 9 (MISO-Pin im aktuellen Pinout des XIAO-ESP32-C3) ist ein Strapping-Pin. Wenn dieser beim Reset auf "Low" gezogen wird (was durch den angeschlossenen CC1101 oder fehlende Pull-ups geschehen kann), erzwingt dies den Bootloader-Modus und verhindert den Start der Applikation. Andere Strapping-Pins (GPIO 8/SCK) könnten ebenfalls eine Rolle spielen.
-    *   **Aktueller Status (Builds & Flashes SUCCESSFUL, Boot-Modus PROBLEMATISCH, Serielle Ausgabe FEHLT):**
-        1.  Die Firmware (sowohl CULFW als auch ein Minimal-Sketch) lässt sich erfolgreich auf den XIAO-ESP32-C3 flashen, auch mit `factory.bin` auf `0x0`.
+    *   **Problem:** Nach dem Flashen der Firmware (sowohl einer vollständigen CULFW-Version als auch eines minimalistischen "Hello World"-Sketches) bootet der XIAO-ESP32-C3 nicht in die Applikation. Stattdessen verbleibt er im "wait usb download"-Modus, und es wird keine serielle Ausgabe empfangen, weder im `pio device monitor` noch mit direkten `pyserial`-Skripten oder dem `cul_test.py` Skript.
+    *   **Identifizierte Hauptursache (CONFIRMED):** Es besteht ein **Strapping-Pin-Konflikt**. GPIO 9 (MISO-Pin im *aktuellen* Pinout des XIAO-ESP32-C3) ist ein Strapping-Pin. Wenn dieser beim Reset auf "Low" gezogen wird (was durch den angeschlossenen CC1101 oder fehlende Pull-ups geschehen kann), erzwingt dies den Bootloader-Modus und verhindert den Start der Applikation. Andere Strapping-Pins wie GPIO 8 (SCK) und GPIO 2 (potenziell GDO0) können ebenfalls eine Rolle spielen. Softwareseitige USB-CDC-Fixes (`ARDUINO_USB_MODE=1`, `ARDUINO_USB_CDC_ON_BOOT=1`, explizite `USBSerial` Nutzung) haben das Problem nicht behoben.
+    *   **Aktueller Status:**
+        1.  Die Firmware (CULFW und ein Minimal-Sketch) lässt sich erfolgreich auf den XIAO-ESP32-C3 flashen, auch mit `factory.bin` auf `0x0`.
         2.  `esptool.py` kann mit dem Chip kommunizieren und Flash-Informationen auslesen, jedoch startet der Chip nach einem Reset durch `esptool.py` nicht die Applikation, sondern verbleibt im "wait usb download"-Modus.
-        3.  Alle Versuche, serielle Ausgaben zu erhalten (inkl. expliziter `USBSerial`-Nutzung, `setTxTimeoutMs(0)`, manuellen DTR/RTS-Resets per Skript), schlugen fehl.
-        4.  Der `cul_test.py` Skript bestätigt das Ausbleiben jeglicher serieller Antwort vom XIAO.
-        5.  **Obsolet / Geklärt:** Die ursprünglichen Probleme mit Port-Locking (`[Errno 11] Resource temporarily unavailable`) und `termios.error` beim `pio device monitor` wurden durch direkte Ausführung des Monitors oder die Verwendung des `cul_test.py` Skripts umgangen und sind nicht mehr die primäre Blockade.
+        3.  Alle Versuche, serielle Ausgaben zu erhalten (inkl. expliziter `USBSerial`-Nutzung, `setTxTimeoutMs(0)`, manuellen DTR/RTS-Resets per Skript und `cul_test.py`), schlugen fehl.
 
 *   **Nächste Schritte zur Behebung des Boot- & Serial-Output-Problems:**
-    1.  **Pin-Re-Assignment:** Das Pinout für den XIAO-ESP32-C3 muss überprüft und angepasst werden, um die Verwendung von kritischen Strapping-Pins (insbesondere GPIO 9/MISO und GPIO 8/SCK) für den SPI-Bus zu vermeiden. Neue, unkritische Pins sollten für den CC1101 zugewiesen werden.
-    2.  **Hardware-Verifikation/Modifikation:** Falls eine Pin-Re-Assignment nicht sofort möglich ist, muss geprüft werden, ob Pull-Up-Widerstände an den Strapping-Pins GPIO 9 und GPIO 8 (im Idealfall 10kΩ) während des Bootvorgangs sicherstellen, dass diese auf "High" gehalten werden, um den Applikationsstart zu ermöglichen.
-    3.  **Minimal-Sketch mit neuem Pinout:** Nach der Anpassung der Pins (im Code und ggf. Hardware) sollte zuerst der minimalistische "Hello World" Sketch mit der LED-Blinkfunktion und `USBSerial.println()` erneut geflasht werden, um die serielle Ausgabe und den korrekten Boot der Applikation zu verifizieren.
-    4.  **CULFW-Logik wiederherstellen:** Erst wenn der Minimal-Sketch stabil bootet und serielle Ausgaben liefert, sollte die vollständige CULFW-Logik mit den korrigierten Pins getestet werden.
+    1.  **Pin-Re-Assignment (PROPOSED, PENDING HARDWARE MODIFICATION):** Das Pinout für den XIAO-ESP32-C3 *muss* überprüft und angepasst werden, um die Verwendung von kritischen Strapping-Pins (insbesondere GPIO 2, 8 und 9) für den SPI-Bus und die GDO-Leitungen zu vermeiden.
+        *   **Vorgeschlagenes sicheres Pinout:**
+            *   **SCK:** GPIO 6 (XIAO Pin D4) - Weg von GPIO 8 (Strapping)
+            *   **MISO:** GPIO 10 (XIAO Pin D10) - Weg von GPIO 9 (Strapping)
+            *   **MOSI:** GPIO 7 (XIAO Pin D5) - Unkritisch
+            *   **CS:** GPIO 5 (XIAO Pin D3) - Unkritisch
+            *   **GDO0:** GPIO 3 (XIAO Pin D1) - Unkritisch (Weg von GPIO 2 Strapping)
+            *   **GDO2:** GPIO 4 (XIAO Pin D2) - Unkritisch
+            *   **LED:** GPIO 21 (XIAO Pin D6) - Bleibt gleich
+    2.  **Hardware-Verifikation/Modifikation (PENDING):** Die Hardware-Verbindungen müssen gemäß dem vorgeschlagenen Pinout physisch geändert werden. Falls eine direkte Pin-Re-Assignment nicht sofort möglich ist, muss geprüft werden, ob Pull-Up-Widerstände (im Idealfall 10kΩ) an den Strapping-Pins GPIO 9 und GPIO 8 während des Bootvorgangs sicherstellen, dass diese auf "High" gehalten werden, um den Applikationsstart zu ermöglichen.
+    3.  **Minimal-Sketch mit neuem Pinout (PENDING):** Nach der Anpassung der Pins (im Code und in der Hardware) sollte zuerst der minimalistische "Hello World" Sketch mit der LED-Blinkfunktion und `USBSerial.println()` erneut geflasht werden, um die serielle Ausgabe und den korrekten Boot der Applikation zu verifizieren.
+    4.  **CULFW-Logik wiederherstellen (PENDING):** Erst wenn der Minimal-Sketch stabil bootet und serielle Ausgaben liefert, sollte die vollständige CULFW-Logik mit den korrigierten Pins getestet werden.
 
 *   **Weitere Entwicklung (aktuell pausiert):**
     *   Optimierung des SPI-Timings.
