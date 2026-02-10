@@ -1418,5 +1418,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "uint32_t HAL_timer_get_counter_value(uint8_t instance) {\n    return last_isr_time_val - rf_counter_offset;\n}\n",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "uint32_t HAL_timer_get_counter_value(uint8_t instance) {\n    return (uint32_t)esp_timer_get_time() - rf_counter_offset;\n}\n"
+          }
+        }
+      }
+    ]
   }
 ]
