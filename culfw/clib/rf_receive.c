@@ -411,6 +411,10 @@ RfAnalyze_Task(void)
           obuf[oby] = fs_csum;                  // do not report if we get both
         } else if(cksum1(12, obuf, oby) == obuf[oby] && oby >= 4) {
           datatype = TYPE_FHT;
+        } else {
+          if (TX_REPORT & REP_MONITOR) {
+             DC('e'); DH2(fs_csum); DC('/'); DH2(obuf[oby]);
+          }
         }
       }
       if(!datatype)
