@@ -1214,5 +1214,137 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/main.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include \"board.h\"\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"clock.h\"\n#include \"rf_receive.h\"\n#include \"rf_send.h\"\n#include \"cc1100.h\"\n#include \"ttydata.h\"\n#include \"ringbuffer.h\"\n#include \"fncollection.h\"\n#include \"display.h\"\n#include \"fastrf.h\"\n#include \"fband.h\"\n#include \"rf_mode.h\"\n#include \"version.h\"\n#include \"fht.h\"\n\nextern volatile uint32_t gdo_isr_count;\nextern \"C\" uint8_t bucket_nrused[];\n\n#ifdef HAS_ASKSIN\n#include \"rf_asksin.h\"\n#endif\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"\n#endif\n#ifdef HAS_RWE\n#include \"rf_rwe.h\"\n#endif\n#ifdef HAS_RFNATIVE\n#include \"rf_native.h\"\n#endif\n#ifdef HAS_INTERTECHNO\n#include \"intertechno.h\"\n#endif\n#ifdef HAS_SOMFY_RTS\n#include \"somfy_rts.h\"\n#endif\n#ifdef HAS_MBUS\n#include \"rf_mbus.h\"\n#endif\n\nvoid eeprom_init(void);\nextern const t_fntab fntab[];\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n\nvoid show_debug(char *in) {\n    display_debug(in);\n}\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n\nextern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_IT\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n  { 'A', asksin_func },\n#endif\n#ifdef HAS_MORITZ\n  { 'Z', moritz_func },\n#endif\n#ifdef HAS_RFNATIVE\n  { 'N', native_func },\n#endif\n#ifdef HAS_RWE\n  { 'E', rwe_func },\n#endif\n  { 'R', read_eeprom },\n  { 'T', fhtsend },\n  { 'V', version },\n  { 'W', write_eeprom },\n  { 'X', set_txreport },\n  { 'e', eeprom_factory_reset },\n#ifdef HAS_FASTRF\n  { 'f', fastrf_func },\n#endif\n  { 'l', ledfunc },\n  { 't', gettime },\n  { 'x', ccsetpa },\n  { 'y', show_debug },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n#ifdef HAS_SOMFY_RTS\n  { 'Y', somfy_rts_func },\n#endif\n  { 0, 0 },\n};\n\nvoid background_task(void *pvParameters) {\n    for(;;) {\n        hal_timer_task();\n        RfAnalyze_Task();\n        yield();\n    }\n}\n\nvoid setup() {\n    // USB CDC Initialisierung f\u00fcr ESP32-C3\n    Serial.begin(115200);\n    Serial.setTxTimeoutMs(0); // Non-blocking\n    \n    // Warte kurz auf Serial, aber nicht ewig (verhindert h\u00e4ngen ohne USB)\n    unsigned long start = millis();\n    while (!Serial && (millis() - start) < 2000);\n\n    Serial.println(\"\\r\\n--- CULFW32 Starting (XIAO Safe Pinning) ---\");\n    \n    hal_timer_init();\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    // Background task f\u00fcr Timer und Analyse (h\u00f6here Prio als loop)\n    xTaskCreate(background_task, \"bg\", 4096, NULL, 10, NULL);\n\n    // Interrupt erst nach Initialisierung aktivieren\n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}\n\nvoid loop() {\n    static uint32_t last_isr_print = 0;\n    if (millis() - last_isr_print > 1000) {\n        last_isr_print = millis();\n        Serial.printf(\"ISR Count: %u, Ticks: %u, BucketUsed: %u\\n\", gdo_isr_count, ticks, bucket_nrused[0]);\n    }\n\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        // Serial.printf(\"Processing %d bytes\\n\", TTY_Rx_Buffer.nbytes);\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    \n#ifdef HAS_FASTRF\n    FastRF_Task();\n#endif\n#ifdef HAS_ASKSIN\n    rf_asksin_task();\n#endif\n#ifdef HAS_MORITZ\n    rf_moritz_task();\n#endif\n#ifdef HAS_RWE\n    rf_rwe_task();\n#endif\n#ifdef HAS_MBUS\n    rf_mbus_task();\n#endif\n#ifdef HAS_RFNATIVE\n    native_task();\n#endif\n\n    // 4. Write from Tx Buffer to Serial\n    while (!rb_is_empty(&TTY_Tx_Buffer)) {\n        Serial.write(rb_get(&TTY_Tx_Buffer));\n    }\n    \n    yield();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/board.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _BOARD_H\n#define _BOARD_H\n\n#ifdef ESP32_C3\n  #ifndef BOARD_NAME\n    #define BOARD_NAME          \"ESP32-C3-CUL\"\n  #endif\n  #ifndef BOARD_ID_STR\n    #define BOARD_ID_STR        \"ESP32-C3-CUL\"\n  #endif\n\n  // CC1101 Pins for ESP32-C3\n  #ifndef SPI_SCLK\n    #define SPI_SCLK  6\n  #endif\n  #ifndef SPI_MISO\n    #define SPI_MISO  5\n  #endif\n  #ifndef SPI_MOSI\n    #define SPI_MOSI  7\n  #endif\n  #ifndef SPI_SS\n    #define SPI_SS    10\n  #endif\n  #ifndef CC1100_CS_PIN\n    #define CC1100_CS_PIN SPI_SS\n  #endif\n\n  #ifndef GDO0_PIN\n    #define GDO0_PIN  2\n  #endif\n  #ifndef GDO2_PIN\n    #define GDO2_PIN  3\n  #endif\n\n  #ifndef LED_PIN\n    #define LED_PIN   4\n  #endif\n#endif\n\n#ifdef ESP32_C6\n  #ifndef BOARD_NAME\n    #define BOARD_NAME          \"ESP32-C6-CUL\"\n  #endif\n  #ifndef BOARD_ID_STR\n    #define BOARD_ID_STR        \"ESP32-C6-CUL\"\n  #endif\n\n  // CC1101 Pins for ESP32-C6 (Adjusted for DevKitC-1)\n  #ifndef SPI_SCLK\n    #define SPI_SCLK  21\n  #endif\n  #ifndef SPI_MISO\n    #define SPI_MISO  20\n  #endif\n  #ifndef SPI_MOSI\n    #define SPI_MOSI  19\n  #endif\n  #ifndef SPI_SS\n    #define SPI_SS    18\n  #endif\n  #ifndef CC1100_CS_PIN\n    #define CC1100_CS_PIN SPI_SS\n  #endif\n\n  #ifndef GDO0_PIN\n    #define GDO0_PIN  2\n  #endif\n  #ifndef GDO2_PIN\n    #define GDO2_PIN  3\n  #endif\n\n  #ifndef LED_PIN\n    #define LED_PIN   8\n  #endif\n#endif\n\n#define HAS_UART\n#define HAS_FASTRF\n#define HAS_ASKSIN\n#define HAS_MORITZ\n#define HAS_RWE\n#define HAS_RFNATIVE\n#define HAS_IT\n#define HAS_INTERTECHNO\n#define HAS_HMS\n#define HAS_ESA\n#define HAS_TCM97001\n#define HAS_SOMFY_RTS\n#define HAS_MBUS\n\n#define CDC_BAUD_RATE 115200\n#define TTY_BUFSIZE 1024\n\n#define GPIO_PIN_SET 1\n#define GPIO_PIN_RESET 0\n\n#define CC_INSTANCE 0\n#define NUM_SLOWRF 1\n\n#define E2END 511\n\n#define RCV_BUCKETS 8\n\n#define USB_IsConnected 0\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/rf_receive_it.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "/* \n * a-culfw\n * Copyright (C) 2015 B. Hempel\n *\n * This program is free software; you can redistribute it and/or modify it under  \n * the terms of the GNU General Public License as published by the Free Software  \n * Foundation; either version 2 of the License, or (at your option) any later  \n * version.\n * \n * This program is distributed in the hope that it will be useful, but  \n * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY  \n * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for  \n * more details.\n * \n * You should have received a copy of the GNU General Public License along with  \n * this program; if not, write to the  \n * Free Software Foundation, Inc.,  \n * 51 Franklin St, Fifth Floor, Boston, MA 02110, USA\n */\n\n#ifndef _RF_RECEIVE_IT_H\n#define _RF_RECEIVE_IT_H\n\n#include <stdint.h>                     // for uint8_t\n\n#include \"board.h\"                      // for HAS_IT\n#include \"rf_receive_bucket.h\"          // for bucket_t\n\n#ifdef HAS_IT\n\n#define STATE_IT       7\n#define STATE_ITV3     9\n#define STATE_HE      10\n#define TYPE_IT  \t    'i'\n\n\n/*\n * Analyse IT packet.\n * Parameter:\n *  b        = the received bucket\n *  datatype = the datatype\n *  obuf     = the object buffer\n *  oby      = the oby count\n * The datatype are set to TYPE_IT, if packet is correct.\n */\nvoid analyze_intertechno(bucket_t *b, uint8_t *datatype, uint8_t *obuf, uint8_t *oby);\n\n\n#endif\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/platformio.ini"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "[platformio]\nsrc_dir = .\n\n; -------------------------------------------------------------------------\n; ESP32-C3 CONFIGURATION\n; -------------------------------------------------------------------------\n\n[env:ESP32-C3]\nplatform = espressif32\nboard = esp32-c3-devkitm-1\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility (use DIO for C3)\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py\n\nbuild_flags = \n    -DESP32_C3\n    -DUSE_HAL\n    -DARDUINO_USB_MODE=1\n    -DARDUINO_USB_CDC_ON_BOOT=1\n    -DHAS_CC1100\n    -I Devices/ESP32\n    -I .\n    -I clib\n    -I clib/mbus\n    -I ESP32\n    -I ESP32/avr\n    -I ESP32/utility\n\nbuild_src_filter =\n    +<Devices/ESP32/main.cpp>\n    +<ESP32/hal.cpp>\n    +<clib/cc1100.c>\n    +<clib/cc1101_pllcheck.c>\n    +<clib/clock.c>\n    +<clib/display.c>\n    +<clib/fastrf.c>\n    +<clib/fband.c>\n    +<clib/fht.c>\n    +<clib/fncollection.c>\n    +<clib/hw_autodetect.c>\n    +<clib/intertechno.c>\n    +<clib/kopp-fc.c>\n    +<clib/multi_CC.c>\n    +<clib/rf_asksin.c>\n    +<clib/rf_maico.c>\n    +<clib/rf_mbus.c>\n    +<clib/mbus/*.c>\n    +<clib/rf_mode.c>\n    +<clib/rf_moritz.c>\n    +<clib/rf_native.c>\n    +<clib/lacrosse.c>\n    +<clib/rf_router.c>\n    +<clib/rf_receive_bucket.c>\n    +<clib/rf_receive_esa.c>\n    +<clib/rf_receive_hms.c>\n    +<clib/rf_receive_it.c>\n    +<clib/rf_receive_revolt.c>\n    +<clib/rf_receive_tcm97001.c>\n    +<clib/rf_receive_tx3.c>\n    +<clib/rf_receive.c>\n    +<clib/rf_rwe.c>\n    +<clib/rf_send.c>\n    +<clib/rf_zwave.c>\n    +<clib/ringbuffer.c>\n    +<clib/somfy_rts.c>\n    +<clib/stringfunc.c>\n    +<clib/ttydata.c>\n    +<clib/onewire.c>\n\n; -------------------------------------------------------------------------\n; XIAO-ESP32-C3 CONFIGURATION\n; -------------------------------------------------------------------------\n\n[env:XIAO-ESP32-C3]\nplatform = espressif32\nboard = seeed_xiao_esp32c3\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py\n\nbuild_flags = \n    -DESP32_C3\n    -DUSE_HAL\n    -DARDUINO_USB_MODE=1\n    -DARDUINO_USB_CDC_ON_BOOT=1\n    -DHAS_CC1100\n    -DBOARD_NAME=\\\"XIAO-ESP32-C3\\\"\n    -DBOARD_ID_STR=\\\"XIAO-ESP32-C3\\\"\n    -DSPI_SCLK=6\n    -DSPI_MISO=10\n    -DSPI_MOSI=7\n    -DSPI_SS=5\n    -DCC1100_CS_PIN=5\n    -DGDO0_PIN=3\n    -DGDO2_PIN=4\n    -DLED_PIN=21\n    -I Devices/ESP32\n    -I .\n    -I clib\n    -I clib/mbus\n    -I ESP32\n    -I ESP32/avr\n    -I ESP32/utility\n\nbuild_src_filter =\n    ${env:ESP32-C3.build_src_filter}\n\n; -------------------------------------------------------------------------\n; ESP32-C6 CONFIGURATION\n; -------------------------------------------------------------------------\n\n[env:ESP32-C6]\nplatform = espressif32\nboard = esp32-c6-devkitc-1\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py\n\nbuild_flags = \n    -DESP32_C6\n    -DUSE_HAL\n    -DARDUINO_USB_MODE=1\n    -DARDUINO_USB_CDC_ON_BOOT=1\n    -DHAS_CC1100\n    -I Devices/ESP32\n    -I .\n    -I clib\n    -I clib/mbus\n    -I ESP32\n    -I ESP32/avr\n    -I ESP32/utility\n\nbuild_src_filter =\n    ${env:ESP32-C3.build_src_filter}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#ifdef HAS_INTERTECHNO\n  { 'i', it_func },\n#endif\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "#ifdef HAS_IT\n  { 'i', it_func },\n#endif\n"
+          }
+        }
+      }
+    ]
   }
 ]

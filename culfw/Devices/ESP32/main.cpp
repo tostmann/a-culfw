@@ -59,7 +59,7 @@ void show_debug(char *in) {
 extern "C" const t_fntab fntab[] = {
   { 'C', ccreg },
   { 'F', fs20send },
-#ifdef HAS_IT
+#ifdef HAS_INTERTECHNO
   { 'i', it_func },
 #endif
 #ifdef HAS_ASKSIN
