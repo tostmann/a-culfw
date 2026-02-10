@@ -73,6 +73,8 @@ void IRAM_ATTR addbit(bucket_t *b, uint8_t bit)
   if(bit)
     b->data[b->byteidx] |= _BV(b->bitidx);
 
+  // if(tx_report & 8) display_char('B');
+
   if(b->bitidx-- == 0) {           // next byte
     b->bitidx = 7;
     b->data[++b->byteidx] = 0;
