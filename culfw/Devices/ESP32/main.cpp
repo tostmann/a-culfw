@@ -128,8 +128,9 @@ void setup() {
     ccInitChip(EE_CC1100_CFG);
     tx_init();
     
-    // Background task für Timer und Analyse (höhere Prio als loop)
-    xTaskCreate(background_task, "bg", 4096, NULL, 10, NULL);
+    // Background task für Timer und Analyse (gleiche Prio wie loop)
+    xTaskCreate(background_task, "bg", 4096, NULL, 1, NULL);
+    vTaskDelay(10); // Geben wir dem Task Zeit zum Starten
 
     // Interrupt erst nach Initialisierung aktivieren
     hal_enable_CC_GDOin_int(0, 1);
