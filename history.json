@@ -1359,5 +1359,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void IRAM_ATTR gdo_interrupt_handler() {\n    gdo_isr_count++;\n    rf_last_edge_time = esp_timer_get_time();\n    CC1100_in_callback();\n}\n",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "void IRAM_ATTR gdo_interrupt_handler() {\n    gdo_isr_count++;\n    CC1100_in_callback();\n}\n"
+          }
+        }
+      }
+    ]
   }
 ]

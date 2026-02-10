@@ -109,6 +109,7 @@ void HAL_LED_Toggle(LED_List led) {
 
 void IRAM_ATTR gdo_interrupt_handler() {
     gdo_isr_count++;
+    rf_last_edge_time = esp_timer_get_time();
     CC1100_in_callback();
 }
 
