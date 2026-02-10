@@ -43,14 +43,14 @@ void hal_timer_init(void) {
 #if ESP_ARDUINO_VERSION_MAJOR >= 3
     tick_timer = timerBegin(1000000); // 1MHz
     timerAttachInterrupt(tick_timer, &onTickTimer);
-    timerAlarm(tick_timer, 1000, true, 0); // 1ms
+    timerAlarm(tick_timer, 8000, true, 0); // 125Hz / 8ms
     
     rf_hw_timer = timerBegin(1000000); // 1MHz
     timerAttachInterrupt(rf_hw_timer, &onRfTimer);
 #else
     tick_timer = timerBegin(0, 80, true); // 1MHz
     timerAttachInterrupt(tick_timer, &onTickTimer, true);
-    timerAlarmWrite(tick_timer, 1000, true);
+    timerAlarmWrite(tick_timer, 8000, true); // 125Hz / 8ms
     timerAlarmEnable(tick_timer);
 
     rf_hw_timer = timerBegin(1, 80, true); // 1MHz

@@ -1027,5 +1027,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void hal_timer_init(void) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    tick_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer);\n    timerAlarm(tick_timer, 8000, true, 0); // 125Hz / 8ms\n    \n    rf_hw_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer);\n#else\n    tick_timer = timerBegin(0, 80, true); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer, true);\n    timerAlarmWrite(tick_timer, 8000, true); // 125Hz / 8ms\n    timerAlarmEnable(tick_timer);\n\n    rf_hw_timer = timerBegin(1, 80, true); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer, true);\n#endif\n}\n",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "void hal_timer_init(void) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    tick_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer);\n    timerAlarm(tick_timer, 1000, true, 0); // 1ms\n    \n    rf_hw_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer);\n#else\n    tick_timer = timerBegin(0, 80, true); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer, true);\n    timerAlarmWrite(tick_timer, 1000, true);\n    timerAlarmEnable(tick_timer);\n\n    rf_hw_timer = timerBegin(1, 80, true); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer, true);\n#endif\n}\n"
+          }
+        }
+      }
+    ]
   }
 ]
