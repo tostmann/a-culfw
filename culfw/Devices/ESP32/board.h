@@ -83,10 +83,6 @@
 #define HAS_RFNATIVE
 #define HAS_IT
 #define HAS_INTERTECHNO
-#define HAS_HMS
-#define HAS_ESA
-#define HAS_TCM97001
-#define HAS_SOMFY_RTS
 #define HAS_MBUS
 
 #define CDC_BAUD_RATE 115200
