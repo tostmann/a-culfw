@@ -529,5 +529,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n\nvoid show_debug(uint8_t *in) {\n    extern volatile uint32_t gdo_isr_count;\n    Serial.printf(\"GDO0_INT_COUNT: %u\\n\", gdo_isr_count);\n}\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n"
+          }
+        }
+      }
+    ]
   }
 ]
