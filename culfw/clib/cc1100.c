@@ -380,10 +380,6 @@ ccRX(void)
         (ccStrobe(CC1100_SRX) & CC1100_STATUS_STATE_BM) != CC1100_STATE_RX)
     my_delay_us(10);
 
-#ifdef ESP32
-  if (cnt == 0) Serial.println("DEBUG: ccRX timeout!");
-#endif
-
 #ifdef USE_HAL
     hal_enable_CC_GDOin_int(CC_INSTANCE,TRUE);
 #else
