@@ -139,9 +139,9 @@ void IRAM_ATTR gdo_interrupt_handler() {
 }
 
 void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
-    pinMode(GDO0_PIN, INPUT);
+    pinMode(GDO0_PIN, INPUT_PULLUP);
     pinMode(GDO2_PIN, INPUT);
-    attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
+    // Interrupt will be enabled explicitly later or via hal_enable_CC_GDOin_int
 }
 
 void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {
