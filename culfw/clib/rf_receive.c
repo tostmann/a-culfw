@@ -750,7 +750,7 @@ delbit(bucket_t *b)
 /*
  * Calculate the end off message time
  */
-static void calcOcrValue(bucket_t *b, pulse_t *hightime, pulse_t *lowtime, bool syncHighTime) {
+static void calcOcrValue(bucket_t *b, volatile pulse_t *hightime, volatile pulse_t *lowtime, bool syncHighTime) {
   if (b->valCount < 8) {
     if (maxLevel[CC_INSTANCE]<*hightime) {
       maxLevel[CC_INSTANCE] = *hightime;
