@@ -19,7 +19,8 @@ Currently, the following environments are defined:
 1.  **nanoCUL868 / nanoCUL433** (ATmega328P)
 2.  **CUL_V3** (ATmega32U4 with native USB)
 3.  **MapleCUN** (STM32F103CB, Quad-CC1101, Ethernet)
-4.  **XIAO_ESP32C3** (ESP32-C3 RISC-V Native Port)
+4.  **XIAO-ESP32-C3** (ESP32-C3 RISC-V Native Port - Fully Functional)
+5.  **ESP32-C3 / ESP32-C6** (Generic ESP32 Support)
 
 ## Generating Firmware (Build)
 
