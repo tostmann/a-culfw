@@ -100,7 +100,7 @@ void background_task(void *pvParameters) {
     for(;;) {
         hal_timer_task();
         RfAnalyze_Task();
-        yield();
+        vTaskDelay(1);
     }
 }
 
