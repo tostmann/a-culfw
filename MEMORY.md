@@ -9,7 +9,7 @@
 *   **Target Architectures:** AVR, STM32, ESP32 (RISC-V)
 
 ## 2. Supported Boards & Firmware Versions
-*   **Firmware Version:** 1.26.64 (latest build, automatisch inkrementiert)
+*   **Firmware Version:** 1.26.65 (latest build, automatisch inkrementiert)
 *   **AVR Targets (Verified):**
     *   `CUL_V3.hex`
     *   `nanoCUL868.hex`
@@ -54,26 +54,28 @@
     *   Alle ESP32-Targets bauen nun erfolgreich und generieren sowohl `factory.bin` als auch `app.bin`.
 *   **AVR-spezifische Header-Dateien für ESP32 (DONE):** Die `#include <avr/io.h>` und `#include <avr/pgmspace.h>` Pfade wurden in den `build_flags` für ESP32-Targets korrekt referenziert, um Kompilierungsfehler zu beheben.
 *   **GDO-Interrupt-Handler-Deklaration und Initialisierung (DONE):**
-    *   Die `gdo_interrupt_handler` Funktion wurde in `culfw/ESP32/hal.cpp` mit `IRAM_ATTR` deklariert, um sicherzustellen, dass sie im RAM liegt.
-    *   Eine Forward-Deklaration `void IRAM_ATTR gdo_interrupt_handler();` wurde im `extern "C"` Block in `hal.cpp` hinzugefügt, um Kompilierungsfehler bei der Referenzierung zu vermeiden.
-    *   Die `attachInterrupt` Funktion für den GDO0-Pin wurde direkt in `hal_CC_GDO_init()` (statt nur `hal_enable_CC_GDOin_int()`) in `culfw/ESP32/hal.cpp` platziert, um eine sofortige Aktivierung des Interrupts während der Hardware-Initialisierung zu gewährleisten.
+    *   Die `gdo_interrupt_handler` Funktion wurde in `culfw/ESP32/hal.cpp` mit `IRAM_ATTR` deklariert.
+    *   Eine Forward-Deklaration `void IRAM_ATTR gdo_interrupt_handler();` wurde im `extern "C"` Block in `hal.cpp` hinzugefügt.
+    *   **Problembehebung für Board-Unresponsiveness:** Der Aufruf von `attachInterrupt` für den GDO0-Pin wurde aus `hal_CC_GDO_init()` entfernt und wird nun über `hal_enable_CC_GDOin_int(0, 1)` am Ende der `setup()`-Funktion in `culfw/main.cpp` vorgenommen. Dies stellt sicher, dass der CC1101 vollständig initialisiert ist, bevor Interrupts aktiviert werden, und verhindert einen "Interrupt Storm", der das System blockierte und die serielle Kommunikation verhinderte.
 *   **GDO-Interrupt-Zähler für Debugging (DONE):** Ein `volatile uint32_t gdo_isr_count` wurde in `culfw/ESP32/hal.cpp` hinzugefügt und wird in der `gdo_interrupt_handler()` inkrementiert. Zusätzlich wurde in `culfw/main.cpp` eine periodische Ausgabe des Zählerstands über die serielle Schnittstelle implementiert, um die Aktivität des Interrupts zu überwachen.
 *   **Git-Integration (DONE):** Projektänderungen (alle ESP32-Fixes, C3/C6 und XIAO-Targets) in einem neuen Feature-Branch (`feature/esp32-support`) committet und erfolgreich via SSH nach GitHub gepusht. Ein neuer SSH-Key wurde auf dem VPS generiert und dem Benutzer zur Registrierung bei GitHub bereitgestellt, um den Push zu ermöglichen.
 
 ## 4. Known Issues & Next Steps
 *   **XIAO-ESP32-C3 SlowRF Reception Debugging (In Progress):**
-    *   **Problem:** Der SlowRF Empfang funktioniert nach der Portierung auf den ESP32 (insbesondere XIAO-ESP32-C3) nicht wie erwartet. Das Booten des Boards mit angeschlossenem CC1101 ist stabil, die LED blinkt, und der `ISR Count` zeigt Interrupt-Aktivität an, aber es werden keine Datenpakete empfangen oder korrekt verarbeitet.
-    *   **Vermutete Ursachen:** Trotz erfolgreicher Interrupt-Erkennung könnten Timing-Differenzen zwischen AVR und ESP32 in den zeitkritischen CC1101-Routinen oder eine fehlerhafte Interrupt-Konfiguration/Verarbeitung zu Problemen führen.
-    *   **Aktueller Status (Debugging-Setup DONE):**
-        1.  **Build:** Ein neues Image (Version 1.26.64) mit Debugging-Instrumentierung (`gdo_isr_count`) wurde erfolgreich erstellt.
-        2.  **ISR-Zähler:** Der `gdo_isr_count` wird bei jedem GDO0-Interrupt inkrementiert und periodisch über die serielle Konsole ausgegeben.
+    *   **Problem:** Der SlowRF Empfang funktioniert nach der Portierung auf den ESP32 (insbesondere XIAO-ESP32-C3) nicht wie erwartet. Das Booten des Boards mit angeschlossenem CC1101 ist stabil, die LED blinkt, und der `ISR Count` zeigt Interrupt-Aktivität an, aber es werden keine Datenpakete empfangen oder korrekt verarbeitet. Das System war zwischenzeitlich nicht mehr über die serielle Konsole ansprechbar, was auf einen "Interrupt Storm" hindeutete.
+    *   **Vermutete Ursachen:** Timing-Differenzen zwischen AVR und ESP32 in den zeitkritischen CC1101-Routinen oder eine fehlerhafte Interrupt-Verarbeitung nach der Initialisierung könnten zu Problemen führen.
+    *   **Aktueller Status (Debugging-Setup DONE, Initial Blocking Fixed):**
+        1.  Ein neues Image (Version 1.26.65) mit Debugging-Instrumentierung (`gdo_isr_count`) wurde erfolgreich erstellt.
+        2.  Das Problem der Systemblockade durch einen frühen "Interrupt Storm" wurde behoben, indem die Aktivierung des GDO0-Interrupts nach der vollständigen CC1101-Initialisierung verschoben wurde. Das Board sollte nun wieder auf Serielle Eingaben reagieren.
+        3.  Der `gdo_isr_count` wird bei jedem GDO0-Interrupt inkrementiert und periodisch über die serielle Konsole ausgegeben.
     *   **Nächste Schritte (Manuelle Hardware-Verifikation UNBEDINGT erforderlich):**
-        1.  **Flashen des Images:** Flashe das erfolgreich erstellte `XIAO-ESP32-C3-factory.bin` (Version 1.26.64) auf das Board.
+        1.  **Flashen des Images:** Flashe das erfolgreich erstellte `XIAO-ESP32-C3-factory.bin` (Version 1.26.65) auf das Board.
         2.  **Hardware-Anschluss:** Stelle sicher, dass der CC1101 am XIAO-ESP32-C3 gemäß dem definierten Pinout angeschlossen ist (SCK=GPIO8, MISO=GPIO9, MOSI=GPIO10, CS=GPIO5, GDO0=GPIO3, GDO2=GPIO4, LED=GPIO21).
-        3.  **Monitor beobachten:**
-            *   Überprüfe, ob der `ISR Count` in der seriellen Ausgabe bei RF-Aktivität (z.B. durch Senden eines FS20-Signals) ansteigt.
-            *   **Fall A: Zähler steigt nicht an:** Überprüfe die Hardware-Verkabelung von GDO0 und GDO2 zum CC1101. Stelle sicher, dass der CC1101 richtig initialisiert ist und Signale sendet.
-            *   **Fall B: Zähler steigt an:** Wenn der Zähler ansteigt, die Pakete aber nicht dekodiert werden, liegt das Problem tiefer in der Software-Verarbeitung oder im Timing. Dann sollte mit dem `X21` Befehl (Hex-Dump der empfangenen Rohdaten) weiter analysiert werden, um zu sehen, welche Art von Daten im Empfangspuffer ankommt.
+        3.  **Monitor beobachten und Interaktion testen:**
+            *   Überprüfe, ob das Board auf Befehle wie `V` über die serielle Konsole reagiert. (Sollte jetzt funktionieren).
+            *   Beobachte, ob der `ISR Count` in der seriellen Ausgabe bei RF-Aktivität (z.B. durch Senden eines FS20-Signals) ansteigt.
+            *   **Fall A: Zähler bleibt 0 oder System reagiert nicht auf `V`:** Überprüfe die Hardware-Verkabelung von GDO0 und GDO2 zum CC1101 erneut. Stelle sicher, dass der CC1101 richtig initialisiert ist und Signale sendet.
+            *   **Fall B: Zähler steigt an und System reagiert auf `V` (aber keine Pakete dekodiert):** Wenn der Zähler ansteigt, die Pakete aber nicht dekodiert werden, liegt das Problem tiefer in der Software-Verarbeitung oder im Timing. Dann sollte mit dem `X21` Befehl (Hex-Dump der empfangenen Rohdaten) weiter analysiert werden, um zu sehen, welche Art von Daten im Empfangspuffer ankommt.
     *   **Potenzieller weiterer Fix (bei Boot-Problemen):** Sollte das Board trotz des korrigierten Pinouts wieder Boot-Probleme zeigen, wird ein **10kΩ Pull-Up-Widerstand am CS-Pin (GPIO 5)** empfohlen, um den CC1101 während des Bootvorgangs sicher zu deaktivieren.
 *   **Weitere Entwicklung:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
 ```
