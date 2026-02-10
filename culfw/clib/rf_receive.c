@@ -786,7 +786,7 @@ static void calcOcrValue(bucket_t *b, pulse_t *hightime, pulse_t *lowtime, bool 
 //////////////////////////////////////////////////////////////////////
 // "Edge-Detected" Interrupt Handler
 #ifdef USE_HAL
-	void CC1100_in_callback() {
+	void IRAM_ATTR CC1100_in_callback() {
 #else
 ISR(CC1100_INTVECT)
 {
