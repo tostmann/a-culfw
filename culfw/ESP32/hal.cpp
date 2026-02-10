@@ -133,15 +133,15 @@ void HAL_LED_Toggle(LED_List led) {
     digitalWrite(LED_PIN, !digitalRead(LED_PIN));
 }
 
+void IRAM_ATTR gdo_interrupt_handler() {
+    gdo_isr_count++;
+    CC1100_in_callback();
+}
+
 void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
     pinMode(GDO0_PIN, INPUT);
     pinMode(GDO2_PIN, INPUT);
     attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
-}
-
-void IRAM_ATTR gdo_interrupt_handler() {
-    gdo_isr_count++;
-    CC1100_in_callback();
 }
 
 void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {

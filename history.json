@@ -1220,5 +1220,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void IRAM_ATTR gdo_interrupt_handler() {\n    gdo_isr_count++;\n    CC1100_in_callback();\n}\n\nvoid hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT);\n    pinMode(GDO2_PIN, INPUT);\n    attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n}",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT);\n    pinMode(GDO2_PIN, INPUT);\n    attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler() {\n    gdo_isr_count++;\n    CC1100_in_callback();\n}"
+          }
+        }
+      }
+    ]
   }
 ]
