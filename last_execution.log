@@ -1,8 +1,17 @@
+Guru Meditation Error: Core  0 panic'ed (Interrupt wdt timeout on CPU0). 
+
+Core  0 register dump:
+MEPC    : 0x42000f1c  RA      : 0x42000f1c  SP      : 0x3fc95cd0  GP      : 0x3fc8be00  
+TP      : 0x3fc8af40  T0      : 0x4038a294  T1      : 0x00000060  T2      : 0xffffffff  
+S0/FP   : 0x3fc8d340  S1      : 0x0000000c  A0      : 0x00000001  A1      : 0x00000034  
+A2      : 0x3fc964c0  A3      : 0x00000004  A4      : 0x600c2000  A5      : 0x00000081  
+A6      : 0x00000001  A7      : 0x00000000  S2
 Setting ESP32 to X21...
 Sending FS20 from REF...
 Send 1/5
+[ESP32] F123401113C
 Send 2/5
 Send 3/5
 Send 4/5
 Send 5/5
-[ESP32 Debug] GDO0_INT_COUNT: 19
+[ESP32 Debug] GDO0_INT_COUNT: 2261

@@ -402,12 +402,15 @@ prepare_boot(char *in)
   fs_sync(&fs);              // Sync the filesystem
 #endif
 
-
+#ifdef ESP32
+  ESP.restart();
+#else
   TIMSK0 = 0;                // Disable the clock which resets the watchdog
   cli();
   
   wdt_enable(WDTO_15MS);       // Make sure the watchdog is running 
   while (1);                 // go to bed, the wathchdog will take us to reset
+#endif
 #endif
 }
 
