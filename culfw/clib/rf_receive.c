@@ -350,33 +350,12 @@ RfAnalyze_Task(void)
   bucket_t *b;
   uint8_t oby = 0;
 
+  // Debug output moved to command 'y'
+  /*
   if(lowtime[CC_INSTANCE]) {
-    if(TX_REPORT & REP_MONITOR) DC('!');
-#ifndef NO_RF_DEBUG
-    if(TX_REPORT & REP_LCDMON) {
-#ifdef HAS_LCD
-      lcd_txmon(hightime[CC_INSTANCE], lowtime[CC_INSTANCE]);
-#else
-      uint8_t rssi = cc1100_readReg(CC1100_RSSI);    //  0..256
-      rssi = (rssi >= 128 ? rssi-128 : rssi+128);    // Swap
-      if(rssi < 64)                                  // Drop low and high 25%
-        rssi = 0;
-      else if(rssi >= 192)
-        rssi = 15;
-      else 
-        rssi = (rssi-80)>>3;
-      MULTICC_PREFIX();
-      DC('a'+rssi);
-#endif
-    }
-    if(TX_REPORT & REP_MONITOR) {
-      DC('r'); if(TX_REPORT & REP_BINTIME) { DU(hightime[CC_INSTANCE], 0); DC(' '); }
-      DC('f'); if(TX_REPORT & REP_BINTIME) { DU(lowtime[CC_INSTANCE], 0); DC(' '); }
-      DNL();
-    }
-#endif // NO_RF_DEBUG
     lowtime[CC_INSTANCE] = 0;
   }
+  */
 
 
   if(bucket_nrused[CC_INSTANCE] == 0)
