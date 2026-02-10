@@ -81,18 +81,28 @@
 
 ## 4. Known Issues & Next Steps
 *   **RF-Datenaustausch (Slow RF - FS20, Intertechno):**
-    *   **Problem:** Die Dekodierung von "Slow RF" Protokollen (FS20, Intertechno) zwischen dem XIAO-ESP32-C3 und einem Referenz-CUL funktioniert noch nicht zuverlässig im `X21`-Modus.
-    *   **Beobachtung:** Die Analyse des `X07`-Raw-Monitorings und die `GDO0_INT_COUNT` zeigen, dass der ESP32 die einzelnen Funkimpulse empfängt und die GDO0-Interrupts ausgelöst werden. Dies bestätigt die Funktion der GDO-Erkennung und des präzisen Timings auf Hardware-Ebene. Jedoch bleibt der Zähler `bucket_nrused` konstant bei 0, was darauf hindeutet, dass die `CC1100_in_callback`-State-Machine in `rf_receive.c` die erfassten Pulse nicht korrekt in die Analyse-Buckets überführt. Das Problem liegt voraussichtlich in der Pulsbreitenerkennung (`hightime`, `lowtime`) oder den State-Transitions (`STATE_INIT`, `STATE_SYNC`, `STATE_COLLECT`) innerhalb dieser Funktion.
-    *   **Status FIFO-basierte Protokolle (MAX!/Moritz):** Bidirektionaler Datenaustausch für MAX!-Pakete funktioniert einwandfrei. Dies bestätigt die grundlegende Funktionsfähigkeit der SPI-Kommunikation und CC1101-Initialisierung für Paket-basierte Protokolle im FIFO-Modus.
-*   **Kompilierungsfehler und Warnungen:**
+    *   **Kritisches Problem (NEU): Boot-Hänger / Serielle Stille.** Der ESP32-C3 bootet nach der vollständigen Initialisierung der CC1101-Hardware (insbesondere nach Aktivierung von `ccInitChip` und GDO-Interrupts) nicht mehr sauber durch; es gibt keine serielle Ausgabe ("Ready." oder Debug-Meldungen). Dies deutet auf einen tiefgreifenden Hardware-Initialisierungs- oder Interrupt-Konflikt hin, der den seriellen Kommunikationskanal blockiert oder das System zum Absturz bringt.
+    *   **Debugging Status:** Die `X07`-Raw-Monitor-Ausgabe in `rf_receive.c` wurde auf dezimale Pulsbreiten (`DU`) umgestellt, um die Timings direkt am Monitor sichtbar zu machen, sobald der serielle Port wieder funktioniert.
+    *   **Originalproblem:** Das ursprüngliche Problem der fehlenden Dekodierung von Slow RF-Protokollen (FS20, Intertechno) bleibt bestehen, aber die Diagnose ist aktuell durch das Boot-Problem blockiert. Vor dem Boot-Problem wurde beobachtet, dass GDO0-Interrupts ausgelöst werden (`gdo_isr_count` steigt), aber `bucket_nrused` konstant bei 0 bleibt. Dies deutet weiterhin auf ein Problem in der Pulsbreitenerkennung (`hightime`, `lowtime`) oder den State-Transitions (`STATE_INIT`, `STATE_SYNC`, `STATE_COLLECT`) innerhalb der `CC1100_in_callback`-Funktion hin.
+    *   **Status FIFO-basierte Protokolle (MAX!/Moritz):** Bidirektionaler Datenaustausch für MAX!-Pakete funktioniert einwandfrei.
+
+*   **Kompilierungsfehler und Warnungen (UNRESOLVED):**
     *   Die `_BV` redefinition warning (`ESP32/avr/avr/io.h` vs `Arduino.h`) bleibt weiterhin bestehen und muss noch final adressiert werden.
     *   Warnungen `initialized and declared 'extern'` für `ticks`, `SREG`, `TIMSK0` in `ESP32/hal.cpp` bleiben bestehen und sollten korrigiert werden.
-*   **Weitere Entwicklung:**
-    *   **Priorität 1: Optimierung der SlowRF-Dekodierung:** Tiefgehende Analyse der `CC1100_in_callback` Funktion in `rf_receive.c` um die Ursache für das Verbleiben von `bucket_nrused` auf 0 zu finden. Dies beinhaltet:
-        *   Verifizierung der in `CC1100_in_callback` berechneten `hightime` und `lowtime` Werte (mittels `X07` Modus und erweiterten Debug-Ausgaben).
+
+*   **Protokoll-Unterstützung (DONE):**
+    *   Die Flags `HAS_IT`, `HAS_INTERTECHNO`, `HAS_HMS`, `HAS_ESA`, `HAS_TCM97001` wurden in `culfw/Devices/ESP32/board.h` für die ESP32-Targets aktiviert.
+    *   Der `i`-Befehl für Intertechno wurde in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt mit `it_func` verknüpft.
+
+*   **Weitere Entwicklung (Priorisierung angepasst):**
+    *   **Priorität 1: Behebung des Boot-Hangs und Wiederherstellung der seriellen Debug-Ausgabe.**
+        *   Temporäre Deaktivierung von `ccInitChip()` und `tx_init()` in `setup()` (`culfw/Devices/ESP32/main.cpp`) zur Isolation der Fehlerursache wurde bereits versucht, jedoch ohne Erfolg. Dies deutet auf eine tiefere Ursache hin.
+        *   Erneute Überprüfung der GPIO-Pin-Konfigurationen des CC1101 (SPI, GDO-Pins) auf mögliche Konflikte mit ESP32-Strapping-Pins.
+        *   Analyse der Interaktion zwischen USB-CDC-Serial und FreeRTOS-Tasks während des Bootvorgangs, da selbst ohne CC1101-Initialisierung keine serielle Ausgabe erfolgt.
+    *   **Priorität 2: Tiefgehende Analyse der SlowRF-Dekodierung (nach Behebung des Boot-Problems):**
+        *   Verifizierung der in `CC1100_in_callback` berechneten `hightime` und `lowtime` Werte mittels der neuen `X07` Debug-Ausgabe.
         *   Debugging der State-Machine-Logik (`STATE_INIT`, `STATE_SYNC`, `STATE_COLLECT`) und der `check_rf_sync`-Bedingungen.
         *   Erneute Evaluierung der `TSCALE`-Makros und der Interaktion mit `esp_timer_get_time()`.
-    *   **Priorität 2: Finalisierung der Kompilierungswarnungen:** Adressierung der verbleibenden `_BV` redefinition warning und der `extern` Initialisierungswarnungen.
-    *   Überprüfung der CC1101-Konfigurationen (`MDMCFG` Register) für die Slow RF-Modi auf optimale Werte im Kontext der ESP32-Geschwindigkeit.
-    *   Optimierung des SPI-Timings, falls erforderlich, um die Latenz weiter zu reduzieren.
-    *   Implementierung eines Web-Interfaces für ESP32.
+        *   Überprüfung der CC1101-Konfigurationen (`MDMCFG` Register) für die Slow RF-Modi auf optimale Werte im Kontext der ESP32-Geschwindigkeit.
+    *   **Priorität 3: Finalisierung der Kompilierungswarnungen.**
+    *   **Langfristig:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
