@@ -5,6 +5,7 @@
 #include "hal_spi.h"
 #include "hal_timer.h"
 #include "board.h"
+#include "esp_timer.h"
 
 extern "C" volatile uint32_t ticks = 0;
 extern "C" uint8_t SREG = 0;
