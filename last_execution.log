@@ -1,421 +1,408 @@
-Processing XIAO-ESP32-C3 (platform: espressif32; board: seeed_xiao_esp32c3; framework: arduino)
---------------------------------------------------------------------------------
-Verbose mode can be enabled via `-v, --verbose` option
-
-*******************************************
-* FIRMWARE VERSION UPDATE                 *
-*******************************************
-* Base Version: 1.26
-* Build Number: 65
-* New Version:  1.26.65
-* Build Date:   2026-02-10 11:51:44
-*******************************************
-
-CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
-PLATFORM: Espressif 32 (2024.12.30) > Seeed Studio XIAO ESP32C3
-HARDWARE: ESP32C3 160MHz, 320KB RAM, 4MB Flash
-DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
-PACKAGES: 
- - framework-arduinoespressif32 @ 3.1.0+sha.35321e8b 
- - tool-esptoolpy @ 4.8.4 
- - tool-mklittlefs @ 3.2.0 
- - tool-riscv32-esp-elf-gdb @ 14.2.0+20240403 
- - tool-xtensa-esp-elf-gdb @ 14.2.0+20240403 
- - toolchain-atmelavr @ 1.50400.190710 (5.4.0) 
- - toolchain-riscv32-esp @ 13.2.0+20240530
-LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
-LDF Modes: Finder ~ chain, Compatibility ~ soft
-Found 25 compatible libraries
-Scanning dependencies...
-Dependency Graph
-|-- EEPROM @ 3.1.0
-|-- SPI @ 3.1.0
-Building in release mode
-Compiling .pio/build/XIAO-ESP32-C3/src/Devices/ESP32/main.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/src/ESP32/hal.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/cc1100.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/cc1101_pllcheck.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/clock.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/display.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fastrf.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fband.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fht.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/clock.c:7:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
-   84 | #define sei()          portENABLE_INTERRUPTS()
-      | 
-In file included from clib/clock.c:2:
-ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
-    9 | #define sei()
-      | 
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
-   85 | #define cli()          portDISABLE_INTERRUPTS()
-      | 
-ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
-   12 | #define cli()
-      | 
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/clock.c:1:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-clib/fband.c: In function 'readEEpromValue':
-clib/fband.c:24:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-   24 |   d = erb((uint8_t *)addr);
-      |           ^
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/hw_autodetect.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/cc1100.h:13,
-                 from clib/fastrf.c:7:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/cc1100.h:10:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/intertechno.c.o
-In file included from ESP32/avr/avr/pgmspace.h:3,
-                 from clib/fncollection.c:6:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
-   84 | #define sei()          portENABLE_INTERRUPTS()
-      | 
-In file included from clib/fncollection.c:4:
-ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
-    9 | #define sei()
-      | 
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
-   85 | #define cli()          portDISABLE_INTERRUPTS()
-      | 
-ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
-   12 | #define cli()
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/kopp-fc.c.o
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/fncollection.c:5:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-clib/fncollection.c: In function 'read_eeprom':
-clib/fncollection.c:158:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-  158 |     d = erb((uint8_t *)addr);
-      |             ^
-clib/fncollection.c: In function 'write_eeprom':
-clib/fncollection.c:222:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-  222 |     ewb((uint8_t*)addr, hb[d-1]);
-      |         ^
-clib/fncollection.c:232:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-  232 |       ewb((uint8_t*)++addr, hb[0]);
-      |           ^
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/cc1100.h:13,
-                 from clib/hw_autodetect.c:2:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/cc1100.h:10:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/lacrosse.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/3outof6.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/crc.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/intertechno.c:11:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
-   84 | #define sei()          portENABLE_INTERRUPTS()
-      | 
-In file included from clib/intertechno.c:7:
-ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
-    9 | #define sei()
-      | 
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
-   85 | #define cli()          portDISABLE_INTERRUPTS()
-      | 
-ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
-   12 | #define cli()
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/manchester.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/mbus_packet.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/kopp-fc.c:66:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/kopp-fc.c:62:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/multi_CC.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/onewire.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_asksin.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_maico.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_mbus.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_mode.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_moritz.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_native.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/rf_asksin.c:5:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/rf_asksin.c:1:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/rf_moritz.c:5:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/rf_moritz.c:1:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/rf_mbus.c:11:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/rf_mbus.c:7:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_bucket.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_esa.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/rf_native.c:15:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/rf_native.c:11:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_hms.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_it.c.o
-In file included from ESP32/avr/avr/pgmspace.h:3,
-                 from clib/rf_receive.c:25:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
-   84 | #define sei()          portENABLE_INTERRUPTS()
-      | 
-In file included from clib/rf_receive.c:24:
-ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
-    9 | #define sei()
-      | 
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
-   85 | #define cli()          portDISABLE_INTERRUPTS()
-      | 
-ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
-   12 | #define cli()
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_revolt.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tcm97001.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tx3.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_router.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_rwe.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_send.c.o
-ESP32/hal.cpp:9:30: warning: 'ticks' initialized and declared 'extern'
-    9 | extern "C" volatile uint32_t ticks = 0;
-      |                              ^~~~~
-ESP32/hal.cpp:10:20: warning: 'SREG' initialized and declared 'extern'
-   10 | extern "C" uint8_t SREG = 0;
-      |                    ^~~~
-ESP32/hal.cpp:11:20: warning: 'TIMSK0' initialized and declared 'extern'
-   11 | extern "C" uint8_t TIMSK0 = 0;
-      |                    ^~~~~~
-ESP32/hal.cpp: In function 'void onTickTimer()':
-ESP32/hal.cpp:28:5: warning: '++' expression of 'volatile'-qualified type is deprecated [-Wvolatile]
-   28 |     ticks++;
-      |     ^~~~~
-ESP32/hal.cpp: At global scope:
-ESP32/hal.cpp:136:38: warning: ignoring attribute 'section (".iram1.3")' because it conflicts with previous 'section (".iram1.0")' [-Wattributes]
-  136 | void IRAM_ATTR gdo_interrupt_handler() {
-      |                                      ^
-ESP32/hal.cpp:23:16: note: previous declaration here
-   23 | void IRAM_ATTR gdo_interrupt_handler();
-      |                ^~~~~~~~~~~~~~~~~~~~~
-ESP32/hal.cpp: In function 'void gdo_interrupt_handler()':
-ESP32/hal.cpp:137:5: warning: '++' expression of 'volatile'-qualified type is deprecated [-Wvolatile]
-  137 |     gdo_isr_count++;
-      |     ^~~~~~~~~~~~~
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_zwave.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/ringbuffer.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/rf_receive_revolt.c:28:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/rf_receive.h:4,
-                 from clib/rf_receive_bucket.h:30,
-                 from clib/rf_receive_revolt.h:29,
-                 from clib/rf_receive_revolt.c:21:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/somfy_rts.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/rf_rwe.c:5:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/rf_rwe.c:1:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-In file included from ESP32/avr/avr/pgmspace.h:3,
-                 from clib/rf_send.c:8:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
-   84 | #define sei()          portENABLE_INTERRUPTS()
-      | 
-In file included from clib/rf_send.c:7:
-ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
-    9 | #define sei()
-      | 
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
-   85 | #define cli()          portDISABLE_INTERRUPTS()
-      | 
-ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
-   12 | #define cli()
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/stringfunc.c.o
-In file included from ESP32/hal_gpio.h:4,
-                 from ESP32/hal.h:4,
-                 from clib/led.h:19,
-                 from clib/rf_zwave.c:5:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:111: warning: "_BV" redefined
-  111 | #define _BV(b) (1UL << (b))
-      | 
-In file included from clib/rf_zwave.c:1:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
-   12 | #define _BV(bit) (1UL << (bit))
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/ttydata.c.o
-In file included from ESP32/avr/avr/pgmspace.h:3,
-                 from clib/somfy_rts.c:31:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "sei" redefined
-   84 | #define sei()          portENABLE_INTERRUPTS()
-      | 
-In file included from clib/somfy_rts.c:30:
-ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
-    9 | #define sei()
-      | 
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:85: warning: "cli" redefined
-   85 | #define cli()          portDISABLE_INTERRUPTS()
-      | 
-ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
-   12 | #define cli()
-      | 
-Compiling .pio/build/XIAO-ESP32-C3/libda1/EEPROM/EEPROM.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/liba96/SPI/SPI.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/ColorFormat.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/Esp.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/FirmwareMSC.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/FunctionalInterrupt.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/HEXBuilder.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/HWCDC.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/HardwareSerial.cpp.o
-Archiving .pio/build/XIAO-ESP32-C3/libda1/libEEPROM.a
-Indexing .pio/build/XIAO-ESP32-C3/libda1/libEEPROM.a
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/IPAddress.cpp.o
-Archiving .pio/build/XIAO-ESP32-C3/liba96/libSPI.a
-Indexing .pio/build/XIAO-ESP32-C3/liba96/libSPI.a
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/MD5Builder.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/MacAddress.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/Print.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/SHA1Builder.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/Stream.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/StreamString.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/Tone.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/USB.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/USBCDC.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/USBMSC.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/WMath.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/WString.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/base64.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/cbuf.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-adc.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-bt.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-cpu.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-dac.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-gpio.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-i2c-slave.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-i2c.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-ledc.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-matrix.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-misc.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-periman.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-psram.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-rgb-led.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-rmt.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-sigmadelta.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-spi.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-time.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-timer.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-tinyusb.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-touch-ng.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-touch.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-uart.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/firmware_msc_fat.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/freertos_stats.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/libb64/cdecode.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/libb64/cencode.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/main.cpp.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/stdlib_noniso.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/wiring_pulse.c.o
-Compiling .pio/build/XIAO-ESP32-C3/FrameworkArduino/wiring_shift.c.o
-Archiving .pio/build/XIAO-ESP32-C3/libFrameworkArduino.a
-Indexing .pio/build/XIAO-ESP32-C3/libFrameworkArduino.a
-Linking .pio/build/XIAO-ESP32-C3/firmware.elf
-Retrieving maximum program size .pio/build/XIAO-ESP32-C3/firmware.elf
-Checking size .pio/build/XIAO-ESP32-C3/firmware.elf
-Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
-RAM:   [          ]   3.0% (used 9740 bytes from 327680 bytes)
-Flash: [=         ]  12.0% (used 157346 bytes from 1310720 bytes)
-Building .pio/build/XIAO-ESP32-C3/firmware.bin
-esptool.py v4.8.4
-Creating esp32c3 image...
-Merged 1 ELF section
-Successfully created esp32c3 image.
-merge_bin([".pio/build/XIAO-ESP32-C3/firmware.bin"], [".pio/build/XIAO-ESP32-C3/firmware.elf"])
---- Erzeuge Factory Image für XIAO-ESP32-C3 (esp32c3) ---
-Ausführung: /root/.platformio/penv/bin/python /root/.platformio/packages/tool-esptoolpy/esptool.py --chip esp32c3 merge_bin -o /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/bootloader.bin 0x8000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/partitions.bin 0xe000 /root/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin 0x10000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/firmware.bin
-esptool.py v4.8.4
-SHA digest in image updated
-Wrote 0x3be30 bytes to file /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin, ready to flash to offset 0x0
-Factory Image erfolgreich erstellt: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin
-collect_binaries([".pio/build/XIAO-ESP32-C3/firmware.bin"], [".pio/build/XIAO-ESP32-C3/firmware.elf"])
-[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.65)
-========================= [SUCCESS] Took 5.95 seconds =========================
-
-Environment    Status    Duration
--------------  --------  ------------
-XIAO-ESP32-C3  SUCCESS   00:00:05.949
-========================= 1 succeeded in 00:00:05.949 =========================
+* feature/esp32-support
+  master
+diff --git a/culfw/Devices/ESP32/main.cpp b/culfw/Devices/ESP32/main.cpp
+new file mode 100644
+index 0000000..4625320
+--- /dev/null
++++ b/culfw/Devices/ESP32/main.cpp
+@@ -0,0 +1,193 @@
++#include <Arduino.h>
++#include "board.h"
++#include "hal_gpio.h"
++#include "hal_spi.h"
++#include "hal_timer.h"
++
++extern "C" {
++#include "delay.h"
++#include "clock.h"
++#include "rf_receive.h"
++#include "rf_send.h"
++#include "cc1100.h"
++#include "ttydata.h"
++#include "ringbuffer.h"
++#include "fncollection.h"
++#include "display.h"
++#include "fastrf.h"
++#include "fband.h"
++#include "rf_mode.h"
++#include "version.h"
++#include "fht.h"
++
++extern volatile uint32_t gdo_isr_count;
++
++#ifdef HAS_ASKSIN
++#include "rf_asksin.h"
++#endif
++#ifdef HAS_MORITZ
++#include "rf_moritz.h"
++#endif
++#ifdef HAS_RWE
++#include "rf_rwe.h"
++#endif
++#ifdef HAS_RFNATIVE
++#include "rf_native.h"
++#endif
++#ifdef HAS_INTERTECHNO
++#include "intertechno.h"
++#endif
++#ifdef HAS_SOMFY_RTS
++#include "somfy_rts.h"
++#endif
++#ifdef HAS_MBUS
++#include "rf_mbus.h"
++#endif
++
++void eeprom_init(void);
++
++// Function table
++extern const t_fntab fntab[];
++
++void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);
++}
++
++#define rb_is_empty(rb) ((rb)->nbytes == 0)
++
++// Function table definition
++extern "C" const t_fntab fntab[] = {
++  { 'C', ccreg },
++  { 'F', fs20send },
++#ifdef HAS_INTERTECHNO
++  { 'i', it_func },
++#endif
++#ifdef HAS_ASKSIN
++  { 'A', asksin_func },
++#endif
++#ifdef HAS_MORITZ
++  { 'Z', moritz_func },
++#endif
++#ifdef HAS_RFNATIVE
++  { 'N', native_func },
++#endif
++#ifdef HAS_RWE
++  { 'E', rwe_func },
++#endif
++  { 'R', read_eeprom },
++  { 'T', fhtsend },
++  { 'V', version },
++  { 'W', write_eeprom },
++  { 'X', set_txreport },
++  { 'e', eeprom_factory_reset },
++#ifdef HAS_FASTRF
++  { 'f', fastrf_func },
++#endif
++  { 'l', ledfunc },
++  { 't', gettime },
++  { 'x', ccsetpa },
++#ifdef HAS_MBUS
++  { 'b', rf_mbus_func },
++#endif
++#ifdef HAS_SOMFY_RTS
++  { 'Y', somfy_rts_func },
++#endif
++  { 0, 0 },
++};
++
++void setup() {
++    // On ESP32-C3/C6, with USB_CDC_ON_BOOT=1, Serial is the USB CDC.
++    // If it doesn't work, we try to use USBSerial directly.
++    Serial.begin(115200);
++    
++    HAL_LED_Init();
++    // Blink LED on startup
++    for(int i=0; i<3; i++) {
++        HAL_LED_Set(LED0, LED_on);
++        delay(100);
++        HAL_LED_Set(LED0, LED_off);
++        delay(100);
++    }
++    
++    Serial.println("\r\n--- CULFW32 ESP32 Starting ---");
++    Serial.print("Board: "); Serial.println(BOARD_NAME);
++    
++    hal_timer_init();
++    eeprom_init();
++    
++    rb_reset(&TTY_Rx_Buffer);
++    rb_reset(&TTY_Tx_Buffer);
++    
++    input_handle_func = analyze_ttydata;
++    display_channel = DISPLAY_USB;
++    
++    spi_init();
++    ccInitChip(EE_CC1100_CFG);
++    tx_init();
++    
++    // Explicitly enable GDO interrupt AFTER initialization
++    hal_enable_CC_GDOin_int(0, 1);
++    
++    Serial.println("Ready.");
++}
++
++void loop() {
++    static uint32_t last_isr_count = 0;
++    static unsigned long last_debug_print = 0;
++
++    if (millis() - last_debug_print > 1000) {
++        if (gdo_isr_count != last_isr_count) {
++             Serial.print("ISR Count: ");
++             Serial.println(gdo_isr_count);
++             last_isr_count = gdo_isr_count;
++        }
++        last_debug_print = millis();
++    }
++
++    // 1. Read from Serial into Rx Buffer
++    while (Serial.available()) {
++        uint8_t c = Serial.read();
++        rb_put(&TTY_Rx_Buffer, c);
++    }
++    
++    // 2. Process Commands
++    if (!rb_is_empty(&TTY_Rx_Buffer)) {
++        analyze_ttydata(DISPLAY_USB);
++    }
++    
++    // 3. Background Tasks
++    Minute_Task();
++    RfAnalyze_Task();
++    
++#ifdef HAS_FASTRF
++    FastRF_Task();
++#endif
++#ifdef HAS_ASKSIN
++    rf_asksin_task();
++#endif
++#ifdef HAS_MORITZ
++    rf_moritz_task();
++#endif
++#ifdef HAS_RWE
++    rf_rwe_task();
++#endif
++#ifdef HAS_MBUS
++    rf_mbus_task();
++#endif
++#ifdef HAS_RFNATIVE
++    native_task();
++#endif
++
++    // 4. Write from Tx Buffer to Serial
++    while (!rb_is_empty(&TTY_Tx_Buffer)) {
++        if (Serial.availableForWrite() > 0) {
++            Serial.write(rb_get(&TTY_Tx_Buffer));
++        } else {
++            // Check if we are connected, otherwise discard to prevent hang
++            // On ESP32 USB CDC, availableForWrite() might return 0 if no host is listening
++            break; 
++        }
++    }
++    
++    // Allow ESP32 system tasks (Watchdog, etc)
++    yield();
++}
+diff --git a/culfw/ESP32/hal.cpp b/culfw/ESP32/hal.cpp
+new file mode 100644
+index 0000000..24bba00
+--- /dev/null
++++ b/culfw/ESP32/hal.cpp
+@@ -0,0 +1,201 @@
++#include <Arduino.h>
++#include <SPI.h>
++#include <EEPROM.h>
++#include "hal_gpio.h"
++#include "hal_spi.h"
++#include "hal_timer.h"
++#include "board.h"
++
++extern "C" volatile uint32_t ticks = 0;
++extern "C" uint8_t SREG = 0;
++extern "C" uint8_t TIMSK0 = 0;
++volatile uint32_t gdo_isr_count = 0;
++
++extern "C" {
++#include "delay.h"
++#include "rf_receive.h"
++
++// Forward declarations of CULFW functions
++void rf_receive_TimerElapsedCallback(void);
++void CC1100_in_callback(void);
++}
++
++void IRAM_ATTR gdo_interrupt_handler();
++
++// Timer for system ticks (1ms)
++static hw_timer_t * tick_timer = NULL;
++void IRAM_ATTR onTickTimer() {
++    ticks++;
++}
++
++// Timer for RF Silence timeout
++static hw_timer_t * rf_timer = NULL;
++static volatile uint32_t rf_reload_val = 0;
++static bool rf_timer_enabled = false;
++
++void IRAM_ATTR onRfTimer() {
++    rf_receive_TimerElapsedCallback();
++}
++
++void hal_timer_init(void) {
++#if ESP_ARDUINO_VERSION_MAJOR >= 3
++    tick_timer = timerBegin(1000000); // 1MHz
++    timerAttachInterrupt(tick_timer, &onTickTimer);
++    timerAlarm(tick_timer, 1000, true, 0); // 1ms
++    
++    rf_timer = timerBegin(1000000); // 1MHz
++    timerAttachInterrupt(rf_timer, &onRfTimer);
++#else
++    tick_timer = timerBegin(0, 80, true); // 1MHz
++    timerAttachInterrupt(tick_timer, &onTickTimer, true);
++    timerAlarmWrite(tick_timer, 1000, true);
++    timerAlarmEnable(tick_timer);
++
++    rf_timer = timerBegin(1, 80, true); // 1MHz
++    timerAttachInterrupt(rf_timer, &onRfTimer, true);
++#endif
++}
++
++uint32_t hal_get_ticks(void) {
++    return ticks;
++}
++
++// RF Timer HAL
++void hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {
++    if (enable) {
++#if ESP_ARDUINO_VERSION_MAJOR >= 3
++        timerAlarm(rf_timer, rf_reload_val, false, 0);
++        timerStart(rf_timer);
++#else
++        timerAlarmWrite(rf_timer, rf_reload_val, false);
++        timerAlarmEnable(rf_timer);
++        timerStart(rf_timer);
++#endif
++        rf_timer_enabled = true;
++    } else {
++#if ESP_ARDUINO_VERSION_MAJOR >= 3
++        timerStop(rf_timer);
++#else
++        timerAlarmDisable(rf_timer);
++        timerStop(rf_timer);
++#endif
++        rf_timer_enabled = false;
++    }
++}
++
++uint32_t HAL_timer_get_reload_register(uint8_t instance) {
++    return rf_reload_val;
++}
++
++void HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {
++    rf_reload_val = value;
++    if (rf_timer_enabled) {
++        hal_enable_CC_timer_int(instance, true);
++    }
++}
++
++static uint32_t rf_counter_offset = 0;
++uint32_t HAL_timer_get_counter_value(uint8_t instance) {
++#if ESP_ARDUINO_VERSION_MAJOR >= 3
++    return (uint32_t)timerRead(rf_timer) - rf_counter_offset;
++#else
++    return timerRead(rf_timer) - rf_counter_offset;
++#endif
++}
++
++void HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {
++#if ESP_ARDUINO_VERSION_MAJOR >= 3
++    rf_counter_offset = (uint32_t)timerRead(rf_timer) - value;
++#else
++    rf_counter_offset = timerRead(rf_timer) - value;
++#endif
++}
++
++void HAL_timer_reset_counter_value(uint8_t instance) {
++#if ESP_ARDUINO_VERSION_MAJOR >= 3
++    timerWrite(rf_timer, 0);
++#else
++    timerWrite(rf_timer, 0);
++#endif
++    rf_counter_offset = 0;
++}
++
++// GPIO stuff
++void HAL_LED_Init(void) {
++    pinMode(LED_PIN, OUTPUT);
++}
++
++void HAL_LED_Set(LED_List led, LED_State state) {
++    digitalWrite(LED_PIN, state == LED_on ? HIGH : LOW);
++}
++
++void HAL_LED_Toggle(LED_List led) {
++    digitalWrite(LED_PIN, !digitalRead(LED_PIN));
++}
++
++void IRAM_ATTR gdo_interrupt_handler() {
++    gdo_isr_count++;
++    CC1100_in_callback();
++}
++
++void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
++    pinMode(GDO0_PIN, INPUT_PULLUP);
++    pinMode(GDO2_PIN, INPUT);
++    // Interrupt will be enabled explicitly later or via hal_enable_CC_GDOin_int
++}
++
++void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {
++    if (enable) {
++        attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
++    } else {
++        detachInterrupt(digitalPinToInterrupt(GDO0_PIN));
++    }
++}
++
++void hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {
++    if (pin == CC_Pin_CS) {
++        digitalWrite(CC1100_CS_PIN, state);
++    }
++}
++
++uint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {
++    if (pin == CC_Pin_In) {
++        return digitalRead(GDO0_PIN);
++    }
++    return 0;
++}
++
++// SPI stuff
++void spi_init(void) {
++    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);
++    pinMode(SPI_SS, OUTPUT);
++    digitalWrite(SPI_SS, HIGH);
++}
++
++uint8_t spi_send(uint8_t data) {
++    return SPI.transfer(data);
++}
++
++// Delay
++extern "C" void my_delay_ms(uint8_t ms) {
++    delay(ms);
++}
++
++extern "C" void my_delay_us(uint16_t us) {
++    delayMicroseconds(us);
++}
++
++// EEPROM emulation
++extern "C" void hal_eeprom_init(void) {
++    if (!EEPROM.begin(512)) {
++    }
++}
++
++extern "C" uint8_t eeprom_read_byte(uint8_t *addr) {
++    return EEPROM.read((size_t)addr);
++}
++
++extern "C" void eeprom_write_byte(uint8_t *addr, uint8_t value) {
++    EEPROM.write((size_t)addr, value);
++    EEPROM.commit();
++}
