@@ -59,6 +59,14 @@
 #include "hal.h"
 #endif
 
+#ifdef ESP32
+#include <esp_attr.h>
+#else
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+#endif
+
 #ifndef USE_RF_MODE
 uint8_t tx_report;              // global verbose / output-filter
 #endif
