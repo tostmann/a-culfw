@@ -1303,5 +1303,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "  if (b->state == STATE_COLLECT) {\n    if(!datatype) {\n      // addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));\n      if(analyze(b, TYPE_FS20, &oby)) { // Can be FS10 (433Mhz) or FS20 (868MHz)\n        oby--;                                  // Separate the checksum byte\n        uint8_t fs_csum = cksum1(6,obuf,oby);\n        if(fs_csum == obuf[oby] && oby >= 4) {\n          datatype = TYPE_FS20;\n        } else if(fs_csum+1 == obuf[oby] && oby >= 4) {     // Repeater\n          datatype = TYPE_FS20;\n          obuf[oby] = fs_csum;                  // do not report if we get both\n        } else if(cksum1(12, obuf, oby) == obuf[oby] && oby >= 4) {\n          datatype = TYPE_FHT;\n        }\n      }\n      // if(!datatype)\n      //  delbit(b);\n    }",
+            "path": "culfw/clib/rf_receive.c",
+            "original_text": "  if (b->state == STATE_COLLECT) {\n    if(!datatype) {\n      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));\n      if(analyze(b, TYPE_FS20, &oby)) { // Can be FS10 (433Mhz) or FS20 (868MHz)\n        oby--;                                  // Separate the checksum byte\n        uint8_t fs_csum = cksum1(6,obuf,oby);\n        if(fs_csum == obuf[oby] && oby >= 4) {\n          datatype = TYPE_FS20;\n        } else if(fs_csum+1 == obuf[oby] && oby >= 4) {     // Repeater\n          datatype = TYPE_FS20;\n          obuf[oby] = fs_csum;                  // do not report if we get both\n        } else if(cksum1(12, obuf, oby) == obuf[oby] && oby >= 4) {\n          datatype = TYPE_FHT;\n        }\n      }\n      if(!datatype)\n        delbit(b);\n    }"
+          }
+        }
+      }
+    ]
   }
 ]

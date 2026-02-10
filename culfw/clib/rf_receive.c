@@ -400,7 +400,7 @@ RfAnalyze_Task(void)
 
   if (b->state == STATE_COLLECT) {
     if(!datatype) {
-      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
+      // addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
       if(analyze(b, TYPE_FS20, &oby)) { // Can be FS10 (433Mhz) or FS20 (868MHz)
         oby--;                                  // Separate the checksum byte
         uint8_t fs_csum = cksum1(6,obuf,oby);
@@ -413,8 +413,8 @@ RfAnalyze_Task(void)
           datatype = TYPE_FHT;
         }
       }
-      if(!datatype)
-        delbit(b);
+      // if(!datatype)
+      //  delbit(b);
     }
 
     if(IS868MHZ && !datatype && analyze(b, TYPE_EM, &oby)) {
