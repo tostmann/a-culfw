@@ -1139,5 +1139,427 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 --target upload --upload-port /dev/ttyACM0"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 25162 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nFlash will be erased from 0x0000e000 to 0x0000ffff...\nFlash will be erased from 0x00010000 to 0x00055fff...\nSHA digest in image updated\nCompressed 12464 bytes to 9064...\nWriting at 0x00000000... (100 %)\nWrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 453.1 kbit/s)...\nHash of data verified.\nCompressed 3072 bytes to 146...\nWriting at 0x00008000... (100 %)\nWrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 463.3 kbit/s)...\nHash of data verified.\nCompressed 8192 bytes to 47...\nWriting at 0x0000e000... (100 %)\nWrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 744.3 kbit/s)...\nHash of data verified.\nCompressed 283696 bytes to 158377...\nWriting at 0x00010000... (10 %)\nWriting at 0x0001b179... (20 %)\nWriting at 0x00023156... (30 %)\nWriting at 0x0002a4bc... (40 %)\nWriting at 0x00030394... (50 %)\nWriting at 0x0003658c... (60 %)\nWriting at 0x0003c454... (70 %)\nWriting at 0x00044238... (80 %)\nWriting at 0x0004ad96... (90 %)\nWriting at 0x00050ecb... (100 %)\nWrote 283696 bytes (158377 compressed) at 0x00010000 in 2.2 seconds (effective 1032.4 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n========================= [SUCCESS] Took 16.65 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:16.652\n========================= 1 succeeded in 00:00:16.652 =========================\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "timeout": 10.0,
+            "command": "/root/.platformio/penv/bin/pio device monitor -d culfw/ -p /dev/ttyACM0 -b 115200"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 1\nOutput:\nUnknownPlatform: Unknown development platform 'atmelavr'\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "timeout": 5.0,
+            "command": "/root/.platformio/penv/bin/pio device monitor -p /dev/ttyACM0 -b 115200"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 124\nOutput:\n--- Terminal on /dev/ttyACM0 | 115200 8-N-1\n--- Available filters and text transformations: debug, default, direct, hexlify, log2file, nocontrol, printable, send_on_enter, time\n--- More details at https://bit.ly/pio-monitor-filters\n--- Quit: Ctrl+C | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H\n\nTIMEOUT\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "timeout": 5.0,
+            "command": "(sleep 1; echo \"V\"; sleep 1) | /root/.platformio/penv/bin/pio device monitor -p /dev/ttyACM0 -b 115200"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 1\nOutput:\nUserSideException: [Errno 11] Could not exclusively lock port /dev/ttyACM0: [Errno 11] Resource temporarily unavailable\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "stty -F /dev/ttyACM0 115200 raw -echo && (cat /dev/ttyACM0 & echo \"V\" > /dev/ttyACM0; sleep 2; kill $!)"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "stty -F /dev/ttyACM0 115200 raw -echo && (cat /dev/ttyACM0 & echo -e \"V\\r\\n\" > /dev/ttyACM0; sleep 2; kill $!)"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/main.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include \"board.h\"\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"clock.h\"\n#include \"rf_receive.h\"\n#include \"rf_send.h\"\n#include \"cc1100.h\"\n#include \"ttydata.h\"\n#include \"ringbuffer.h\"\n#include \"fncollection.h\"\n#include \"display.h\"\n#include \"fastrf.h\"\n#include \"fband.h\"\n#include \"rf_mode.h\"\n#include \"version.h\"\n#include \"fht.h\"\n\nextern volatile uint32_t gdo_isr_count;\n\n#ifdef HAS_ASKSIN\n#include \"rf_asksin.h\"\n#endif\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"\n#endif\n#ifdef HAS_RWE\n#include \"rf_rwe.h\"\n#endif\n#ifdef HAS_RFNATIVE\n#include \"rf_native.h\"\n#endif\n#ifdef HAS_INTERTECHNO\n#include \"intertechno.h\"\n#endif\n#ifdef HAS_SOMFY_RTS\n#include \"somfy_rts.h\"\n#endif\n#ifdef HAS_MBUS\n#include \"rf_mbus.h\"\n#endif\n\nvoid eeprom_init(void);\n\n// Function table\nextern const t_fntab fntab[];\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n\n// Function table definition\nextern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_INTERTECHNO\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n  { 'A', asksin_func },\n#endif\n#ifdef HAS_MORITZ\n  { 'Z', moritz_func },\n#endif\n#ifdef HAS_RFNATIVE\n  { 'N', native_func },\n#endif\n#ifdef HAS_RWE\n  { 'E', rwe_func },\n#endif\n  { 'R', read_eeprom },\n  { 'T', fhtsend },\n  { 'V', version },\n  { 'W', write_eeprom },\n  { 'X', set_txreport },\n  { 'e', eeprom_factory_reset },\n#ifdef HAS_FASTRF\n  { 'f', fastrf_func },\n#endif\n  { 'l', ledfunc },\n  { 't', gettime },\n  { 'x', ccsetpa },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n#ifdef HAS_SOMFY_RTS\n  { 'Y', somfy_rts_func },\n#endif\n  { 0, 0 },\n};\n\nvoid setup() {\n    // On ESP32-C3/C6, with USB_CDC_ON_BOOT=1, Serial is the USB CDC.\n    // If it doesn't work, we try to use USBSerial directly.\n    Serial.begin(115200);\n    \n    HAL_LED_Init();\n    // Blink LED on startup\n    for(int i=0; i<3; i++) {\n        HAL_LED_Set(LED0, LED_on);\n        delay(100);\n        HAL_LED_Set(LED0, LED_off);\n        delay(100);\n    }\n    \n    Serial.println(\"\\r\\n--- CULFW32 ESP32 Starting ---\");\n    Serial.print(\"Board: \"); Serial.println(BOARD_NAME);\n    \n    hal_timer_init();\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    // Explicitly enable GDO interrupt AFTER initialization\n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}\n\nvoid loop() {\n    static uint32_t last_isr_count = 0;\n    static unsigned long last_debug_print = 0;\n\n    if (millis() - last_debug_print > 1000) {\n        if (gdo_isr_count != last_isr_count) {\n             Serial.print(\"ISR Count: \");\n             Serial.println(gdo_isr_count);\n             last_isr_count = gdo_isr_count;\n        }\n        last_debug_print = millis();\n    }\n\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    RfAnalyze_Task();\n    \n#ifdef HAS_FASTRF\n    FastRF_Task();\n#endif\n#ifdef HAS_ASKSIN\n    rf_asksin_task();\n#endif\n#ifdef HAS_MORITZ\n    rf_moritz_task();\n#endif\n#ifdef HAS_RWE\n    rf_rwe_task();\n#endif\n#ifdef HAS_MBUS\n    rf_mbus_task();\n#endif\n#ifdef HAS_RFNATIVE\n    native_task();\n#endif\n\n    // 4. Write from Tx Buffer to Serial\n    while (!rb_is_empty(&TTY_Tx_Buffer)) {\n        if (Serial.availableForWrite() > 0) {\n            Serial.write(rb_get(&TTY_Tx_Buffer));\n        } else {\n            // Check if we are connected, otherwise discard to prevent hang\n            // On ESP32 USB CDC, availableForWrite() might return 0 if no host is listening\n            break; \n        }\n    }\n    \n    // Allow ESP32 system tasks (Watchdog, etc)\n    yield();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "timeout 5s cat /dev/ttyACM0 & sleep 1; echo -e \"V\\r\\n\" > /dev/ttyACM0; sleep 2; kill $!"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "dmesg | tail -n 20"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n[ 1209.715630]  __switch_to+0xe8/0x148\n[ 1209.715637]  __schedule+0x390/0xb68\n[ 1209.715641]  schedule+0x3c/0x148\n[ 1209.715646]  __mmc_claim_host+0xe4/0x240\n[ 1209.715650]  mmc_get_card+0x3c/0x60\n[ 1209.715655]  mmc_sd_detect+0x28/0xa0\n[ 1209.715660]  mmc_rescan+0x94/0x330\n[ 1209.715664]  process_one_work+0x158/0x3d0\n[ 1209.715670]  worker_thread+0x2c4/0x3e8\n[ 1209.715674]  kthread+0x118/0x128\n[ 1209.715678]  ret_from_fork+0x10/0x20\n[ 1526.107736] usb 3-2: new full-speed USB device number 2 using xhci-hcd\n[ 1526.266932] usb 3-2: New USB device found, idVendor=303a, idProduct=1001, bcdDevice= 1.01\n[ 1526.266938] usb 3-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3\n[ 1526.266941] usb 3-2: Product: USB JTAG/serial debug unit\n[ 1526.266944] usb 3-2: Manufacturer: Espressif\n[ 1526.266947] usb 3-2: SerialNumber: 54:32:04:89:48:D0\n[ 1533.857439] cdc_acm 3-2:1.0: ttyACM0: USB ACM device\n[ 1533.857476] usbcore: registered new interface driver cdc_acm\n[ 1533.857480] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "write_file",
+          "args": {
+            "content": "import serial\nimport time\n\ntry:\n    ser = serial.Serial('/dev/ttyACM0', 115200, timeout=1)\n    ser.write(b'V\\n')\n    time.sleep(0.5)\n    print(ser.read_all().decode(errors='ignore'))\n    ser.close()\nexcept Exception as e:\n    print(e)\n",
+            "path": "test_serial.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "write_file",
+          "response": {
+            "result": "Wrote to test_serial.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "python3 test_serial.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 1\nOutput:\nTraceback (most recent call last):\n  File \"/opt/ai_builder_data/users/763684262/projects/CULFW32/test_serial.py\", line 1, in <module>\n    import serial\nModuleNotFoundError: No module named 'serial'\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/python3 test_serial.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include <SPI.h>\n#include <EEPROM.h>\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n#include \"board.h\"\n\nextern \"C\" volatile uint32_t ticks = 0;\nextern \"C\" uint8_t SREG = 0;\nextern \"C\" uint8_t TIMSK0 = 0;\nvolatile uint32_t gdo_isr_count = 0;\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"rf_receive.h\"\n\n// Forward declarations of CULFW functions\nvoid rf_receive_TimerElapsedCallback(void);\nvoid CC1100_in_callback(void);\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler();\n\n// Timer for system ticks (1ms)\nstatic hw_timer_t * tick_timer = NULL;\nvoid IRAM_ATTR onTickTimer() {\n    ticks++;\n}\n\n// Timer for RF Silence timeout\nstatic hw_timer_t * rf_timer = NULL;\nstatic volatile uint32_t rf_reload_val = 0;\nstatic bool rf_timer_enabled = false;\n\nvoid IRAM_ATTR onRfTimer() {\n    rf_receive_TimerElapsedCallback();\n}\n\nvoid hal_timer_init(void) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    tick_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer);\n    timerAlarm(tick_timer, 1000, true, 0); // 1ms\n    \n    rf_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(rf_timer, &onRfTimer);\n#else\n    tick_timer = timerBegin(0, 80, true); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer, true);\n    timerAlarmWrite(tick_timer, 1000, true);\n    timerAlarmEnable(tick_timer);\n\n    rf_timer = timerBegin(1, 80, true); // 1MHz\n    timerAttachInterrupt(rf_timer, &onRfTimer, true);\n#endif\n}\n\nuint32_t hal_get_ticks(void) {\n    return ticks;\n}\n\n// RF Timer HAL\nvoid hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {\n    if (enable) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerAlarm(rf_timer, rf_reload_val, false, 0);\n        timerStart(rf_timer);\n#else\n        timerAlarmWrite(rf_timer, rf_reload_val, false);\n        timerAlarmEnable(rf_timer);\n        timerStart(rf_timer);\n#endif\n        rf_timer_enabled = true;\n    } else {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerStop(rf_timer);\n#else\n        timerAlarmDisable(rf_timer);\n        timerStop(rf_timer);\n#endif\n        rf_timer_enabled = false;\n    }\n}\n\nuint32_t HAL_timer_get_reload_register(uint8_t instance) {\n    return rf_reload_val;\n}\n\nvoid HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {\n    rf_reload_val = value;\n    if (rf_timer_enabled) {\n        hal_enable_CC_timer_int(instance, true);\n    }\n}\n\nstatic uint32_t rf_counter_offset = 0;\nuint32_t HAL_timer_get_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    return (uint32_t)timerRead(rf_timer) - rf_counter_offset;\n#else\n    return timerRead(rf_timer) - rf_counter_offset;\n#endif\n}\n\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    rf_counter_offset = (uint32_t)timerRead(rf_timer) - value;\n#else\n    rf_counter_offset = timerRead(rf_timer) - value;\n#endif\n}\n\nvoid HAL_timer_reset_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    timerWrite(rf_timer, 0);\n#else\n    timerWrite(rf_timer, 0);\n#endif\n    rf_counter_offset = 0;\n}\n\n// GPIO stuff\nvoid HAL_LED_Init(void) {\n    pinMode(LED_PIN, OUTPUT);\n}\n\nvoid HAL_LED_Set(LED_List led, LED_State state) {\n    digitalWrite(LED_PIN, state == LED_on ? HIGH : LOW);\n}\n\nvoid HAL_LED_Toggle(LED_List led) {\n    digitalWrite(LED_PIN, !digitalRead(LED_PIN));\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler() {\n    gdo_isr_count++;\n    CC1100_in_callback();\n}\n\nvoid hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT_PULLUP);\n    pinMode(GDO2_PIN, INPUT);\n    // Interrupt will be enabled explicitly later or via hal_enable_CC_GDOin_int\n}\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {\n    if (enable) {\n        attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n    } else {\n        detachInterrupt(digitalPinToInterrupt(GDO0_PIN));\n    }\n}\n\nvoid hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {\n    if (pin == CC_Pin_CS) {\n        digitalWrite(CC1100_CS_PIN, state);\n    }\n}\n\nuint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {\n    if (pin == CC_Pin_In) {\n        return digitalRead(GDO0_PIN);\n    }\n    return 0;\n}\n\n// SPI stuff\nvoid spi_init(void) {\n    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);\n    pinMode(SPI_SS, OUTPUT);\n    digitalWrite(SPI_SS, HIGH);\n}\n\nuint8_t spi_send(uint8_t data) {\n    return SPI.transfer(data);\n}\n\n// Delay\nextern \"C\" void my_delay_ms(uint8_t ms) {\n    delay(ms);\n}\n\nextern \"C\" void my_delay_us(uint16_t us) {\n    delayMicroseconds(us);\n}\n\n// EEPROM emulation\nextern \"C\" void hal_eeprom_init(void) {\n    if (!EEPROM.begin(512)) {\n    }\n}\n\nextern \"C\" uint8_t eeprom_read_byte(uint8_t *addr) {\n    return EEPROM.read((size_t)addr);\n}\n\nextern \"C\" void eeprom_write_byte(uint8_t *addr, uint8_t value) {\n    EEPROM.write((size_t)addr, value);\n    EEPROM.commit();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/fncollection.c"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include \"board.h\"                      // IWYU pragma: keep\n\n#include <avr/eeprom.h>                 // for __eerd_byte_UNKNOWN, etc\n#include <avr/interrupt.h>              // for cli\n#include <avr/io.h>                     // for bit_is_set\n#include <avr/pgmspace.h>               // for PSTR\n\n#ifndef bit_is_set\n#include <avr/sfr_defs.h>               // for bit_is_set\n#endif\n#include <stdint.h>                     // for uint8_t, uint16_t, int8_t\n\n#include \"../version.h\"                 // for VERSION_1, VERSION_2, etc\n#include \"cc1100.h\"                     // for cc_factory_reset\n#include \"cdc_uart.h\"                   // for EE_write_baud\n#include \"display.h\"                    // for DC, DS_P, DH2, DNL, DU, DH\n#include \"fband.h\"                      // for checkFrequency, IS433MHZ\n#include \"fncollection.h\"\n#include \"led.h\"                        // for LED_OFF, LED_ON\n#include \"qfs.h\"                        // for fs_sync\n#include \"stringfunc.h\"                 // for fromhex, fromip, fromdec\n#include \"hw_autodetect.h\"\n#ifdef HAS_USB\n#ifdef SAM7\n#include <usb/device/cdc-serial/CDCDSerialDriver.h>\n#include <utility/trace.h>\n#include \"delay.h\"\n#elif defined STM32\n#include \"usb_device.h\"\n#else\n#include <Drivers/USB/LowLevel/LowLevel.h>  // for USB_ShutDown\n#endif\n#endif\n#include <avr/wdt.h>                    // for WDTO_15MS, wdt_enable\n\n#include \"ethernet.h\"                   // for ethernet_reset\n#include \"fswrapper.h\"                  // for fs\n#include \"mysleep.h\"                    // for sleep_time\n#include \"multi_CC.h\"\n\n#ifdef USE_HAL\n#include \"hal.h\"\n#endif\n\nuint8_t led_mode = 2;   // Start blinking\n\n#ifdef XLED\n#include \"xled.h\"\n#endif\n\n#if defined(CDC_COUNT) && CDC_COUNT > 1\n#include \"cdc_uart.h\"                   // for EE_write_baud\n#endif\n\n#if defined STM32\n#define RTC_BOOTLOADER_FLAG 0x424C\n#define RTC_BOOTLOADER_JUST_UPLOADED 0x424D\n#include <stm32f103xb.h>\n#endif\n//////////////////////////////////////////////////\n// EEprom\n\n// eeprom_write_byte is inlined and it is too big\n__attribute__((__noinline__)) \nvoid\newb(uint8_t *p, uint8_t v)\n{\n  eeprom_write_byte(p, v);\n  eeprom_busy_wait();\n}\n\n// eeprom_read_byte is inlined and it is too big\n__attribute__((__noinline__)) \nuint8_t\nerb(uint8_t *p)\n{\n  return eeprom_read_byte(p);\n}\n\nstatic void\ndisplay_ee_bytes(uint8_t *a, uint8_t cnt)\n{\n  while(cnt--) {\n    DH2(erb(a++));\n    if(cnt)\n      DC(':');\n  }\n\n}\n\nstatic void\ndisplay_ee_mac(uint8_t *a)\n{\n  display_ee_bytes( a, 6 );\n}\n\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\nstatic void\ndisplay_ee_ip4(uint8_t *a)\n{\n  uint8_t cnt = 4;\n  while(cnt--) {\n    DU(erb(a++),1);\n    if(cnt)\n      DC('.');\n  }\n  \n}\n#endif\n\nvoid\nread_eeprom(char *in)\n{\n  uint8_t hb[2], d;\n  uint16_t addr;\n\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\n  if(in[1] == 'i') {\n           if(in[2] == 'm') { display_ee_mac(EE_MAC_ADDR);\n    } else if(in[2] == 'd') { DH2(erb(EE_USE_DHCP));\n    } else if(in[2] == 'a') { display_ee_ip4(EE_IP4_ADDR);\n    } else if(in[2] == 'n') { display_ee_ip4(EE_IP4_NETMASK);\n    } else if(in[2] == 'g') { display_ee_ip4(EE_IP4_GATEWAY);\n    } else if(in[2] == 'N') { display_ee_ip4(EE_IP4_NTPSERVER);\n    } else if(in[2] == 'o') { DH2(erb(EE_IP4_NTPOFFSET));\n    } else if(in[2] == 'p') {\n      DU(eeprom_read_word((uint16_t *)EE_IP4_TCPLINK_PORT), 0);\n    }\n  } else \n#endif\n  if(in[1] == 'M') { display_ee_mac(EE_DUDETTE_MAC); }  \n  else if(in[1] == 'P') { display_ee_bytes(EE_DUDETTE_PUBL, 16); }  \n  else {\n    hb[0] = hb[1] = 0;\n    d = fromhex(in+1, hb, 2);\n    if(d == 2)\n      addr = (hb[0] << 8) | hb[1];\n    else\n      addr = hb[0];\n\n#ifdef HAS_MULTI_CC\n#if NUM_SLOWRF > 1\n    if(CC1101.instance == 1) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG1;\n      }\n    }\n#endif\n#if NUM_SLOWRF > 2\n    if(CC1101.instance == 2) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG2;\n      }\n    }\n#endif\n#endif\n\n    d = erb((uint8_t *)addr);\n    DC('R');                    // prefix\n    DH(addr,4);                 // register number\n    DS_P( PSTR(\" = \") );\n    DH2(d);                    // result, hex\n    DS_P( PSTR(\" / \") );\n    DU(d,2);                    // result, decimal\n  }\n  DNL();\n}\n\nvoid\nwrite_eeprom(char *in)\n{\n  uint8_t hb[6], d = 0;\n\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\n  if(in[1] == 'i') {\n    uint8_t *addr = 0;\n           if(in[2] == 'm') { d=6; fromhex(in+3,hb,6); addr=EE_MAC_ADDR;\n    } else if(in[2] == 'd') { d=1; fromdec(in+3,hb);   addr=EE_USE_DHCP;\n    } else if(in[2] == 'a') { d=4; fromip (in+3,hb,4); addr=EE_IP4_ADDR;\n    } else if(in[2] == 'n') { d=4; fromip (in+3,hb,4); addr=EE_IP4_NETMASK;\n    } else if(in[2] == 'g') { d=4; fromip (in+3,hb,4); addr=EE_IP4_GATEWAY;\n    } else if(in[2] == 'p') { d=2; fromdec(in+3,hb);   addr=EE_IP4_TCPLINK_PORT;\n    } else if(in[2] == 'N') { d=4; fromip (in+3,hb,4); addr=EE_IP4_NTPSERVER;\n    } else if(in[2] == 'o') { d=1; fromhex(in+3,hb,1); addr=EE_IP4_NTPOFFSET;\n#ifdef HAS_NTP\n      extern int8_t ntp_gmtoff;\n      ntp_gmtoff = hb[0];\n#endif\n    }\n    for(uint8_t i = 0; i < d; i++)\n      ewb(addr++, hb[i]);\n\n  } else \n#endif\n  {\n    uint16_t addr;\n    d = fromhex(in+1, hb, 3);\n    if(d < 2)\n      return;\n    if(d == 2)\n      addr = hb[0];\n    else\n      addr = (hb[0] << 8) | hb[1];\n\n#ifdef HAS_MULTI_CC\n#if NUM_SLOWRF > 1\n    if(CC1101.instance == 1) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG1;\n      }\n    }\n#endif\n#if NUM_SLOWRF > 2\n    if(CC1101.instance == 2) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG2;\n      }\n    }\n#endif\n#endif\n\n    ewb((uint8_t*)addr, hb[d-1]);\n\n    if (addr == 15 || addr == 16 || addr == 17)\n      checkFrequency();\n\n    // If there are still bytes left, then write them too\n    in += (2*d+1);\n    while(in[0]) {\n      if(!fromhex(in, hb, 1))\n        return;\n      ewb((uint8_t*)++addr, hb[0]);\n      in += 2;\n    }\n  }\n}\n\nvoid\neeprom_init(void)\n{\n#ifdef USE_HAL\n  hal_eeprom_init();\n#endif\n\n  if(erb(EE_MAGIC_OFFSET)   != VERSION_1 ||\n     erb(EE_MAGIC_OFFSET+1) != VERSION_2)\n       eeprom_factory_reset(0);\n\n  led_mode = erb(EE_LED);\n#ifdef XLED\n  switch (led_mode) {\n    case 0:\n      xled_pattern = 0;\n      break;\n    case 1:\n      xled_pattern = 0xffff;\n      break;\n    case 2:\n      xled_pattern = 0xff00;\n      break;\n    case 3:\n      xled_pattern = 0xa000;\n      break;\n    case 4:\n      xled_pattern = 0xaa00;\n      break;\n  }\n#endif\n#ifdef HAS_SLEEP\n  sleep_time = erb(EE_SLEEPTIME);\n#endif\n}\n\nvoid\neeprom_factory_reset(char *in)\n{\n\n  ewb(EE_MAGIC_OFFSET  , VERSION_1);\n  ewb(EE_MAGIC_OFFSET+1, VERSION_2);\n\n  cc_factory_reset();\n  checkFrequency();\n\n  ewb(EE_RF_ROUTER_ID, 0);\n  ewb(EE_RF_ROUTER_ROUTER, 0);\n  ewb(EE_REQBL, 0);\n  ewb(EE_LED, 2);\n\n#ifdef HAS_LCD\n  ewb(EE_CONTRAST,   0x40);\n  ewb(EE_BRIGHTNESS, 0x80);\n  ewb(EE_SLEEPTIME, 30);\n#endif\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\n  ethernet_reset();\n#endif\n#ifdef HAS_FS\n  ewb(EE_LOGENABLED, 0x00);\n#endif\n#ifdef HAS_RF_ROUTER\n  ewb(EE_RF_ROUTER_ID, 0x00);\n  ewb(EE_RF_ROUTER_ROUTER, 0x00);\n#endif\n\n#ifdef HAS_WIZNET\n  EE_write_baud(0,CDC_BAUD_RATE);\n  EE_write_baud(1,CDC_BAUD_RATE);\n#endif\n\n  if(in && in[1] != 'x')\n    prepare_boot(0);\n}\n\n// LED\nvoid\nledfunc(char *in)\n{\n  fromhex(in+1, &led_mode, 1);\n#ifdef XLED\n  switch (led_mode) {\n    case 0:\n      xled_pattern = 0; \n      break;\n    case 1:\n      xled_pattern = 0xffff; \n      break;\n    case 2:\n      xled_pattern = 0xff00; \n      break;\n    case 3:\n      xled_pattern = 0xa000; \n      break;\n    case 4:\n      xled_pattern = 0xaa00; \n      break;\n  }\n#else\n  if(led_mode & 1)\n    LED_ON();\n  else\n    LED_OFF();\n#endif\n\n  ewb(EE_LED, led_mode);\n}\n\n//////////////////////////////////////////////////\n// boot\nvoid\nprepare_boot(char *in)\n{\n  uint8_t bl = 0;\n  if(in)\n    fromhex(in+1, &bl, 1);\n\n  if(bl == 0xff) {            // Allow testing\n    while(1);\n  }\n    \n#ifdef SAM7\n\n\tunsigned char volatile * const ram = (unsigned char *) AT91C_ISRAM;\n\n\t//Reset\n\tif(bl)\n\t\t*ram = 0xaa;\t\t// Next reboot we'd like to jump to the bootloader.\n\n\tUSBD_Disconnect();\n\tmy_delay_ms(250);\n\tmy_delay_ms(250);\n\tmy_delay_ms(250);\n\tmy_delay_ms(250);\n\tAT91C_BASE_RSTC->RSTC_RCR = AT91C_RSTC_PROCRST | AT91C_RSTC_PERRST | AT91C_RSTC_EXTRST   | 0xA5<<24;\n\twhile (1);\n\n#elif defined STM32\n\tUSBD_Disconnect();\n\n\tRCC->APB1ENR |= (RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN);\n\t    PWR->CR |= PWR_CR_DBP;\n\tif(bl) {\n\t  // Next reboot we'd like to jump to the bootloader.\n    BKP->DR10 = RTC_BOOTLOADER_FLAG;\n\t} else {\n    BKP->DR10 = RTC_BOOTLOADER_JUST_UPLOADED;\n\t}\n\tPWR->CR &=~ PWR_CR_DBP;\n\n\twdt_enable(WDTO_2S);\n\n\twhile (1);                 // go to bed, the wathchdog will take us to reset\n#else\n  if(bl)                     // Next reboot we'd like to jump to the bootloader.\n    ewb( EE_REQBL, 1 );      // Simply jumping to the bootloader from here\n                             // wont't work. Neither helps to shutdown USB\n                             // first.\n                             \n#ifdef HAS_USB\n  USB_ShutDown();            // ??? Needed?\n#endif\n#ifdef HAS_FS\n  fs_sync(&fs);              // Sync the filesystem\n#endif\n\n\n  TIMSK0 = 0;                // Disable the clock which resets the watchdog\n  cli();\n  \n  wdt_enable(WDTO_15MS);       // Make sure the watchdog is running \n  while (1);                 // go to bed, the wathchdog will take us to reset\n#endif\n}\n\nvoid\nversion(char *in)\n{\n  MULTICC_PREFIX();\n#if defined(CUL_HW_REVISION)\n  if (in[1] == 'H') {\n    DS_P( PSTR(CUL_HW_REVISION) );\n    DNL();\n    return;\n  }\n#endif\n  DS_P( PSTR(\"V \" VERSION \" \" FW_NAME \" Build: \" BUILD_NUMBER \" (\" BUILD_DATE \") \"));\n#ifdef MULTI_FREQ_DEVICE     // check 433MHz version marker\n  if (!bit_is_set(MARK433_PIN, MARK433_BIT))\n     DS_P( PSTR(BOARD_ID_STR433) );\n  else\n#endif\n    DS_P( PSTR(BOARD_ID_STR) );\n#ifdef USE_HW_AUTODETECT\n  DC('_');\n  DH2(get_hw_features());\n#endif\n  if (IS433MHZ) {\n     DS_P( PSTR(\" (F-Band: 433MHz)\") );\n  } else {\n     DS_P( PSTR(\" (F-Band: 868MHz)\") );\n  }\n#ifdef HAS_I2CSLAVE\n\t\tDS_P( PSTR(\" (I2C: 0x\") );\n\t\tdisplay_hex2(i2cSlaveAddr);\n\t\tDS_P( PSTR(\")\") );\n#endif\t\n  DNL();\n}\n\nvoid\ndumpmem(uint8_t *addr, uint16_t len)\n{\n  for(uint16_t i = 0; i < len; i += 16) {\n    uint8_t l = len;\n    if(l > 16)\n      l = 16;\n    DH(i,4);\n    DC(':'); DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      DH2(addr[j]);\n      if(j&1)\n        DC(' ');\n    }\n    DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      if(addr[j] >= ' ' && addr[j] <= '~')\n        DC(addr[j]);\n      else\n        DC('.');\n    }\n    addr += 16;\n    DNL();\n  }\n  DNL();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/platformio.ini"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "[platformio]\nsrc_dir = .\n\n; -------------------------------------------------------------------------\n; ESP32-C3 CONFIGURATION\n; -------------------------------------------------------------------------\n\n[env:ESP32-C3]\nplatform = espressif32\nboard = esp32-c3-devkitm-1\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility (use DIO for C3)\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py\n\nbuild_flags = \n    -DESP32_C3\n    -DUSE_HAL\n    -DARDUINO_USB_MODE=1\n    -DARDUINO_USB_CDC_ON_BOOT=1\n    -DHAS_CC1100\n    -I Devices/ESP32\n    -I .\n    -I clib\n    -I clib/mbus\n    -I ESP32\n    -I ESP32/avr\n    -I ESP32/utility\n\nbuild_src_filter =\n    +<Devices/ESP32/main.cpp>\n    +<ESP32/hal.cpp>\n    +<clib/cc1100.c>\n    +<clib/cc1101_pllcheck.c>\n    +<clib/clock.c>\n    +<clib/display.c>\n    +<clib/fastrf.c>\n    +<clib/fband.c>\n    +<clib/fht.c>\n    +<clib/fncollection.c>\n    +<clib/hw_autodetect.c>\n    +<clib/intertechno.c>\n    +<clib/kopp-fc.c>\n    +<clib/multi_CC.c>\n    +<clib/rf_asksin.c>\n    +<clib/rf_maico.c>\n    +<clib/rf_mbus.c>\n    +<clib/mbus/*.c>\n    +<clib/rf_mode.c>\n    +<clib/rf_moritz.c>\n    +<clib/rf_native.c>\n    +<clib/lacrosse.c>\n    +<clib/rf_router.c>\n    +<clib/rf_receive_bucket.c>\n    +<clib/rf_receive_esa.c>\n    +<clib/rf_receive_hms.c>\n    +<clib/rf_receive_it.c>\n    +<clib/rf_receive_revolt.c>\n    +<clib/rf_receive_tcm97001.c>\n    +<clib/rf_receive_tx3.c>\n    +<clib/rf_receive.c>\n    +<clib/rf_rwe.c>\n    +<clib/rf_send.c>\n    +<clib/rf_zwave.c>\n    +<clib/ringbuffer.c>\n    +<clib/somfy_rts.c>\n    +<clib/stringfunc.c>\n    +<clib/ttydata.c>\n    +<clib/onewire.c>\n\n; -------------------------------------------------------------------------\n; XIAO-ESP32-C3 CONFIGURATION\n; -------------------------------------------------------------------------\n\n[env:XIAO-ESP32-C3]\nplatform = espressif32\nboard = seeed_xiao_esp32c3\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py\n\nbuild_flags = \n    -DESP32_C3\n    -DUSE_HAL\n    -DARDUINO_USB_MODE=1\n    -DARDUINO_USB_CDC_ON_BOOT=1\n    -DHAS_CC1100\n    -DBOARD_NAME=\\\"XIAO-ESP32-C3\\\"\n    -DBOARD_ID_STR=\\\"XIAO-ESP32-C3\\\"\n    -DSPI_SCLK=8\n    -DSPI_MISO=9\n    -DSPI_MOSI=10\n    -DSPI_SS=5\n    -DCC1100_CS_PIN=5\n    -DGDO0_PIN=3\n    -DGDO2_PIN=4\n    -DLED_PIN=21\n    -I Devices/ESP32\n    -I .\n    -I clib\n    -I clib/mbus\n    -I ESP32\n    -I ESP32/avr\n    -I ESP32/utility\n\nbuild_src_filter =\n    ${env:ESP32-C3.build_src_filter}\n\n; -------------------------------------------------------------------------\n; ESP32-C6 CONFIGURATION\n; -------------------------------------------------------------------------\n\n[env:ESP32-C6]\nplatform = espressif32\nboard = esp32-c6-devkitc-1\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py\n\nbuild_flags = \n    -DESP32_C6\n    -DUSE_HAL\n    -DARDUINO_USB_MODE=1\n    -DARDUINO_USB_CDC_ON_BOOT=1\n    -DHAS_CC1100\n    -I Devices/ESP32\n    -I .\n    -I clib\n    -I clib/mbus\n    -I ESP32\n    -I ESP32/avr\n    -I ESP32/utility\n\nbuild_src_filter =\n    ${env:ESP32-C3.build_src_filter}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "    if (millis() - last_debug_print > 1000) {\n        Serial.print(\"Heartbeat. ISR Count: \");\n        Serial.println(gdo_isr_count);\n        last_isr_count = gdo_isr_count;\n        last_debug_print = millis();\n    }",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "    if (millis() - last_debug_print > 1000) {\n        if (gdo_isr_count != last_isr_count) {\n             Serial.print(\"ISR Count: \");\n             Serial.println(gdo_isr_count);\n             last_isr_count = gdo_isr_count;\n        }\n        last_debug_print = millis();\n    }"
+          }
+        }
+      }
+    ]
   }
 ]

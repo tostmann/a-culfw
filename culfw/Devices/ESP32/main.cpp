@@ -135,11 +135,9 @@ void loop() {
     static unsigned long last_debug_print = 0;
 
     if (millis() - last_debug_print > 1000) {
-        if (gdo_isr_count != last_isr_count) {
-             Serial.print("ISR Count: ");
-             Serial.println(gdo_isr_count);
-             last_isr_count = gdo_isr_count;
-        }
+        Serial.print("Heartbeat. ISR Count: ");
+        Serial.println(gdo_isr_count);
+        last_isr_count = gdo_isr_count;
         last_debug_print = millis();
     }
 
