@@ -683,5 +683,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "// Function table\nextern const t_fntab fntab[];\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n}",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "// Function table\nextern const t_fntab fntab[];\n}"
+          }
+        }
+      }
+    ]
   }
 ]

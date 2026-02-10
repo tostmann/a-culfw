@@ -48,6 +48,8 @@ void eeprom_init(void);
 
 // Function table
 extern const t_fntab fntab[];
+
+void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);
 }
 
 #define rb_is_empty(rb) ((rb)->nbytes == 0)
