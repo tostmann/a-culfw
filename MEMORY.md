@@ -67,7 +67,7 @@
     *   Die `_BV` redefinition warning bleibt weiterhin bestehen, hat aber keine Auswirkungen auf die Funktionalität.
 *   **Initialer Upload auf XIAO-ESP32-C3 (DONE):** Das neu erstellte Binary (v1.26.70 und Minimal-Sketches) wurde nun *mehrmals* erfolgreich auf den XIAO-ESP32-C3 geflasht.
 *   **CLI Serial Test Script (`cul_test.py`) (DONE):** Ein Python-basiertes Skript (`cul_test.py`) wurde entwickelt, um serielle Kommunikation zu testen. Es wurde erfolgreich mit einem Legacy CUL868 (`/dev/ttyACM1`) verifiziert und zur Diagnose und Funktionsprüfung des XIAO-ESP32-C3 verwendet.
-*   **XIAO-ESP32-C3 Pin-Re-Assignment (DONE):**
+*   **XIAO-ESP32-C3 Pin-Re-Assignment (DONE - RESOLVED Boot- & Serial-Output-Problem):**
     *   **Ursache (CONFIRMED):** Strapping-Pin-Konflikte (insbesondere GPIO 8, 9 und potenziell 2) verhinderte den Applikationsstart des XIAO-ESP32-C3, da diese Pins den Bootloader-Modus erzwingen können, wenn sie beim Reset auf einem kritischen Pegel sind.
     *   **Fix:** Das Pinout für den XIAO-ESP32-C3 wurde in der Hardware und in `platformio.ini` angepasst, um die Verwendung der kritischen Strapping-Pins für SPI und GDO zu vermeiden.
     *   **Angewandtes Pinout (Verifiziert & Funktional):**
@@ -75,17 +75,20 @@
         *   **MISO:** GPIO 10 (XIAO Pin D10)
         *   **MOSI:** GPIO 7 (XIAO Pin D5)
         *   **CS:** GPIO 5 (XIAO Pin D3)
-        *   **GDO0:** GPIO 3 (XIAO Pin D1)
-        *   **GDO2:** GPIO 4 (XIAO Pin D2)
+        *   **GDO0:** GPIO 3 (Pin D1)
+        *   **GDO2:** GPIO 4 (Pin D2)
         *   **LED:** GPIO 21 (XIAO Pin D6)
-    *   **Verifizierung:** Die erfolgreiche Kommunikation mit dem CC1101 (Lesen von Registern wie `C00`, `C01`, `C02`) und das korrekte Booten der Firmware bestätigen die Funktionalität des neuen Pinouts.
+    *   **Verifizierung:** Die erfolgreiche Kommunikation mit dem CC1101 (Lesen von Registern wie `C00`, `C01`, `C02`, `C35`) und das korrekte Booten der Firmware bestätigen die Funktionalität des neuen Pinouts. Der `gdo_isr_count` debug counter zeigt die korrekte Interrupt-Aktivität an.
+*   **`ttydata.h` Function Pointer Type Fix (DONE):** Der Typ des Funktionszeigers `fn` innerhalb der `t_fntab` Struktur in `culfw/clib/ttydata.h` wurde von `void (* const fn)(char *)` auf `void (* const fn)(uint8_t *)` geändert. Dies behebt `invalid conversion` Compilerfehler, die durch Typinkonsistenzen bei der Initialisierung von `fntab` in `main.cpp` aufgetreten sind.
+*   **`cc1100.c` Serial Output Conditional Compilation (DONE):** `Serial.println` Aufrufe in `culfw/clib/cc1100.c` wurden angepasst (z.B. durch `DBG()` ersetzt oder unter `#if defined(ESP32_DEBUG)` gestellt), um Konflikte mit der `Serial` Objektdefinition in der ESP32-Umgebung zu vermeiden und die Kompilierung erfolgreich zu machen.
 
 ## 4. Known Issues & Next Steps
-*   **XIAO-ESP32-C3 Boot- & Serial-Output-Problem (RESOLVED):**
-    *   **Problem:** Nach dem Flashen der Firmware bootete der XIAO-ESP32-C3 nicht in die Applikation, verblieb im "wait usb download"-Modus, und es wurde keine serielle Ausgabe empfangen.
-    *   **Lösung:** Die Ursache war ein Strapping-Pin-Konflikt, bei dem kritische Pins (insbesondere GPIO 8, 9) für den SPI-Bus genutzt wurden. Durch eine Hardware-Anpassung des Pinouts (siehe Abschnitt 3, "XIAO-ESP32-C3 Pin-Re-Assignment") wurden diese Pins vermieden. Die Firmware bootet nun zuverlässig, und die serielle Kommunikation funktioniert einwandfrei. Die CC1101-Kommunikation wurde ebenfalls erfolgreich verifiziert.
-
+*   **RF-Datenaustausch (Slow RF - FS20, Intertechno):**
+    *   **Problem:** Der bidirektionale Datenaustausch von "Slow RF" Protokollen (FS20, Intertechno) zwischen dem XIAO-ESP32-C3 und einem Referenz-CUL funktioniert noch nicht zuverlässig. Empfangs- und Sendeversuche über das neu entwickelte `cul_exchange_test.py` Skript schlagen fehl, obwohl der GDO0-Interrupt auf dem ESP32-C3 ausgelöst wird, was auf eine aktive Funkerkennung hinweist.
+    *   **Beobachtung:** Das Senden von Befehlen wie `X` (Transceiver Status) oder `t` (TX Power) führt zu einem `TIMEOUT` auf dem ESP32, was auf Probleme beim Senden selbst oder beim internen Empfang des gesendeten Signals hinweist.
 *   **Weitere Entwicklung:**
+    *   Analyse und Debugging des RF-Timings (insbesondere der `HAL_timer_set_reload_register` Funktion und der Puls-Dekodierung in `rf_receive.c`), um die korrekte Erkennung und Dekodierung der Funkprotokolle sicherzustellen.
+    *   Überprüfung der CC1101-Konfigurationen (`MDMCFG` Register) für die Slow RF-Modi auf optimale Werte.
     *   Optimierung des SPI-Timings.
     *   Implementierung eines Web-Interfaces für ESP32.
 ```
