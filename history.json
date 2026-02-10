@@ -1581,5 +1581,59 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/avr/avr/pgmspace.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _AVR_PGMSPACE_H\n#define _AVR_PGMSPACE_H\n#include <Arduino.h>\n#define PROGMEM\n#define PSTR(s) (s)\n#define pgm_read_byte(addr) (*(const uint8_t *)(addr))\n#define pgm_read_word(addr) (*(const uint16_t *)(addr))\n#define __LPM(addr) (*(const uint8_t *)(addr))\n#define __LPM_word(addr) (*(const uint16_t *)(addr))\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#ifndef _AVR_PGMSPACE_H\n#define _AVR_PGMSPACE_H\n#pragma GCC system_header\n#include <Arduino.h>",
+            "path": "culfw/ESP32/avr/avr/pgmspace.h",
+            "original_text": "#ifndef _AVR_PGMSPACE_H\n#define _AVR_PGMSPACE_H\n#include <Arduino.h>"
+          }
+        }
+      }
+    ]
   }
 ]
