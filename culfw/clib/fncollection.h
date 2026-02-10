@@ -16,6 +16,7 @@ void dumpmem(uint8_t *addr, uint16_t len);
 void ledfunc(char *);
 void prepare_boot(char *);
 void version(char *);
+void display_debug(char *);
 void do_wdt_enable(uint8_t t);
 
 // Already used magics: c1,c2

@@ -6,9 +6,9 @@ Verbose mode can be enabled via `-v, --verbose` option
 * FIRMWARE VERSION UPDATE                 *
 *******************************************
 * Base Version: 1.26
-* Build Number: 97
-* New Version:  1.26.97
-* Build Date:   2026-02-10 15:17:42
+* Build Number: 98
+* New Version:  1.26.98
+* Build Date:   2026-02-10 15:17:50
 *******************************************
 
 CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
@@ -95,6 +95,24 @@ clib/fband.c:54:30: warning: passing argument 1 of 'readEEpromValue' discards 'c
 clib/fband.c:15:31: note: expected 'char *' but argument is of type 'const char *'
  uint8_t readEEpromValue(char *rbyte) {
                          ~~~~~~^~~~~
+Devices/ESP32/main.cpp: In function 'void show_debug(char*)':
+Devices/ESP32/main.cpp:52:5: error: 'display_debug' was not declared in this scope
+     display_debug(in);
+     ^~~~~~~~~~~~~
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fht.c.o
+Devices/ESP32/main.cpp:52:5: note: suggested alternative: 'display_hex2'
+     display_debug(in);
+     ^~~~~~~~~~~~~
+     display_hex2
+ESP32/hal.cpp:10:30: warning: 'ticks' initialized and declared 'extern'
+ extern "C" volatile uint32_t ticks = 0;
+                              ^~~~~
+ESP32/hal.cpp:11:20: warning: 'SREG' initialized and declared 'extern'
+ extern "C" uint8_t SREG = 0;
+                    ^~~~
+ESP32/hal.cpp:12:20: warning: 'TIMSK0' initialized and declared 'extern'
+ extern "C" uint8_t TIMSK0 = 0;
+                    ^~~~~~
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -108,67 +126,10 @@ In file included from clib/cc1100.h:10,
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fht.c.o
-Devices/ESP32/main.cpp: In function 'void show_debug(char*)':
-Devices/ESP32/main.cpp:52:5: error: 'display_debug' was not declared in this scope
-     display_debug(in);
-     ^~~~~~~~~~~~~
-Devices/ESP32/main.cpp:52:5: note: suggested alternative: 'display_hex2'
-     display_debug(in);
-     ^~~~~~~~~~~~~
-     display_hex2
-ESP32/hal.cpp:10:30: warning: 'ticks' initialized and declared 'extern'
- extern "C" volatile uint32_t ticks = 0;
-                              ^~~~~
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
-ESP32/hal.cpp:11:20: warning: 'SREG' initialized and declared 'extern'
- extern "C" uint8_t SREG = 0;
-                    ^~~~
-ESP32/hal.cpp:12:20: warning: 'TIMSK0' initialized and declared 'extern'
- extern "C" uint8_t TIMSK0 = 0;
-                    ^~~~~~
 *** [.pio/build/XIAO-ESP32-C3/src/Devices/ESP32/main.cpp.o] Error 1
-In file included from ESP32/avr/avr/pgmspace.h:3,
-                 from clib/fncollection.c:6:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
- #define sei() portENABLE_INTERRUPTS()
- 
-In file included from clib/fncollection.c:4:
-ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
- #define sei()
- 
-In file included from ESP32/avr/avr/pgmspace.h:3,
-                 from clib/fncollection.c:6:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
- #define cli() portDISABLE_INTERRUPTS()
- 
-In file included from clib/fncollection.c:4:
-ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
- #define cli()
- 
-In file included from ESP32/avr/avr/pgmspace.h:3,
-                 from clib/fncollection.c:6:
-/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
- #define _BV(b) (1UL << (b))
- 
-In file included from clib/fncollection.c:5:
-ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
- #define _BV(bit) (1UL << (bit))
- 
-clib/fncollection.c: In function 'read_eeprom':
-clib/fncollection.c:162:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-     d = erb((uint8_t *)addr);
-             ^
-clib/fncollection.c: In function 'write_eeprom':
-clib/fncollection.c:226:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-     ewb((uint8_t*)addr, hb[d-1]);
-         ^
-clib/fncollection.c:236:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
-       ewb((uint8_t*)++addr, hb[0]);
-           ^
-========================== [FAILED] Took 1.94 seconds ==========================
+========================== [FAILED] Took 2.01 seconds ==========================
 
 Environment    Status    Duration
 -------------  --------  ------------
-XIAO-ESP32-C3  FAILED    00:00:01.941
-==================== 1 failed, 0 succeeded in 00:00:01.941 ====================
+XIAO-ESP32-C3  FAILED    00:00:02.009
+==================== 1 failed, 0 succeeded in 00:00:02.009 ====================
