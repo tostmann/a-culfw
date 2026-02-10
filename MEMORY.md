@@ -80,9 +80,9 @@
 *   **Global `bucket_nrused` (DONE):** Das `bucket_nrused` Array, das den Füllstand der RF-Receive-Buckets angibt, wurde global zugänglich gemacht, um seinen Status über den Debug-Befehl `y` zu überwachen.
 *   **Full Microsecond Precision for SlowRF Timing (DONE - Finalized & Verified):**
     *   The `TSCALE` macro in `rf_receive_bucket.h` was definitively changed from `(x/16)` back to `(x)`, eliminating the 1/16 scaling factor for 32-bit platforms.
-    *   All relevant timing variables (`hightime`, `lowtime`, `wave_t` members) and function parameters (`wave_equals`, `makeavg`) were converted to `pulse_t` (uint16_t) or `uint32_t` to handle the unscaled microsecond values without overflow. A critical type conflict in `wave_equals` (previously mixing `uint8_t` and `pulse_t`) was resolved.
+    *   All relevant timing variables (`hightime`, `lowtime`, `wave_t` members) and function parameters (`wave_equals`, `makeavg`) were converted to `pulse_t` (uint16_t) or `uint32_t` to handle the unscaled microsecond values without overflow. A critical type conflict in `wave_equals` (previously mixing `uint8_t` and `pulse_t`) was resolved during this session.
     *   The `>> 4` scaling was explicitly removed from `hightime`/`lowtime` calculations in `rf_receive.c`.
-    *   `makeavg` function in `rf_receive_bucket.c` was updated to accept `pulse_t` types and uses a more precise `((uint32_t)i * 3 + j) / 4` calculation to avoid rounding errors and prevent overflows with larger microsecond values.
+    *   `makeavg` function in `rf_receive_bucket.c` was updated to accept `pulse_t` types and uses a more precise `((uint32_t)i * 3 + j) / 4` calculation to avoid rounding errors and prevent overflows with larger microsecond values. This fix was completed during this session.
     *   `TDIFF` (tolerance) was adjusted to 120µs (from 160µs).
     *   `SILENCE` timeout increased to 15000µs (from 8000µs) to allow for longer packet reception without premature termination.
     *   The calculation of `hightime` and `lowtime` in `CC1100_in_callback` and `gdo_interrupt_handler` in `hal.cpp` was refined to use `static volatile pulse_t last_isr_time_val = 0;` and `esp_timer_get_time()` for jitter-free microsecond precision.
@@ -90,11 +90,11 @@
 *   **Enhanced Debugging (DONE - Optimized output for bit collection):**
     *   Logging within `addbit` was enabled to show `0` or `1` for recognized bits (activated with `X3F` monitor mode).
     *   The `X3F`-Raw-Monitor output now explicitly shows `S` (Sync), `C` (Collect), `R` (Reset), `.` (Silence), and the newly collected `0`/`1` bits.
-    *   General debug output in `CC1100_in_callback` was streamlined to focus on key events and bit collection, reducing console clutter and improving buffer efficiency.
+    *   General debug output in `CC1100_in_callback` was streamlined to focus on key events and bit collection, reducing console clutter and improving buffer efficiency. The frequent `S`, `1`, `0` messages are now less verbose, prioritizing buffer space for full packet reports.
 
 ## 4. Known Issues & Next Steps
 *   **RF-Datenaustausch (Slow RF - FS20, Intertechno):**
-    *   **Problem:** Bits are now successfully collected in the internal buckets (`bucket_nrused` indicates data), and raw packet snapshots are observed in the debug output (e.g., `.tp 3 397 409 594 603 ... 121A406225E8`). However, the higher-level protocol decoding (`analyze()` function in `rf_receive.c`) for Slow RF protocols (FS20, Intertechno) is not yet successful, meaning packets are not being fully recognized and reported with protocol-specific formats (e.g., `F...`). This suggests issues with checksums, parity checks, or the final processing logic after bit collection.
+    *   **Problem:** Bits are now successfully collected in the internal buckets (`bucket_nrused` indicates data), and raw packet snapshots are observed in the debug output (e.g., `.tp 3 397 409 594 603 ... 121A406225E8`). However, the higher-level protocol decoding (`analyze()` function in `rf_receive.c`) for Slow RF protocols (FS20, Intertechno) is not yet successful, meaning packets are not being fully recognized and reported with protocol-specific formats (e.g., `F...`). This strongly suggests issues with checksums, parity checks, or the final processing logic after bit collection.
     *   **Status FIFO-basierte Protokolle (MAX!/Moritz):** Bidirektionaler Datenaustausch für MAX!-Pakete funktioniert einwandfrei.
 
 *   **Kompilierungsfehler und Warnungen (UNRESOLVED):**
@@ -107,8 +107,9 @@
 
 *   **Weitere Entwicklung:**
     *   **Priorität 1: Tiefgehende Analyse der Protokoll-Dekodierung für SlowRF-Protokolle.**
-        *   **Validate `analyze()` logic:** Debug the `analyze()` function in `rf_receive.c` to understand why it's not correctly validating the collected bits, specifically focusing on parity checks, checksum calculations, and bit/byte ordering (e.g., LSB/MSB handling, nibble checks for KS300, etc.).
+        *   **Validate `analyze()` logic:** Debug the `analyze()` function in `rf_receive.c` to understand why it's not correctly validating the collected bits, specifically focusing on parity checks (`parity_even_bit`), checksum calculations (`cksum1` for FS20/FHT), and bit/byte ordering (e.g., LSB/MSB handling, nibble checks for KS300, etc.).
         *   **End-of-message processing:** Re-confirm that the packet is properly finalized and passed to `analyze()` without corruption or truncation due to `SILENCE` timeouts or other state machine resets.
+        *   **Check Repeater Logic:** Investigate if the `checkForRepeatedPackage` logic in `rf_receive.c` is incorrectly filtering the *first* instance of a packet, preventing it from being reported.
     *   **Priorität 2: Finalisierung der Kompilierungswarnungen.**
     *   **Langfristig:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
 ```
