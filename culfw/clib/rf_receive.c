@@ -1148,7 +1148,7 @@ retry_sync:
           b->state = STATE_COLLECT;
           if(TX_REPORT & REP_MONITOR) {
               DC('C');
-              // DU(b->zero.hightime, 0); DC('/'); DU(b->zero.lowtime, 0); DC(' ');
+              DC('<'); DU(b->zero.hightime, 0); DC('/'); DU(b->zero.lowtime, 0); DC('>');
           }
         }
 
