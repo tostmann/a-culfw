@@ -66,3 +66,4 @@ history.json
 *.log
 a-culfw-repo/
 a-culfw-src/
+project_config.json
