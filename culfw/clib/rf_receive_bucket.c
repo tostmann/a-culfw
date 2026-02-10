@@ -31,8 +31,9 @@
 #endif
 #endif
 
-uint8_t IRAM_ATTR makeavg(uint8_t i, uint8_t j)
+pulse_t IRAM_ATTR makeavg(pulse_t i, pulse_t j)
 {
+  if (i == 0) return j;
   return (i+i+i+j)/4;
 }
 
