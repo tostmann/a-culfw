@@ -20,6 +20,8 @@ extern "C" {
 #include "version.h"
 #include "fht.h"
 
+extern volatile uint32_t gdo_isr_count;
+
 #ifdef HAS_ASKSIN
 #include "rf_asksin.h"
 #endif

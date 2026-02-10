@@ -844,5 +844,59 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/main.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include \"board.h\"\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"clock.h\"\n#include \"rf_receive.h\"\n#include \"rf_send.h\"\n#include \"cc1100.h\"\n#include \"ttydata.h\"\n#include \"ringbuffer.h\"\n#include \"fncollection.h\"\n#include \"display.h\"\n#include \"fastrf.h\"\n#include \"fband.h\"\n#include \"rf_mode.h\"\n#include \"version.h\"\n#include \"fht.h\"\n\n#ifdef HAS_ASKSIN\n#include \"rf_asksin.h\"\n#endif\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"\n#endif\n#ifdef HAS_RWE\n#include \"rf_rwe.h\"\n#endif\n#ifdef HAS_RFNATIVE\n#include \"rf_native.h\"\n#endif\n#ifdef HAS_INTERTECHNO\n#include \"intertechno.h\"\n#endif\n#ifdef HAS_SOMFY_RTS\n#include \"somfy_rts.h\"\n#endif\n#ifdef HAS_MBUS\n#include \"rf_mbus.h\"\n#endif\n\nvoid eeprom_init(void);\n\n// Function table\nextern const t_fntab fntab[];\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n\n// Function table definition\nextern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_INTERTECHNO\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n  { 'A', asksin_func },\n#endif\n#ifdef HAS_MORITZ\n  { 'Z', moritz_func },\n#endif\n#ifdef HAS_RFNATIVE\n  { 'N', native_func },\n#endif\n#ifdef HAS_RWE\n  { 'E', rwe_func },\n#endif\n  { 'R', read_eeprom },\n  { 'T', fhtsend },\n  { 'V', version },\n  { 'W', write_eeprom },\n  { 'X', set_txreport },\n  { 'e', eeprom_factory_reset },\n#ifdef HAS_FASTRF\n  { 'f', fastrf_func },\n#endif\n  { 'l', ledfunc },\n  { 't', gettime },\n  { 'x', ccsetpa },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n#ifdef HAS_SOMFY_RTS\n  { 'Y', somfy_rts_func },\n#endif\n  { 0, 0 },\n};\n\nvoid setup() {\n    // On ESP32-C3/C6, with USB_CDC_ON_BOOT=1, Serial is the USB CDC.\n    // If it doesn't work, we try to use USBSerial directly.\n    Serial.begin(115200);\n    \n    HAL_LED_Init();\n    // Blink LED on startup\n    for(int i=0; i<3; i++) {\n        HAL_LED_Set(LED0, LED_on);\n        delay(100);\n        HAL_LED_Set(LED0, LED_off);\n        delay(100);\n    }\n    \n    Serial.println(\"\\r\\n--- CULFW32 ESP32 Starting ---\");\n    Serial.print(\"Board: \"); Serial.println(BOARD_NAME);\n    \n    hal_timer_init();\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    Serial.println(\"Ready.\");\n}\n\nvoid loop() {\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    RfAnalyze_Task();\n    \n#ifdef HAS_FASTRF\n    FastRF_Task();\n#endif\n#ifdef HAS_ASKSIN\n    rf_asksin_task();\n#endif\n#ifdef HAS_MORITZ\n    rf_moritz_task();\n#endif\n#ifdef HAS_RWE\n    rf_rwe_task();\n#endif\n#ifdef HAS_MBUS\n    rf_mbus_task();\n#endif\n#ifdef HAS_RFNATIVE\n    native_task();\n#endif\n\n    // 4. Write from Tx Buffer to Serial\n    while (!rb_is_empty(&TTY_Tx_Buffer)) {\n        if (Serial.availableForWrite() > 0) {\n            Serial.write(rb_get(&TTY_Tx_Buffer));\n        } else {\n            // Check if we are connected, otherwise discard to prevent hang\n            // On ESP32 USB CDC, availableForWrite() might return 0 if no host is listening\n            break; \n        }\n    }\n    \n    // Allow ESP32 system tasks (Watchdog, etc)\n    yield();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#include \"fht.h\"\n\nextern volatile uint32_t gdo_isr_count;\n\n#ifdef HAS_ASKSIN",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "#include \"fht.h\"\n\n#ifdef HAS_ASKSIN"
+          }
+        }
+      }
+    ]
   }
 ]
