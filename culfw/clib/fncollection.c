@@ -42,6 +42,10 @@
 #include "hal.h"
 #endif
 
+#ifdef ESP32
+#include "esp_system.h"
+#endif
+
 uint8_t led_mode = 2;   // Start blinking
 
 #ifdef XLED

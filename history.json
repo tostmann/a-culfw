@@ -1500,5 +1500,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#ifdef USE_HAL\n#include \"hal.h\"\n#endif\n\n#ifdef ESP32\n#include \"esp_system.h\"\n#endif\n",
+            "path": "culfw/clib/fncollection.c",
+            "original_text": "#ifdef USE_HAL\n#include \"hal.h\"\n#endif\n"
+          }
+        }
+      }
+    ]
   }
 ]
