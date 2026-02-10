@@ -93,16 +93,16 @@ void HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {
 }
 
 static uint32_t rf_counter_offset = 0;
-uint32_t HAL_timer_get_counter_value(uint8_t instance) {
-    return last_isr_time_val - rf_counter_offset;
+uint32_t IRAM_ATTR HAL_timer_get_counter_value(uint8_t instance) {
+    return (uint32_t)esp_timer_get_time() - rf_counter_offset;
 }
 
 void HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {
     rf_counter_offset = (uint32_t)esp_timer_get_time() - value;
 }
 
-void HAL_timer_reset_counter_value(uint8_t instance) {
-    rf_counter_offset = last_isr_time_val;
+void IRAM_ATTR HAL_timer_reset_counter_value(uint8_t instance) {
+    rf_counter_offset = (uint32_t)esp_timer_get_time();
 }
 
 // GPIO stuff
