@@ -102,8 +102,8 @@
         "platform": "espressif32",
         "board": "seeed_xiao_esp32c3",
         "mcu": "esp32c3",
-        "version": "1.26.110",
-        "last_build": "2026-02-10 15:35:05",
+        "version": "1.26.111",
+        "last_build": "2026-02-10 15:36:17",
         "artifacts": [
             {
                 "file": "XIAO-ESP32-C3.bin",

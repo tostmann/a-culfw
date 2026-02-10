@@ -124,7 +124,7 @@ void setup() {
     tx_init();
     
     xTaskCreate(background_task, "bg", 4096, NULL, 1, NULL);
-    // hal_enable_CC_GDOin_int(0, 1);
+    hal_enable_CC_GDOin_int(0, 1);
     
     Serial.println("Ready.");
 }
