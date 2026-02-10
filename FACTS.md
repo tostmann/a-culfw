@@ -1,2 +1,2 @@
 *PLATFORMIO*
-/root/.platformio/penv/bin/pio
+is in $HOME/.platformio/penv/bin
