@@ -86,7 +86,7 @@
 #define HAS_MBUS
 
 #define CDC_BAUD_RATE 115200
-#define TTY_BUFSIZE 128
+#define TTY_BUFSIZE 1024
 
 #define GPIO_PIN_SET 1
 #define GPIO_PIN_RESET 0
@@ -96,7 +96,7 @@
 
 #define E2END 511
 
-#define RCV_BUCKETS 4
+#define RCV_BUCKETS 8
 
 #define USB_IsConnected 0
 

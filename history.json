@@ -947,5 +947,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#define CDC_BAUD_RATE 115200\n#define TTY_BUFSIZE 1024\n\n#define GPIO_PIN_SET 1\n#define GPIO_PIN_RESET 0\n\n#define CC_INSTANCE 0\n#define NUM_SLOWRF 1\n\n#define E2END 511\n\n#define RCV_BUCKETS 8\n",
+            "path": "culfw/Devices/ESP32/board.h",
+            "original_text": "#define CDC_BAUD_RATE 115200\n#define TTY_BUFSIZE 128\n\n#define GPIO_PIN_SET 1\n#define GPIO_PIN_RESET 0\n\n#define CC_INSTANCE 0\n#define NUM_SLOWRF 1\n\n#define E2END 511\n\n#define RCV_BUCKETS 4\n"
+          }
+        }
+      }
+    ]
   }
 ]
