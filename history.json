@@ -1076,5 +1076,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "board_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:../../scripts/increment_version.py",
+            "path": "culfw/Devices/ESP32/platformio.ini",
+            "original_text": "board_build.f_flash = 40000000L\n\nsrc_dir = .\nextra_scripts = \n    pre:../../scripts/increment_version.py"
+          }
+        }
+      }
+    ]
   }
 ]
