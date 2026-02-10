@@ -125,8 +125,8 @@ void setup() {
     display_channel = DISPLAY_USB;
     
     spi_init();
-    ccInitChip(EE_CC1100_CFG);
-    tx_init();
+    // ccInitChip(EE_CC1100_CFG);
+    // tx_init();
     
     // Background task für Timer und Analyse (gleiche Prio wie loop)
     xTaskCreate(background_task, "bg", 4096, NULL, 1, NULL);
