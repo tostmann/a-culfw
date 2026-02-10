@@ -1,0 +1,19 @@
+{
+    "XIAO-ESP32-C3": {
+        "platform": "espressif32",
+        "board": "seeed_xiao_esp32c3",
+        "mcu": "esp32c3",
+        "version": "0.00.7",
+        "last_build": "2026-02-10 10:28:34",
+        "artifacts": [
+            {
+                "file": "XIAO-ESP32-C3.bin",
+                "type": "ota"
+            },
+            {
+                "file": "XIAO-ESP32-C3-factory.bin",
+                "type": "factory"
+            }
+        ]
+    }
+}
