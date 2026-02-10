@@ -1,2 +1,2 @@
-378:    lowtime[CC_INSTANCE] = 0;
-928:  lowtime[CC_INSTANCE] = c-hightime[CC_INSTANCE];
+    lowtime[CC_INSTANCE] = 0;
+  lowtime[CC_INSTANCE] = c-hightime[CC_INSTANCE];

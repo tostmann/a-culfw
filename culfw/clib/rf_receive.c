@@ -607,6 +607,8 @@ void IRAM_ATTR reset_input(void)
 {
   if(TX_REPORT & REP_MONITOR) DC('R');
   maxLevel[CC_INSTANCE]=0;
+  hightime[CC_INSTANCE] = 0;
+  lowtime[CC_INSTANCE] = 0;
 #ifdef USE_HAL
   hal_enable_CC_timer_int(CC_INSTANCE,FALSE);
   HAL_timer_reset_counter_value(CC_INSTANCE);
