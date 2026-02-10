@@ -819,7 +819,7 @@ ISR(CC1100_INTVECT)
   #ifdef SAM7
   uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE) / 6;   // catch the time and make it smaller
   #elif defined STM32 || defined ESP32
-  uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE)>>4;;
+  uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE);
   #else
   uint16_t c = (TCNT1>>4);               // catch the time and make it smaller
   #endif
@@ -827,7 +827,7 @@ ISR(CC1100_INTVECT)
   #ifdef SAM7
   uint8_t c = HAL_timer_get_counter_value(CC_INSTANCE) / 6;   // catch the time and make it smaller
   #elif defined STM32 || defined ESP32
-  uint8_t c = HAL_timer_get_counter_value(CC_INSTANCE)>>4;
+  uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE);
   #else
   uint8_t c = (TCNT1>>4);               // catch the time and make it smaller
   #endif
