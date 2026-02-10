@@ -19,6 +19,7 @@
  */
 
 #include "rf_receive_bucket.h"
+#include "display.h"
 
 #include <avr/io.h>                     // for _BV
 #include <stdint.h>                     // for uint8_t
