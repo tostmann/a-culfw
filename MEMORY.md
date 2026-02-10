@@ -1,5 +1,4 @@
-```markdown
-        ## 1. General Project Information
+## 1. General Project Information
 *   **Project Name:** CULFW32 (Portierung der a-culfw auf 32-Bit-Mikrocontroller)
 *   **Repository:** `tostmann/a-culfw.git` (forked)
 *   **Local Codebase:** `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/`
@@ -24,7 +23,7 @@
         *   `ESP32-C6-factory.bin` (Vollständiges Image für `0x0`)
         *   `ESP32-C6.bin` (Nur Applikation für OTA)
         *   **Pinout:** LED=GPIO8 (DevKitC-1 Standard), SPI Pins wie in `board.h` definiert.
-    *   **XIAO-ESP32-C3:** (MAX!/Moritz Functional, SlowRF-Puls-Erkennung stabil)
+    *   **XIAO-ESP32-C3:** (MAX!/Moritz Functional, SlowRF-Puls-Erkennung stabil, **Getestet & Flash Erfolgreich**)
         *   `XIAO-ESP32-C3-factory.bin` (Vollständiges Image für `0x0`)
         *   `XIAO-ESP32-C3.bin` (Nur Applikation für OTA)
         *   **Angewendetes Pinout (Verifiziert & Funktional):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO6 (Pin D4), MISO=GPIO10 (Pin D10), MOSI=GPIO7 (Pin D5), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
@@ -79,7 +78,7 @@
     *   **Bit Collection Output:** Logging innerhalb von `addbit` wurde aktiviert, um `0` oder `1` für erkannte Bits anzuzeigen (aktiviert mit `X3F` Monitor-Modus). Der `X3F`-Raw-Monitor-Output zeigt nun explizit `S` (Sync), `C` (Collect), `R` (Reset), `.` (Silence) und die neu gesammelten `0`/`1` Bits. Die Debug-Ausgabe in `CC1100_in_callback` wurde gestrafft, um den Fokus auf Schlüsselereignisse und die Bit-Sammlung zu legen.
 *   **Improved Serial Output Speed (DONE):** Die `loop()`-Logik zum Schreiben des `TTY_Tx_Buffer` an `Serial` wurde optimiert, um so viele Bytes wie möglich in einem Schritt zu schreiben (`Serial.availableForWrite()`), was die Responsivität der Debug-Ausgabe verbessert.
 *   **Global `bucket_nrused` (DONE):** Das `bucket_nrused` Array, das den Füllstand der RF-Receive-Buckets angibt, wurde global zugänglich gemacht, um seinen Status über den Debug-Befehl `y` zu überwachen.
-*   **Full Microsecond Precision & Robustness for SlowRF Timing (DONE):**
+*   **Full Microsecond Precision & Robustness for SlowRF Timing (DONE - Refined):**
     *   Das `TSCALE`-Makro in `rf_receive_bucket.h` wurde dauerhaft von `(x/16)` auf `(x)` geändert, wodurch der 1/16 Skalierungsfaktor für 32-Bit-Plattformen entfällt.
     *   Alle relevanten Timing-Variablen (`hightime`, `lowtime`, `wave_t`-Elemente) und Funktionsparameter (`wave_equals`, `makeavg`) wurden auf `pulse_t` (uint16_t) oder `uint32_t` umgestellt, um die unskalierten Mikrosekundenwerte ohne Überlauf zu verarbeiten. Ein kritischer Typkonflikt in `wave_equals` (zuvor eine Mischung aus `uint8_t` und `pulse_t`) wurde behoben.
     *   Die `>> 4` Skalierung wurde explizit aus den `hightime`/`lowtime`-Berechnungen in `rf_receive.c` entfernt.
@@ -93,11 +92,15 @@
 *   **Robustness of `analyze()` Function (DONE):** Interne Zähler (`cnt`, `max`) innerhalb der `analyze()`-Funktion in `rf_receive.c` wurden auf `uint16_t` geändert, um potenzielle Überläufe bei der Verarbeitung längerer Pakete zu verhindern.
 *   **Enhanced Protocol Debugging (Parity Error Reporting) (DONE):** Die `analyze()`-Funktion in `rf_receive.c` wurde erweitert, um eine explizite Debug-Ausgabe (`P<byte_index><hex_byte>?<expected_parity>`) zu liefern, wenn ein Paritätsfehler bei FS20/FHT-Paketen erkannt wird. Dies unterstützt die präzise Identifizierung von Datenbeschädigungen oder Fehlern in der Paritätsberechnung.
 *   **Increased RF Receive Bucket Capacity (DONE):** Das `RCV_BUCKETS`-Makro (Anzahl der Empfangs-Buckets) wurde in `rf_receive.c` und `rf_receive_bucket.h` von 8 auf 16 erhöht, um eine größere Pufferkapazität für eingehende RF-Pakete bereitzustellen und die Wahrscheinlichkeit von Überläufen während Phasen hoher Aktivität zu reduzieren.
+*   **Timing Accuracy & Robustness for ESP32 (DONE):**
+    *   `culfw/ESP32/hal.cpp`: Die Funktion `HAL_timer_get_counter_value` wurde angepasst, um `esp_timer_get_time()` direkt zu verwenden und einen präzisen, jitterfreien Mikrosekunden-Timestamp zu liefern. `HAL_timer_reset_counter_value` wurde ebenfalls entsprechend angepasst, um den `rf_counter_offset` auf Basis des aktuellen ISR-Timestamps (`last_isr_time_val`) zu setzen.
+    *   `culfw/clib/rf_receive.c`: Die Variable `c` in `CC1100_in_callback` wurde auf `uint32_t` geändert, um potenzielle 16-Bit-Überläufe bei der Messung von Pulslängen, insbesondere bei langen "Silence"-Perioden, zu verhindern.
+    *   `culfw/clib/rf_receive.c`: Die `reset_input()`-Funktion wurde erweitert, um `hightime[CC_INSTANCE]` und `lowtime[CC_INSTANCE]` explizit auf `0` zurückzusetzen. Dies verhindert, dass veraltete oder fehlerhafte Zeitwerte aus früheren, unvollständigen Paketen die Erkennung neuer Sync-Sequenzen stören.
 
 ## 4. Known Issues & Next Steps
 *   **RF-Datenaustausch (Slow RF - FS20, Intertechno):**
-    *   **Problem:** Bits werden jetzt erfolgreich gesammelt und Roh-Paket-Snapshots werden beobachtet. Trotz umfassender Verbesserungen in der Timing-Erfassung und Paketpufferung ist die übergeordnete Protokoll-Dekodierung (`analyze()`-Funktion in `rf_receive.c`) für Slow RF-Protokolle (FS20, Intertechno) noch nicht vollständig erfolgreich, d.h. Pakete werden nicht im protokollspezifischen Format (z.B. `F...`) erkannt und gemeldet.
-    *   **Neue Erkenntnis:** Die Debug-Ausgabe `!r... f...` im `X3F`-Monitor-Modus zeigt extrem hohe Werte für `f` (lowtime), z.B. `f32787` oder `f65491`. Dies deutet auf einen potenziellen Timer-Überlauf, einen Skalierungsfehler oder eine falsche Interpretation der Mikrosekunden-Differenzen innerhalb der `RfAnalyze_Task` hin, nachdem ein `SILENCE`-Timeout im `rf_receive_TimerElapsedCallback` aufgetreten ist.
+    *   **Problem:** Die Hardware (XIAO-ESP32-C3) erkennt erfolgreich Sync-Sequenzen und wechselt in den `STATE_COLLECT`-Modus. Die Debug-Ausgabe zeigt `C<hightime/lowtime>.R` (z.B. `C<403/412>.R`), was bedeutet, dass ein Paket-Sync erkannt und die Bit-Sammlung gestartet wurde, aber unmittelbar danach ein Reset (`R`) erfolgt. Dies deutet darauf hin, dass das erste oder eines der ersten Bits nach dem Sync von der `wave_equals`-Logik oder der `analyze()`-Funktion abgelehnt wird und das Paket somit nicht erfolgreich dekodiert wird.
+    *   **Neue Erkenntnis:** Die `!r... f...` Debug-Ausgaben zeigen jetzt realistische `hightime` und `lowtime` Werte (z.B. `!r387 f409`), was bestätigt, dass die Timer-Implementierung und Mikrosekunden-Erfassung korrekt funktioniert.
     *   **Status FIFO-basierte Protokolle (MAX!/Moritz):** Bidirektionaler Datenaustausch für MAX!-Pakete funktioniert einwandfrei.
 
 *   **Kompilierungsfehler und Warnungen (UNRESOLVED):**
@@ -109,11 +112,11 @@
     *   Der `i`-Befehl für Intertechno wurde in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt mit `it_func` verknüpft.
 
 *   **Weitere Entwicklung:**
-    *   **Priorität 1: Tiefgehende Analyse der Protokoll-Dekodierung für SlowRF-Protokolle.**
-        *   **Behebung der hohen `lowtime`-Werte:** Untersuchen, warum die `lowtime`-Werte in der `!r... f...` Debug-Ausgabe extrem hoch sind. Dies ist kritisch, da es die Grundlage für die Paketanalyse (`wave_equals`, `makeavg`) beeinflusst. Mögliche Ursachen sind ein Reset des Timers, ein Überlauf oder eine falsche Berechnung der Zeitdifferenz nach einem `SILENCE`-Event.
-        *   **Validate `analyze()` logic:** Speziell auf die neue Paritätsfehler-Ausgabe (`P<idx><byte>?<parity>`) konzentrieren, um festzustellen, ob die Datenbits korrekt sind und die Paritätsberechnung fehlschlägt, oder ob die Bits selbst korrumpiert sind.
-        *   **Checksum Validation:** Erneut bestätigen, dass die Checksummenberechnungen (`cksum1` für FS20/FHT) für die 32-Bit-Architektur korrekt sind und auf das korrekt gebildete Byte-Array (`obuf`) angewendet werden.
-        *   **Check Repeater Logic:** Untersuchen, ob die `checkForRepeatedPackage`-Logik in `rf_receive.c` die *erste* Instanz eines Pakets fälschlicherweise filtert und somit dessen Meldung verhindert.
+    *   **Priorität 1: Tiefgehende Analyse der Protokoll-Dekodierung für SlowRF-Protokolle (Fokus auf `STATE_COLLECT` Abbruch).**
+        *   **Ursache für `STATE_COLLECT` Abbruch:** Untersuchen, warum die Bit-Sammlung nach dem Sync sofort abbricht (`C<...>.R`). Hierfür sind `rf_receive.c` (insbesondere `CC1100_in_callback`, `wave_equals`, `addbit`) und `rf_receive_bucket.c` zu prüfen.
+        *   **`wave_equals` Toleranz:** Bestätigen, dass `TDIFF` und die Toleranzberechnung in `wave_equals` für die ersten Datenbits nach dem Sync nicht zu restriktiv ist.
+        *   **`addbit`/`delbit` Logik:** Verifizieren, dass die Bits korrekt in den Bucket geschrieben werden und nicht fälschlicherweise entfernt werden.
+        *   **`analyze()` Einstiegspunkte:** Prüfen, ob `analyze()` unter bestimmten Bedingungen sofort fehlschlägt, z.B. wenn es eine Mindestanzahl von Bits oder Bytes erwartet, die am Anfang eines Pakets noch nicht erreicht ist.
+        *   **Checksum/Parity Check Timing:** Sicherstellen, dass die Paritäts- und Checksummenprüfungen erst nach der Erfassung einer ausreichenden Datenmenge erfolgen und nicht zu einem frühzeitigen Abbruch führen.
     *   **Priorität 2: Finalisierung der Kompilierungswarnungen.**
     *   **Langfristig:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
-```

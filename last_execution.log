@@ -1,2 +1,41 @@
-    lowtime[CC_INSTANCE] = 0;
-  lowtime[CC_INSTANCE] = c-hightime[CC_INSTANCE];
+
+
+  if(bucket_nrused[CC_INSTANCE] == 0)
+    return;
+
+  LED_ON();
+
+  b = bucket_array[CC_INSTANCE] + bucket_out[CC_INSTANCE];
+
+#ifdef HAS_IT
+  analyze_intertechno(b, &datatype, obuf, &oby);
+#endif
+#ifdef HAS_TCM97001
+  analyze_tcm97001(b, &datatype, obuf, &oby);
+#endif
+#ifdef HAS_REVOLT
+  analyze_revolt(b, &datatype, obuf, &oby);
+#endif
+#ifdef HAS_ESA
+  analyze_esa(b, &datatype, obuf, &oby);
+#endif
+#ifdef HAS_HMS
+  analyze_hms(b, &datatype, obuf, &oby);
+#endif
+#ifdef HAS_MANCHESTER
+    analyseMC(b, &datatype, obuf, &oby);
+#endif
+#if defined(HAS_IT) || defined(HAS_TCM97001) 
+  if(datatype == 0 && b->state == STATE_SYNC_PACKAGE) {
+    // unknown sync package
+    uint8_t ix;
+    for (ix=0;ix<b->byteidx;ix++)
+      obuf[ix]=b->data[ix];
+
+    if (7-b->bitidx != 0) {
+      obuf[ix]=b->data[ix];
+      ix++; 
+    }    
+    oby = ix;
+  }
+#endif
