@@ -1,5 +1,6 @@
 #ifndef _AVR_IO_H
 #define _AVR_IO_H
+#pragma GCC system_header
 #include <stdint.h>
 #ifdef __cplusplus
 extern "C" {

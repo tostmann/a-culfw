@@ -1,3 +1,394 @@
-10:extern "C" volatile uint32_t ticks = 0;
-49:uint32_t hal_get_ticks(void) {
-50:    return ticks;
+In file included from clib/cc1100.h:184,
+                 from Devices/ESP32/main.cpp:12:
+clib/rf_mode.h:71: warning: "TX_REPORT" redefined
+ #define TX_REPORT         (tx_report)
+ 
+In file included from Devices/ESP32/main.cpp:10:
+clib/rf_receive.h:47: note: this is the location of the previous definition
+ #define TX_REPORT tx_report
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/clock.c:2:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/clock.c:2:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/clock.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/cc1100.h:13,
+                 from clib/fastrf.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/cc1100.h:10,
+                 from clib/fastrf.c:7:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+clib/fband.c: In function 'readEEpromValue':
+clib/fband.c:24:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   d = erb((uint8_t *)addr);
+           ^
+clib/fband.c: In function 'checkFrequency':
+clib/fband.c:52:30: warning: passing argument 1 of 'readEEpromValue' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   value_0D = readEEpromValue("0F");
+                              ^~~~
+clib/fband.c:15:31: note: expected 'char *' but argument is of type 'const char *'
+ uint8_t readEEpromValue(char *rbyte) {
+                         ~~~~~~^~~~~
+clib/fband.c:53:30: warning: passing argument 1 of 'readEEpromValue' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   value_0E = readEEpromValue("10");
+                              ^~~~
+clib/fband.c:15:31: note: expected 'char *' but argument is of type 'const char *'
+ uint8_t readEEpromValue(char *rbyte) {
+                         ~~~~~~^~~~~
+clib/fband.c:54:30: warning: passing argument 1 of 'readEEpromValue' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   value_0F = readEEpromValue("11");
+                              ^~~~
+clib/fband.c:15:31: note: expected 'char *' but argument is of type 'const char *'
+ uint8_t readEEpromValue(char *rbyte) {
+                         ~~~~~~^~~~~
+In file included from clib/fht.c:11:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/fht.c:6:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/fncollection.c:6:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/fncollection.c:4:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/fncollection.c:6:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/fncollection.c:4:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/fncollection.c:6:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/fncollection.c:5:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+clib/fncollection.c: In function 'read_eeprom':
+clib/fncollection.c:162:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     d = erb((uint8_t *)addr);
+             ^
+clib/fncollection.c: In function 'write_eeprom':
+clib/fncollection.c:226:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     ewb((uint8_t*)addr, hb[d-1]);
+         ^
+clib/fncollection.c:236:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+       ewb((uint8_t*)++addr, hb[0]);
+           ^
+In file included from clib/rf_receive_bucket.h:30,
+                 from clib/fncollection.c:487:
+clib/rf_receive.h: At top level:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/fncollection.c:14:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/cc1100.h:13,
+                 from clib/hw_autodetect.c:2:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/cc1100.h:10,
+                 from clib/hw_autodetect.c:2:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/intertechno.c:11:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/intertechno.c:7:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/intertechno.c:11:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/intertechno.c:7:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from clib/intertechno.c:28:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/intertechno.c:22:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/kopp-fc.c:66:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/kopp-fc.c:62:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_asksin.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/rf_asksin.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from clib/rf_asksin.c:16:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/rf_asksin.c:10:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_mbus.c:11:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/rf_mbus.c:7:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from clib/rf_mbus.c:26:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/rf_mbus.c:16:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_moritz.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/rf_moritz.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from clib/rf_moritz.c:16:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/rf_moritz.c:10:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_native.c:15:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/rf_native.c:11:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/rf_receive.c:25:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/rf_receive.c:24:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/rf_receive.c:25:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/rf_receive.c:24:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from clib/rf_receive.c:37:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/rf_receive.c:31:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/rf_receive_revolt.c:28:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/rf_receive.h:4,
+                 from clib/rf_receive_bucket.h:30,
+                 from clib/rf_receive_revolt.h:29,
+                 from clib/rf_receive_revolt.c:21:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from clib/rf_receive_revolt.c:30:
+clib/rf_mode.h:71: warning: "TX_REPORT" redefined
+ #define TX_REPORT         (tx_report)
+ 
+In file included from clib/rf_receive_bucket.h:30,
+                 from clib/rf_receive_revolt.h:29,
+                 from clib/rf_receive_revolt.c:21:
+clib/rf_receive.h:47: note: this is the location of the previous definition
+ #define TX_REPORT tx_report
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_rwe.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/rf_rwe.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from clib/rf_rwe.c:14:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/rf_rwe.c:10:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/rf_send.c:8:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/rf_send.c:7:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/rf_send.c:8:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/rf_send.c:7:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from clib/rf_send.c:18:
+clib/rf_receive.h:47: warning: "TX_REPORT" redefined
+ #define TX_REPORT tx_report
+ 
+In file included from clib/cc1100.h:184,
+                 from clib/rf_send.c:14:
+clib/rf_mode.h:71: note: this is the location of the previous definition
+ #define TX_REPORT         (tx_report)
+ 
+clib/rf_send.c: In function 'sendraw':
+clib/rf_send.c:128:18: warning: passing argument 1 of 'set_txreport' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+     set_txreport("21");
+                  ^~~~
+In file included from clib/rf_send.c:18:
+clib/rf_receive.h:33:25: note: expected 'char *' but argument is of type 'const char *'
+ void set_txreport(char *in);
+                   ~~~~~~^~
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/rf_zwave.c:5:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/rf_zwave.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/somfy_rts.c:31:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/somfy_rts.c:30:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/somfy_rts.c:31:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/somfy_rts.c:30:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 

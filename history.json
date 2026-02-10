@@ -1083,5 +1083,475 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef __HAL_H\n#define __HAL_H\n\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\nvoid hal_eeprom_init(void);\n\n#ifdef __cplusplus\n}\n#endif\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/board.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _BOARD_H\n#define _BOARD_H\n\n#ifdef ESP32_C3\n  #ifndef BOARD_NAME\n    #define BOARD_NAME          \"ESP32-C3-CUL\"\n  #endif\n  #ifndef BOARD_ID_STR\n    #define BOARD_ID_STR        \"ESP32-C3-CUL\"\n  #endif\n\n  // CC1101 Pins for ESP32-C3\n  #ifndef SPI_SCLK\n    #define SPI_SCLK  6\n  #endif\n  #ifndef SPI_MISO\n    #define SPI_MISO  5\n  #endif\n  #ifndef SPI_MOSI\n    #define SPI_MOSI  7\n  #endif\n  #ifndef SPI_SS\n    #define SPI_SS    10\n  #endif\n  #ifndef CC1100_CS_PIN\n    #define CC1100_CS_PIN SPI_SS\n  #endif\n\n  #ifndef GDO0_PIN\n    #define GDO0_PIN  2\n  #endif\n  #ifndef GDO2_PIN\n    #define GDO2_PIN  3\n  #endif\n\n  #ifndef LED_PIN\n    #define LED_PIN   4\n  #endif\n#endif\n\n#ifdef ESP32_C6\n  #ifndef BOARD_NAME\n    #define BOARD_NAME          \"ESP32-C6-CUL\"\n  #endif\n  #ifndef BOARD_ID_STR\n    #define BOARD_ID_STR        \"ESP32-C6-CUL\"\n  #endif\n\n  // CC1101 Pins for ESP32-C6 (Adjusted for DevKitC-1)\n  #ifndef SPI_SCLK\n    #define SPI_SCLK  21\n  #endif\n  #ifndef SPI_MISO\n    #define SPI_MISO  20\n  #endif\n  #ifndef SPI_MOSI\n    #define SPI_MOSI  19\n  #endif\n  #ifndef SPI_SS\n    #define SPI_SS    18\n  #endif\n  #ifndef CC1100_CS_PIN\n    #define CC1100_CS_PIN SPI_SS\n  #endif\n\n  #ifndef GDO0_PIN\n    #define GDO0_PIN  2\n  #endif\n  #ifndef GDO2_PIN\n    #define GDO2_PIN  3\n  #endif\n\n  #ifndef LED_PIN\n    #define LED_PIN   8\n  #endif\n#endif\n\n#define HAS_UART\n#define HAS_FASTRF\n#define HAS_ASKSIN\n#define HAS_MORITZ\n#define HAS_RWE\n#define HAS_RFNATIVE\n#define HAS_IT\n#define HAS_INTERTECHNO\n#define HAS_MBUS\n\n#define CDC_BAUD_RATE 115200\n#define TTY_BUFSIZE 1024\n\n#define GPIO_PIN_SET 1\n#define GPIO_PIN_RESET 0\n\n#define CC_INSTANCE 0\n#define NUM_SLOWRF 1\n\n#define E2END 511\n\n#define RCV_BUCKETS 16\n\n#define USB_IsConnected 0\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "grep -r \"avr/io.h\" culfw/ | head -n 20"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\ngrep: culfw/Devices/ESP32/.pio/build/ESP32-C6/.sconsign311.dblite: binary file matches\ngrep: culfw/Devices/ESP32/.pio/build/ESP32-C3/.sconsign311.dblite: binary file matches\ngrep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/.sconsign311.dblite: binary file matches\ngrep: culfw/Devices/CUNO2/Bootloader/main: binary file matchesculfw/Devices/ESP32CUL/nanoCUL.c:#include <avr/io.h>\nculfw/Devices/ESP32CUL/board.h:#include <avr/io.h>\nculfw/Devices/rpiaddon/board.h:#include <avr/io.h>\nculfw/Devices/rpiaddon/Bootloader/chipdef.h:#include <avr/io.h>\nculfw/Devices/rpiaddon/Bootloader/main.c:#include <avr/io.h>\nculfw/Devices/rpiaddon/rpiaddon.c:#include <avr/io.h>\nculfw/Devices/miniCUL/miniCUL.c:#include <avr/io.h>\nculfw/Devices/miniCUL/board.h:#include <avr/io.h>\nculfw/Devices/SCC/SCC.c:#include <avr/io.h>\nculfw/Devices/SCC/board.h:#include <avr/io.h>\nculfw/Devices/ESP32/.pio/build/ESP32-C6/src/main.cpp.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/ESP32/hal.cpp.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h\nculfw/Devices/ESP32/.pio/build/ESP32-C3/src/main.cpp.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/src/main.cpp.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/clib/rf_receive.c.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/clib/cc1100.c.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/clib/rf_rwe.c.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/clib/rf_native.c.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/clib/clock.c.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\nculfw/Devices/ESP32/.pio/build/clib/fncollection.c.d: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/avr/avr/io.h \\\n\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/Devices/ESP32/main.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include \"board.h\"\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"clock.h\"\n#include \"rf_receive.h\"\n#include \"rf_send.h\"\n#include \"cc1100.h\"\n#include \"ttydata.h\"\n#include \"ringbuffer.h\"\n#include \"fncollection.h\"\n#include \"display.h\"\n#include \"fastrf.h\"\n#include \"fband.h\"\n#include \"rf_mode.h\"\n#include \"version.h\"\n#include \"fht.h\"\n\nextern volatile uint32_t gdo_isr_count;\nextern volatile uint32_t gdo_high_count;\nextern volatile uint32_t gdo_low_count;\nextern \"C\" uint8_t bucket_nrused[];\n\n#ifdef HAS_ASKSIN\n#include \"rf_asksin.h\"\n#endif\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"\n#endif\n#ifdef HAS_RWE\n#include \"rf_rwe.h\"\n#endif\n#ifdef HAS_RFNATIVE\n#include \"rf_native.h\"\n#endif\n#ifdef HAS_INTERTECHNO\n#include \"intertechno.h\"\n#endif\n#ifdef HAS_SOMFY_RTS\n#include \"somfy_rts.h\"\n#endif\n#ifdef HAS_MBUS\n#include \"rf_mbus.h\"\n#endif\n\nvoid eeprom_init(void);\nextern const t_fntab fntab[];\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n\nvoid show_debug(char *in) {\n    display_debug(in);\n}\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n\nextern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_INTERTECHNO\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n  { 'A', asksin_func },\n#endif\n#ifdef HAS_MORITZ\n  { 'Z', moritz_func },\n#endif\n#ifdef HAS_RFNATIVE\n  { 'N', native_func },\n#endif\n#ifdef HAS_RWE\n  { 'E', rwe_func },\n#endif\n  { 'R', read_eeprom },\n  { 'T', fhtsend },\n  { 'V', version },\n  { 'W', write_eeprom },\n  { 'X', set_txreport },\n  { 'e', eeprom_factory_reset },\n#ifdef HAS_FASTRF\n  { 'f', fastrf_func },\n#endif\n  { 'l', ledfunc },\n  { 't', gettime },\n  { 'x', ccsetpa },\n  { 'y', show_debug },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n#ifdef HAS_SOMFY_RTS\n  { 'Y', somfy_rts_func },\n#endif\n  { 0, 0 },\n};\n\nvoid background_task(void *pvParameters) {\n    for(;;) {\n        hal_timer_task();\n        RfAnalyze_Task();\n        vTaskDelay(1);\n    }\n}\n\nvoid setup() {\n    Serial.begin(115200);\n    Serial.setTxTimeoutMs(0); \n    \n    unsigned long start = millis();\n    while (!Serial && (millis() - start) < 2000);\n\n    Serial.println(\"\\r\\n--- CULFW32 Starting (Full) ---\");\n    \n    hal_timer_init();\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    xTaskCreate(background_task, \"bg\", 4096, NULL, 1, NULL);\n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}\n\nvoid loop() {\n    static uint32_t last_isr_print = 0;\n    if (millis() - last_isr_print > 1000) {\n        last_isr_print = millis();\n        Serial.printf(\"ISR H/L/T: %u/%u/%u, Ticks: %u, BucketUsed: %u\\n\", gdo_high_count, gdo_low_count, gdo_isr_count, ticks, bucket_nrused[0]);\n    }\n\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    \n#ifdef HAS_FASTRF\n    FastRF_Task();\n#endif\n#ifdef HAS_ASKSIN\n    rf_asksin_task();\n#endif\n#ifdef HAS_MORITZ\n    rf_moritz_task();\n#endif\n#ifdef HAS_RWE\n    rf_rwe_task();\n#endif\n#ifdef HAS_MBUS\n    rf_mbus_task();\n#endif\n#ifdef HAS_RFNATIVE\n    native_task();\n#endif\n\n    // 4. Write from Tx Buffer to Serial\n    while (!rb_is_empty(&TTY_Tx_Buffer)) {\n        Serial.write(rb_get(&TTY_Tx_Buffer));\n    }\n    \n    yield();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include <SPI.h>\n#include <EEPROM.h>\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n#include \"board.h\"\n#include \"esp_timer.h\"\n\nextern \"C\" {\n  volatile uint32_t ticks = 0;\n  uint8_t SREG = 0;\n  uint8_t TIMSK0 = 0;\n}\nvolatile uint32_t gdo_isr_count = 0;\nvolatile uint32_t gdo_high_count = 0;\nvolatile uint32_t gdo_low_count = 0;\nvolatile uint32_t last_isr_time_val = 0;\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"rf_receive.h\"\n\n// Forward declarations of CULFW functions\nvoid rf_receive_TimerElapsedCallback(void);\nvoid CC1100_in_callback(void);\nvoid clock_TimerElapsedCallback(void);\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler();\n\n// Timer for RF Silence timeout\nstatic hw_timer_t * rf_hw_timer = NULL;\nstatic volatile uint32_t rf_reload_val = 4000;\nstatic volatile bool rf_timer_enabled = false;\n\nvoid IRAM_ATTR onRfTimer() {\n    rf_receive_TimerElapsedCallback();\n}\n\nvoid hal_timer_init(void) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    rf_hw_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer);\n#else\n    rf_hw_timer = timerBegin(1, 80, true); // 1MHz\n    timerAttachInterrupt(rf_hw_timer, &onRfTimer, true);\n#endif\n}\n\nuint32_t hal_get_ticks(void) {\n    return ticks;\n}\n\nvoid hal_timer_task(void) {\n    static uint32_t last_tick_ms = 0;\n    uint32_t now = millis();\n    if (now - last_tick_ms >= 8) { // 125Hz approx\n        last_tick_ms = now;\n        clock_TimerElapsedCallback();\n    }\n}\n\n// RF Timer HAL\nvoid IRAM_ATTR hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {\n    if (enable) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerRestart(rf_hw_timer);\n        timerAlarm(rf_hw_timer, rf_reload_val, false, 0);\n#else\n        timerAlarmWrite(rf_hw_timer, rf_reload_val, false);\n        timerAlarmEnable(rf_hw_timer);\n        timerWrite(rf_hw_timer, 0);\n#endif\n        rf_timer_enabled = true;\n    } else {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerStop(rf_hw_timer);\n#else\n        timerAlarmDisable(rf_hw_timer);\n#endif\n        rf_timer_enabled = false;\n    }\n}\n\nuint32_t HAL_timer_get_reload_register(uint8_t instance) {\n    return rf_reload_val;\n}\n\nvoid HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {\n    rf_reload_val = value;\n    if (rf_timer_enabled) {\n        hal_enable_CC_timer_int(instance, true);\n    }\n}\n\nstatic uint32_t rf_counter_offset = 0;\nuint32_t IRAM_ATTR HAL_timer_get_counter_value(uint8_t instance) {\n    return (uint32_t)esp_timer_get_time() - rf_counter_offset;\n}\n\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {\n    rf_counter_offset = (uint32_t)esp_timer_get_time() - value;\n}\n\nvoid IRAM_ATTR HAL_timer_reset_counter_value(uint8_t instance) {\n    rf_counter_offset = (uint32_t)esp_timer_get_time();\n}\n\n// GPIO stuff\nvoid HAL_LED_Init(void) {\n    pinMode(LED_PIN, OUTPUT);\n}\n\nvoid HAL_LED_Set(LED_List led, LED_State state) {\n    digitalWrite(LED_PIN, state == LED_on ? HIGH : LOW);\n}\n\nvoid HAL_LED_Toggle(LED_List led) {\n    digitalWrite(LED_PIN, !digitalRead(LED_PIN));\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler() {\n    last_isr_time_val = (uint32_t)esp_timer_get_time();\n    gdo_isr_count++;\n    if (digitalRead(GDO0_PIN)) gdo_high_count++;\n    else gdo_low_count++;\n    if (rf_timer_enabled) {\n        timerWrite(rf_hw_timer, 0);\n    }\n    CC1100_in_callback();\n}\n\nvoid hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT); // No pullup, CC1101 is push-pull\n    pinMode(GDO2_PIN, INPUT);\n}\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {\n    if (enable) {\n        attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n    } else {\n        detachInterrupt(digitalPinToInterrupt(GDO0_PIN));\n    }\n}\n\nvoid hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {\n    if (pin == CC_Pin_CS) {\n        digitalWrite(CC1100_CS_PIN, state);\n    }\n}\n\nuint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {\n    if (pin == CC_Pin_In) {\n        return digitalRead(GDO0_PIN);\n    }\n    return 0;\n}\n\n// SPI stuff\nvoid spi_init(void) {\n    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);\n    SPI.setFrequency(2000000); // 2MHz for stability\n    pinMode(SPI_SS, OUTPUT);\n    digitalWrite(SPI_SS, HIGH);\n}\n\nuint8_t spi_send(uint8_t data) {\n    return SPI.transfer(data);\n}\n\n// Delay\nextern \"C\" void my_delay_ms(uint8_t ms) {\n    delay(ms);\n}\n\nextern \"C\" void my_delay_us(uint16_t us) {\n    delayMicroseconds(us);\n}\n\n// EEPROM emulation\nextern \"C\" void hal_eeprom_init(void) {\n    if (!EEPROM.begin(512)) {\n    }\n}\n\nextern \"C\" uint8_t eeprom_read_byte(uint8_t *addr) {\n    return EEPROM.read((size_t)addr);\n}\n\nextern \"C\" void eeprom_write_byte(uint8_t *addr, uint8_t value) {\n    EEPROM.write((size_t)addr, value);\n    EEPROM.commit();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal_gpio.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef __HAL_GPIO_H\n#define __HAL_GPIO_H\n\n#include <Arduino.h>\n#include \"board.h\"\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n#define INIT_MODE_OUT_CS_IN    0\n#define INIT_MODE_IN_CS_IN     1\n\n#ifndef TRUE\n#define TRUE 1\n#endif\n#ifndef FALSE\n#define FALSE 0\n#endif\n\ntypedef enum {\n    LED0 = 0,\n    LED_COUNT\n} LED_List;\n\ntypedef enum {\n    LED_off = 0,\n    LED_on\n} LED_State;\n\ntypedef enum {\n    CC_Pin_Out = 0,\n    CC_Pin_CS,\n    CC_Pin_In\n} CC_PIN;\n\nvoid HAL_LED_Init(void);\nvoid HAL_LED_Set(LED_List led, LED_State state);\nvoid HAL_LED_Toggle(LED_List led);\n\nvoid hal_CC_GDO_init(uint8_t cc_num, uint8_t mode);\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\nvoid hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state);\nuint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin);\n\n#ifdef __cplusplus\n}\n#endif\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal_spi.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef __HAL_SPI_H\n#define __HAL_SPI_H\n\n#include <stdint.h>\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\nvoid spi_init(void);\nuint8_t spi_send(uint8_t data);\n\n#ifdef __cplusplus\n}\n#endif\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal_timer.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef __HAL_TIMER_H\n#define __HAL_TIMER_H\n\n#include <stdint.h>\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\nextern volatile uint32_t ticks;\nvoid hal_timer_init(void);\nuint32_t hal_get_ticks(void);\nvoid hal_timer_task(void);\n\nvoid hal_enable_CC_timer_int(uint8_t instance, uint8_t enable);\n\nuint32_t HAL_timer_get_reload_register(uint8_t instance);\nvoid HAL_timer_set_reload_register(uint8_t instance, uint32_t value);\nuint32_t HAL_timer_get_counter_value(uint8_t instance);\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value);\nvoid HAL_timer_reset_counter_value(uint8_t instance);\n\n#ifdef __cplusplus\n}\n#endif\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "head -n 40 culfw/clib/rf_receive.c"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 1865 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\n *\n * This program is distributed in the hope that it will be useful, but \n * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY \n * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for \n * more details.\n *\n * You should have received a copy of the GNU General Public License along with \n * this program; if not, write to the \n * Free Software Foundation, Inc., \n * 51 Franklin St, Fifth Floor, Boston, MA 02110, USA\n *\n */\n#include <avr/interrupt.h>              // for ISR\n#include <avr/pgmspace.h>               // for PSTR\n#include <stdbool.h>                    // for bool, false\n#include <stdint.h>                     // for int8_t\n#include <util/parity.h>                // for parity_even_bit\n\n#include \"board.h\"                      // for HAS_HMS, HAS_ESA, etc\n#include \"cc1100.h\"                     // for cc1100_readReg, CC1100_RSSI, etc\n#include \"clock.h\"                      // for ticks\n#include \"display.h\"                    // for DU, DC, DH2, DNL, DH, DS_P\n#include \"fband.h\"                      // for IS868MHZ, IS433MHZ\n#include \"fht.h\"                        // for fht_hook, FHT_ACK, FHT_ACK2, etc\n#include \"led.h\"                        // for CLEAR_BIT, SET_BIT, LED_OFF, etc\n#include \"rf_receive.h\"\n#include \"rf_receive_bucket.h\"          // for bucket_t, wave_t, TSCALE, etc\n#include \"rf_receive_esa.h\"             // for STATE_ESA, analyze_esa\n#include \"rf_receive_hms.h\"             // for STATE_HMS, analyze_hms\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/avr/avr/interrupt.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _AVR_INTERRUPT_H\n#define _AVR_INTERRUPT_H\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n#ifndef sei\n#define sei()\n#endif\n#ifndef cli\n#define cli()\n#endif\n\n#ifdef __cplusplus\n}\n#endif\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/led.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _LED_H\n#define _LED_H   1\n\n#define HI8(x)  ((uint8_t)((x) >> 8))\n#define LO8(x)  ((uint8_t)(x))\n\n#ifndef SET_BIT\n#define SET_BIT(PORT, BITNUM) ((PORT) |= (1<<(BITNUM)))\n#endif\n#ifndef CLEAR_BIT\n#define CLEAR_BIT(PORT, BITNUM) ((PORT) &= ~(1<<(BITNUM)))\n#endif\n#define TOGGLE_BIT(PORT, BITNUM) ((PORT) ^= (1<<(BITNUM)))\n\n#include \"board.h\"\n\n#ifdef USE_HAL\n\n#include \"hal.h\"\n\n#define led_init()      HAL_LED_Init()\n\n#define LED_ON()        HAL_LED_Set(0,LED_on)\n#define LED_OFF()       HAL_LED_Set(0,LED_off)\n#define LED_TOGGLE()    HAL_LED_Toggle(0)\n\n#define LED2_ON()       HAL_LED_Set(1,LED_on)\n#define LED2_OFF()      HAL_LED_Set(1,LED_off)\n#define LED2_TOGGLE()   HAL_LED_Toggle(1)\n\n#define LED3_ON()       HAL_LED_Set(2,LED_on)\n#define LED3_OFF()      HAL_LED_Set(2,LED_off)\n#define LED3_TOGGLE()   HAL_LED_Toggle(2)\n\n\n#else\n\n#ifdef XLED\n#include \"xled.h\"\n\n#define led_init()   LED_DDR  |= _BV(LED_PIN); xled_pos=0; xled_pattern=0xff00\n#else\n#define led_init()   LED_DDR  |= _BV(LED_PIN)\n#endif\n\n#define LED_TOGGLE() LED_PORT ^= _BV(LED_PIN)\n\n#ifdef LED_INV\n#define LED_OFF()    LED_PORT |= _BV(LED_PIN)\n#define LED_ON( )    LED_PORT &= ~_BV(LED_PIN)\n#else\n#define LED_ON()     LED_PORT |= _BV(LED_PIN)\n#define LED_OFF( )   LED_PORT &= ~_BV(LED_PIN)\n#endif\n\n#endif\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/cc1100.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "/*******************************************************************************\n    Filename: cc1100.h\n\n    Copyright 2007 Texas Instruments, Inc.\n*******************************************************************************/\n\n#ifndef CC1100_H\n#define CC1100_H\n\n#include <avr/io.h>                     // for _BV\n#include <stdint.h>                     // for uint8_t\n\n#include \"led.h\"                        // for SET_BIT, CLEAR_BIT\n\nvoid ccInitChip(uint8_t *cfg);\nvoid cc_factory_reset(void);\nvoid ccDump(void);\nvoid ccTX(void);\nvoid ccRX(void);\nuint8_t ccStrobe(uint8_t);\nvoid ccreg(char*);\nvoid ccsetpa(char*);\nuint8_t cc1100_sendbyte(uint8_t data);\nvoid cc1100_writeReg(uint8_t addr, uint8_t data);\nuint8_t cc1100_readReg(uint8_t addr);\nvoid set_ccoff(void);\nvoid set_ccon(void);\n\n#ifndef USE_RF_MODE\nextern uint8_t cc_on;\n#endif\n\n// Configuration Registers\n#define CC1100_IOCFG2           0x00    // GDO2 output pin configuration\n#define CC1100_IOCFG1           0x01    // GDO1 output pin configuration\n#define CC1100_IOCFG0           0x02    // GDO0 output pin configuration\n#define CC1100_FIFOTHR          0x03    // RX FIFO and TX FIFO thresholds\n#define CC1100_SYNC1            0x04    // Sync word, high byte\n#define CC1100_SYNC0            0x05    // Sync word, low byte\n#define CC1100_PKTLEN           0x06    // Packet length\n#define CC1100_PKTCTRL1         0x07    // Packet automation control\n#define CC1100_PKTCTRL0         0x08    // Packet automation control\n#define CC1100_ADDR             0x09    // Device address\n#define CC1100_CHANNR           0x0A    // Channel number\n#define CC1100_FSCTRL1          0x0B    // Frequency synthesizer control\n#define CC1100_FSCTRL0          0x0C    // Frequency synthesizer control\n#define CC1100_FREQ2            0x0D    // Frequency control word, high byte\n#define CC1100_FREQ1            0x0E    // Frequency control word, middle byte\n#define CC1100_FREQ0            0x0F    // Frequency control word, low byte\n#define CC1100_MDMCFG4          0x10    // Modem configuration\n#define CC1100_MDMCFG3          0x11    // Modem configuration\n#define CC1100_MDMCFG2          0x12    // Modem configuration\n#define CC1100_MDMCFG1          0x13    // Modem configuration\n#define CC1100_MDMCFG0          0x14    // Modem configuration\n#define CC1100_DEVIATN          0x15    // Modem deviation setting\n#define CC1100_MCSM2            0x16    // Main Radio Cntrl State Machine config\n#define CC1100_MCSM1            0x17    // Main Radio Cntrl State Machine config\n#define CC1100_MCSM0            0x18    // Main Radio Cntrl State Machine config\n#define CC1100_FOCCFG           0x19    // Frequency Offset Compensation config\n#define CC1100_BSCFG            0x1A    // Bit Synchronization configuration\n#define CC1100_AGCCTRL2         0x1B    // AGC control\n#define CC1100_AGCCTRL1         0x1C    // AGC control\n#define CC1100_AGCCTRL0         0x1D    // AGC control\n#define CC1100_WOREVT1          0x1E    // High byte Event 0 timeout\n#define CC1100_WOREVT0          0x1F    // Low byte Event 0 timeout\n#define CC1100_WORCTRL          0x20    // Wake On Radio control\n#define CC1100_FREND1           0x21    // Front end RX configuration\n#define CC1100_FREND0           0x22    // Front end TX configuration\n#define CC1100_FSCAL3           0x23    // Frequency synthesizer calibration\n#define CC1100_FSCAL2           0x24    // Frequency synthesizer calibration\n#define CC1100_FSCAL1           0x25    // Frequency synthesizer calibration\n#define CC1100_FSCAL0           0x26    // Frequency synthesizer calibration\n#define CC1100_RCCTRL1          0x27    // RC oscillator configuration\n#define CC1100_RCCTRL0          0x28    // RC oscillator configuration\n#define CC1100_FSTEST           0x29    // Frequency synthesizer cal control\n#define CC1100_PTEST            0x2A    // Production test\n#define CC1100_AGCTEST          0x2B    // AGC test\n#define CC1100_TEST2            0x2C    // Various test settings\n#define CC1100_TEST1            0x2D    // Various test settings\n#define CC1100_TEST0            0x2E    // Various test settings\n\n// Status registers\n#define CC1100_PARTNUM          0x30    // Part number\n#define CC1100_VERSION          0x31    // Current version number\n#define CC1100_FREQEST          0x32    // Frequency offset estimate\n#define CC1100_LQI              0x33    // Demodulator estimate for link quality\n#define CC1100_RSSI             0x34    // Received signal strength indication\n#define CC1100_MARCSTATE        0x35    // Control state machine state\n#define CC1100_WORTIME1         0x36    // High byte of WOR timer\n#define CC1100_WORTIME0         0x37    // Low byte of WOR timer\n#define CC1100_PKTSTATUS        0x38    // Current GDOx status and packet status\n#define CC1100_VCO_VC_DAC       0x39    // Current setting from PLL cal module\n#define CC1100_TXBYTES          0x3A    // Underflow and # of bytes in TXFIFO\n#define CC1100_RXBYTES          0x3B    // Overflow and # of bytes in RXFIFO\n\n// Multi byte memory locations\n#define CC1100_PATABLE          0x3E\n#define CC1100_TXFIFO           0x3F\n#define CC1100_RXFIFO           0x3F\n\n// Definitions for burst/single access to registers\n#define CC1100_WRITE_BURST      0x40\n#define CC1100_READ_SINGLE      0x80\n#define CC1100_READ_BURST       0xC0\n\n// Strobe commands\n#define CC1100_SRES             0x30        // Reset chip.\n#define CC1100_SFSTXON          0x31        // Enable and calibrate frequency synthesizer (if MCSM0.FS_AUTOCAL=1).\n                                            // If in RX/TX: Go to a wait state where only the synthesizer is\n                                            // running (for quick RX / TX turnaround).\n#define CC1100_SXOFF            0x32        // Turn off crystal oscillator.\n#define CC1100_SCAL             0x33        // Calibrate frequency synthesizer and turn it off\n                                            // (enables quick start).\n#define CC1100_SRX              0x34        // Enable RX. Perform calibration first if coming from IDLE and\n                                            // MCSM0.FS_AUTOCAL=1.\n#define CC1100_STX              0x35        // In IDLE state: Enable TX. Perform calibration first if\n                                            // MCSM0.FS_AUTOCAL=1. If in RX state and CCA is enabled:\n                                            // Only go to TX if channel is clear.\n#define CC1100_SIDLE            0x36        // Exit RX / TX, turn off frequency synthesizer and exit\n                                            // Wake-On-Radio mode if applicable.\n#define CC1100_SAFC             0x37        // Perform AFC adjustment of the frequency synthesizer\n#define CC1100_SWOR             0x38        // Start automatic RX polling sequence (Wake-on-Radio)\n#define CC1100_SPWD             0x39        // Enter power down mode when CSn goes high.\n#define CC1100_SFRX             0x3A        // Flush the RX FIFO buffer.\n#define CC1100_SFTX             0x3B        // Flush the TX FIFO buffer.\n#define CC1100_SWORRST          0x3C        // Reset real time clock.\n#define CC1100_SNOP             0x3D        // No operation. May be used to pad strobe commands to two\n                                            // bytes for simpler software.\n\n\n//------------------------------------------------------------------------------\n// Chip Status Byte\n//------------------------------------------------------------------------------\n\n// Bit fields in the chip status byte\n#define CC1100_STATUS_CHIP_RDYn_BM             0x80\n#define CC1100_STATUS_STATE_BM                 0x70\n#define CC1100_STATUS_FIFO_BYTES_AVAILABLE_BM  0x0F\n\n// Chip states\n#define CC1100_STATE_IDLE                      0x00\n#define CC1100_STATE_RX                        0x10\n#define CC1100_STATE_TX                        0x20\n#define CC1100_STATE_FSTXON                    0x30\n#define CC1100_STATE_CALIBRATE                 0x40\n#define CC1100_STATE_SETTLING                  0x50\n#define CC1100_STATE_RX_OVERFLOW               0x60\n#define CC1100_STATE_TX_UNDERFLOW              0x70\n\n\n//------------------------------------------------------------------------------\n// Other register bit fields\n//------------------------------------------------------------------------------\n#define CC1100_LQI_CRC_OK_BM                   0x80\n#define CC1100_LQI_EST_BM                      0x7F\n\n#define MARCSTATE_SLEEP            0x00\n#define MARCSTATE_IDLE             0x01\n#define MARCSTATE_XOFF             0x02\n#define MARCSTATE_VCOON_MC         0x03\n#define MARCSTATE_REGON_MC         0x04\n#define MARCSTATE_MANCAL           0x05\n#define MARCSTATE_VCOON            0x06\n#define MARCSTATE_REGON            0x07\n#define MARCSTATE_STARTCAL         0x08\n#define MARCSTATE_BWBOOST          0x09\n#define MARCSTATE_FS_LOCK          0x0A\n#define MARCSTATE_IFADCON          0x0B\n#define MARCSTATE_ENDCAL           0x0C\n#define MARCSTATE_RX               0x0D\n#define MARCSTATE_RX_END           0x0E\n#define MARCSTATE_RX_RST           0x0F\n#define MARCSTATE_TXRX_SWITCH      0x10\n#define MARCSTATE_RXFIFO_OVERFLOW  0x11\n#define MARCSTATE_FSTXON           0x12\n#define MARCSTATE_TX               0x13\n#define MARCSTATE_TX_END           0x14\n#define MARCSTATE_RXTX_SWITCH      0x15\n#define MARCSTATE_TXFIFO_UNDERFLOW 0x16\n\n#include \"board.h\"                      // for CC1100_CS_PIN, etc\n\n#ifdef USE_HAL\n#include \"rf_mode.h\"\n#define CC1100_DEASSERT   hal_CC_Pin_Set(CC_INSTANCE,CC_Pin_CS,GPIO_PIN_SET)\n#define CC1100_ASSERT     hal_CC_Pin_Set(CC_INSTANCE,CC_Pin_CS,GPIO_PIN_RESET)\n#define CC1100_SET_OUT    hal_CC_Pin_Set(CC_INSTANCE,CC_Pin_Out,GPIO_PIN_SET)\n#define CC1100_CLEAR_OUT  hal_CC_Pin_Set(CC_INSTANCE,CC_Pin_Out,GPIO_PIN_RESET)\n\n#else\n#define CC1100_DEASSERT  \tSET_BIT( CC1100_CS_PORT, CC1100_CS_PIN )\n#define CC1100_ASSERT    \tCLEAR_BIT( CC1100_CS_PORT, CC1100_CS_PIN )\n#define CC1100_SET_OUT\t\tCC1100_OUT_PORT |= _BV(CC1100_OUT_PIN)\n#define CC1100_CLEAR_OUT\tCC1100_OUT_PORT &= ~_BV(CC1100_OUT_PIN)\n#endif\n\n\n/******************************************************************************/\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/avr/avr/io.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _AVR_IO_H\n#define _AVR_IO_H\n#include <stdint.h>\n#ifdef __cplusplus\nextern \"C\" {\n#endif\nextern uint8_t SREG;\n#ifdef __cplusplus\n}\n#endif\n#ifndef _BV\n#define _BV(bit) (1UL << (bit))\n#endif\n\n// Dummy registers for compatibility\nextern uint8_t TIMSK0;\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/delay.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _MYDELAY_H\n#define _MYDELAY_H\n\n#include <stdint.h>                     // for uint16_t, uint8_t\n\nextern void my_delay_us( uint16_t d );\nextern void my_delay_ms( uint8_t d );\n\n#endif\n     \n\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "grep -r \"_BV\" culfw/ | grep \"#define\" | grep -v \".pio\""
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 12040 bytes. Showing last 6000 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define LED_INIT() DDRA|=_BV(LED_PIN)\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define LED_ON() \tLED_PORT|=_BV(LED_PIN)\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define LED_OFF() LED_PORT&=~_BV(LED_PIN)\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define LED_TOG() LED_PORT^=_BV(LED_PIN)\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define SW_INIT()\tDDRA&=~_BV(SW_PIN);SW_PORT|=_BV(SW_PIN);\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define SW_ACTIVE() ((SW_PORT & _BV(SW_PIN))==0)\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define SENS_INIT()\tDDRA&=~_BV(SENS_PIN);DDRB|=_BV(SENS_ACTIVATE_PIN);\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define SENS_ACTIVATE(on) if(on) SENS_ACTIVATE_PORT|=_BV(SENS_ACTIVATE_PIN); else SENS_ACTIVATE_PORT&=~_BV(SENS_ACTIVATE_PIN);\nculfw/Devices/CPM-Gardenabodenfeuchtesensor/board.h:#define SENS_IS_DRY()\t((SENS_PORT & _BV(SENS_PIN))>0)\nculfw/avr-uip/drivers/ethersex/enc28j60.h:#define         BANK1 _BV(ECON1_BSEL0)\nculfw/avr-uip/drivers/ethersex/enc28j60.h:#define         BANK2 _BV(ECON1_BSEL1)\nculfw/avr-uip/drivers/ethersex/enc28j60.h:#define         BANK3 (_BV(ECON1_BSEL0) | _BV(ECON1_BSEL1))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build.log:  111 | #define _BV(b) (1UL << (b))\nculfw/build.log:   12 | #define _BV(bit) (1UL << (bit))\nculfw/at91lib/hal_twimaster.c:#define TWI_SET_SCL         TWI_SCL_BASE->PIO_SODR =  _BV(TWI_SCL_PIN)\r\nculfw/at91lib/hal_twimaster.c:#define TWI_CLEAR_SCL       TWI_SCL_BASE->PIO_CODR =  _BV(TWI_SCL_PIN)\r\nculfw/at91lib/hal_twimaster.c:#define TWI_SET_SDA         TWI_SDA_BASE->PIO_SODR =  _BV(TWI_SDA_PIN)\r\nculfw/at91lib/hal_twimaster.c:#define TWI_CLEAR_SDA       TWI_SDA_BASE->PIO_CODR =  _BV(TWI_SDA_PIN)\r\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/build_log.txt:  111 | #define _BV(b) (1UL << (b))\nculfw/build_log.txt:   12 | #define _BV(bit) (1UL << (bit))\nculfw/tools/checksummer.c:#define _BV(a) (1<<(a))\nculfw/clib/rf_receive.h:#define REP_KNOWN    _BV(0)\nculfw/clib/rf_receive.h:#define REP_REPEATED _BV(1)\nculfw/clib/rf_receive.h:#define REP_BITS     _BV(2)\nculfw/clib/rf_receive.h:#define REP_MONITOR  _BV(3)\nculfw/clib/rf_receive.h:#define REP_BINTIME  _BV(4)\nculfw/clib/rf_receive.h:#define REP_RSSI     _BV(5)\nculfw/clib/rf_receive.h:#define REP_FHTPROTO _BV(6)\nculfw/clib/rf_receive.h:#define REP_LCDMON   _BV(7)\nculfw/clib/rf_router.c:#define SET_HIGH CC1100_OUT_PORT |= _BV(CC1100_OUT_PIN)\nculfw/clib/rf_router.c:#define SET_LOW  CC1100_OUT_PORT &= ~_BV(CC1100_OUT_PIN)\nculfw/clib/spi.h:#define spi_wait()  while (!(SPSR & _BV(SPIF)))\nculfw/clib/df.c:#define cs_low()  uint8_t sreg = SREG; cli(); DF_PORT &= ~_BV(DF_CS)\nculfw/clib/df.c:#define cs_high() DF_PORT |= _BV(DF_CS); SREG = sreg\nculfw/clib/df.c:#define cs_low()  DF_PORT &= ~_BV(DF_CS)\nculfw/clib/df.c:#define cs_high() DF_PORT |= _BV(DF_CS)\nculfw/clib/led.h:#define led_init()   LED_DDR  |= _BV(LED_PIN); xled_pos=0; xled_pattern=0xff00\nculfw/clib/led.h:#define led_init()   LED_DDR  |= _BV(LED_PIN)\nculfw/clib/led.h:#define LED_TOGGLE() LED_PORT ^= _BV(LED_PIN)\nculfw/clib/led.h:#define LED_OFF()    LED_PORT |= _BV(LED_PIN)\nculfw/clib/led.h:#define LED_ON( )    LED_PORT &= ~_BV(LED_PIN)\nculfw/clib/led.h:#define LED_ON()     LED_PORT |= _BV(LED_PIN)\nculfw/clib/led.h:#define LED_OFF( )   LED_PORT &= ~_BV(LED_PIN)\nculfw/clib/cc1100.h:#define CC1100_SET_OUT\t\tCC1100_OUT_PORT |= _BV(CC1100_OUT_PIN)\nculfw/clib/cc1100.h:#define CC1100_CLEAR_OUT\tCC1100_OUT_PORT &= ~_BV(CC1100_OUT_PIN)\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 | grep -B 5 \"redefined\" | head -n 20"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 16498 bytes. Showing last 6000 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\n                 from ESP32/hal.h:4,\n                 from clib/led.h:19,\n                 from clib/rf_native.c:15:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: \"_BV\" redefined\n #define _BV(b) (1UL << (b))\n \nIn file included from clib/rf_native.c:11:\nESP32/avr/avr/io.h:12: note: this is the location of the previous definition\n #define _BV(bit) (1UL << (bit))\n \nIn file included from ESP32/avr/avr/pgmspace.h:3,\n                 from clib/rf_receive.c:25:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: \"sei\" redefined\n #define sei() portENABLE_INTERRUPTS()\n \nIn file included from clib/rf_receive.c:24:\nESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition\n #define sei()\n \nIn file included from ESP32/avr/avr/pgmspace.h:3,\n                 from clib/rf_receive.c:25:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: \"cli\" redefined\n #define cli() portDISABLE_INTERRUPTS()\n \nIn file included from clib/rf_receive.c:24:\nESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition\n #define cli()\n \nIn file included from clib/rf_receive.c:37:\nclib/rf_receive.h:47: warning: \"TX_REPORT\" redefined\n #define TX_REPORT tx_report\n \nIn file included from clib/cc1100.h:184,\n                 from clib/rf_receive.c:31:\nclib/rf_mode.h:71: note: this is the location of the previous definition\n #define TX_REPORT         (tx_report)\n \nIn file included from ESP32/hal_gpio.h:4,\n                 from ESP32/hal.h:4,\n                 from clib/rf_receive_revolt.c:28:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: \"_BV\" redefined\n #define _BV(b) (1UL << (b))\n \nIn file included from clib/rf_receive.h:4,\n                 from clib/rf_receive_bucket.h:30,\n                 from clib/rf_receive_revolt.h:29,\n                 from clib/rf_receive_revolt.c:21:\nESP32/avr/avr/io.h:12: note: this is the location of the previous definition\n #define _BV(bit) (1UL << (bit))\n \nIn file included from clib/rf_receive_revolt.c:30:\nclib/rf_mode.h:71: warning: \"TX_REPORT\" redefined\n #define TX_REPORT         (tx_report)\n \nIn file included from clib/rf_receive_bucket.h:30,\n                 from clib/rf_receive_revolt.h:29,\n                 from clib/rf_receive_revolt.c:21:\nclib/rf_receive.h:47: note: this is the location of the previous definition\n #define TX_REPORT tx_report\n \nIn file included from ESP32/hal_gpio.h:4,\n                 from ESP32/hal.h:4,\n                 from clib/led.h:19,\n                 from clib/rf_rwe.c:5:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: \"_BV\" redefined\n #define _BV(b) (1UL << (b))\n \nIn file included from clib/rf_rwe.c:1:\nESP32/avr/avr/io.h:12: note: this is the location of the previous definition\n #define _BV(bit) (1UL << (bit))\n \nIn file included from clib/rf_rwe.c:14:\nclib/rf_receive.h:47: warning: \"TX_REPORT\" redefined\n #define TX_REPORT tx_report\n \nIn file included from clib/cc1100.h:184,\n                 from clib/rf_rwe.c:10:\nclib/rf_mode.h:71: note: this is the location of the previous definition\n #define TX_REPORT         (tx_report)\n \nIn file included from ESP32/avr/avr/pgmspace.h:3,\n                 from clib/rf_send.c:8:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: \"sei\" redefined\n #define sei() portENABLE_INTERRUPTS()\n \nIn file included from clib/rf_send.c:7:\nESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition\n #define sei()\n \nIn file included from ESP32/avr/avr/pgmspace.h:3,\n                 from clib/rf_send.c:8:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: \"cli\" redefined\n #define cli() portDISABLE_INTERRUPTS()\n \nIn file included from clib/rf_send.c:7:\nESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition\n #define cli()\n \nIn file included from clib/rf_send.c:18:\nclib/rf_receive.h:47: warning: \"TX_REPORT\" redefined\n #define TX_REPORT tx_report\n \nIn file included from clib/cc1100.h:184,\n                 from clib/rf_send.c:14:\nclib/rf_mode.h:71: note: this is the location of the previous definition\n #define TX_REPORT         (tx_report)\n \nclib/rf_send.c: In function 'sendraw':\nclib/rf_send.c:128:18: warning: passing argument 1 of 'set_txreport' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]\n     set_txreport(\"21\");\n                  ^~~~\nIn file included from clib/rf_send.c:18:\nclib/rf_receive.h:33:25: note: expected 'char *' but argument is of type 'const char *'\n void set_txreport(char *in);\n                   ~~~~~~^~\nIn file included from ESP32/hal_gpio.h:4,\n                 from ESP32/hal.h:4,\n                 from clib/led.h:19,\n                 from clib/rf_zwave.c:5:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: \"_BV\" redefined\n #define _BV(b) (1UL << (b))\n \nIn file included from clib/rf_zwave.c:1:\nESP32/avr/avr/io.h:12: note: this is the location of the previous definition\n #define _BV(bit) (1UL << (bit))\n \nIn file included from ESP32/avr/avr/pgmspace.h:3,\n                 from clib/somfy_rts.c:31:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: \"sei\" redefined\n #define sei() portENABLE_INTERRUPTS()\n \nIn file included from clib/somfy_rts.c:30:\nESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition\n #define sei()\n \nIn file included from ESP32/avr/avr/pgmspace.h:3,\n                 from clib/somfy_rts.c:31:\n/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: \"cli\" redefined\n #define cli() portDISABLE_INTERRUPTS()\n \nIn file included from clib/somfy_rts.c:30:\nESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition\n #define cli()\n \n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/avr/avr/interrupt.h"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#ifndef _AVR_INTERRUPT_H\n#define _AVR_INTERRUPT_H\n\n#ifdef __cplusplus\nextern \"C\" {\n#endif\n\n#ifndef sei\n#define sei()\n#endif\n#ifndef cli\n#define cli()\n#endif\n\n#ifdef __cplusplus\n}\n#endif\n\n#endif\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#ifndef _AVR_IO_H\n#define _AVR_IO_H\n#pragma GCC system_header\n#include <stdint.h>",
+            "path": "culfw/ESP32/avr/avr/io.h",
+            "original_text": "#ifndef _AVR_IO_H\n#define _AVR_IO_H\n#include <stdint.h>"
+          }
+        }
+      }
+    ]
   }
 ]
