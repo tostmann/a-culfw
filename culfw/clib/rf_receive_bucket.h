@@ -47,7 +47,7 @@
 #define TSCALE(x)  (x)      // No scaling on 32-bit platforms
 
 
-#define TDIFF      TSCALE(200) // tolerated diff to previous/avg high/low/total
+#define TDIFF      TSCALE(250) // tolerated diff to previous/avg high/low/total
 
 #define STATE_RESET   0
 
