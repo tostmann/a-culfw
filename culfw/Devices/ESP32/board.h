@@ -82,6 +82,7 @@
 #define HAS_RWE
 #define HAS_RFNATIVE
 #define HAS_IT
+#define HAS_INTERTECHNO
 #define HAS_HMS
 #define HAS_ESA
 #define HAS_TCM97001
