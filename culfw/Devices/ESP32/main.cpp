@@ -125,7 +125,19 @@ void setup() {
     Serial.println("Ready.");
 }
 
+static uint32_t last_isr_count = 0;
+static unsigned long last_debug_print = 0;
+
 void loop() {
+    if (millis() - last_debug_print > 1000) {
+        if (gdo_isr_count != last_isr_count) {
+             Serial.print("ISR Count: ");
+             Serial.println(gdo_isr_count);
+             last_isr_count = gdo_isr_count;
+        }
+        last_debug_print = millis();
+    }
+
     // 1. Read from Serial into Rx Buffer
     while (Serial.available()) {
         uint8_t c = Serial.read();
