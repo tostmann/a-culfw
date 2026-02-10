@@ -127,6 +127,8 @@ void setup() {
 }
 
 void loop() {
+    hal_timer_task();
+
     // 1. Read from Serial into Rx Buffer
     while (Serial.available()) {
         uint8_t c = Serial.read();
