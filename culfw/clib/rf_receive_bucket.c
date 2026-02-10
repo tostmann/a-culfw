@@ -35,7 +35,7 @@
 pulse_t IRAM_ATTR makeavg(pulse_t i, pulse_t j)
 {
   if (i == 0) return j;
-  return (i+i+i+j)/4;
+  return (pulse_t)(((uint32_t)i * 3 + j) / 4);
 }
 
 /*
