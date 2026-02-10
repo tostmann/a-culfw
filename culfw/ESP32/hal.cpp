@@ -119,6 +119,8 @@ void HAL_LED_Toggle(LED_List led) {
 
 void IRAM_ATTR gdo_interrupt_handler() {
     gdo_isr_count++;
+    if (digitalRead(GDO0_PIN)) gdo_high_count++;
+    else gdo_low_count++;
     if (rf_timer_enabled) {
         timerWrite(rf_hw_timer, 0);
     }
