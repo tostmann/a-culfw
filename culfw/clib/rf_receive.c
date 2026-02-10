@@ -609,6 +609,7 @@ void IRAM_ATTR reset_input(void)
   maxLevel[CC_INSTANCE]=0;
 #ifdef USE_HAL
   hal_enable_CC_timer_int(CC_INSTANCE,FALSE);
+  HAL_timer_reset_counter_value(CC_INSTANCE);
 #else
   TIMSK1 = 0;
 #endif
