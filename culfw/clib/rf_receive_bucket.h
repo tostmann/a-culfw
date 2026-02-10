@@ -139,7 +139,7 @@ uint8_t getbits(input_t* in, uint8_t nbits, uint8_t msb);
 /*
  * Make avg for the received packet and return the value
  */
-uint8_t makeavg(uint8_t i, uint8_t j);
+pulse_t makeavg(pulse_t i, pulse_t j);
 
 
 #endif
