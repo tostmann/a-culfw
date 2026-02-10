@@ -9,7 +9,7 @@ is in $HOME/.platformio/penv/bin
 call "pio" only from top of Project directory!!
 pio run -d culfw/
 
-BEFOLGE STRICT: dass Du keine Blockierenden Kommandos senden darfst um unseren Dialog flüssig fortzusetzen, füge im Zweifel immer "timeout" voran zur Prüfung:
+BEFOLGE STRICT: dass Du keine blockierenden Kommandos senden darfst um unseren Dialog flüssig fortzusetzen, füge im Zweifel immer "timeout" voran zur Prüfung:
 timeout 3s pio monitor
 timeout 3s cat /dev/ttyACM0
 
@@ -17,6 +17,8 @@ timeout 3s cat /dev/ttyACM0
 all binaries go into binaries/ - maintain the manifest inside this directory
 
 *HARDWARE SETUP*
+
+Du läufst auf einem Raspberry Pi 5 mit vollem root Zugriff
 
 root@Argus:/opt/ai_builder_data/users/763684262/projects/CULFW32# ls -l /dev/serial/by-id/
 total 0

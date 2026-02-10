@@ -106,7 +106,7 @@ static void delbit(bucket_t *b);
 uint8_t wave_equals(wave_t *a, uint8_t htime, uint8_t ltime, uint8_t state);
 
 
-static pulse_t hightime[NUM_SLOWRF], lowtime[NUM_SLOWRF];
+static volatile pulse_t hightime[NUM_SLOWRF], lowtime[NUM_SLOWRF];
 
 void
 tx_init(void)
