@@ -33,7 +33,7 @@ typedef struct {
   ts_64_t    tx_ts;
 } ntp_packet_t;
 
-typedef struct tm {
+typedef struct ntp_tm {
   uint8_t    tm_year;
   uint8_t    tm_mon;
   uint8_t    tm_mday;
