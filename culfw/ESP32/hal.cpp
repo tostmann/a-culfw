@@ -132,16 +132,16 @@ void IRAM_ATTR gdo_interrupt_handler() {
 }
 
 void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
-    if (mode == INIT_MODE_OUT_CS_IN) {
-        pinMode(GDO0_PIN, OUTPUT);
-    } else {
-        pinMode(GDO0_PIN, INPUT);
-    }
+    pinMode(CC1100_CS_PIN, OUTPUT);
+    digitalWrite(CC1100_CS_PIN, HIGH);
+    
+    pinMode(GDO0_PIN, INPUT); 
     pinMode(GDO2_PIN, INPUT);
 }
 
 void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {
     if (enable) {
+        pinMode(GDO0_PIN, INPUT); 
         attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
     } else {
         detachInterrupt(digitalPinToInterrupt(GDO0_PIN));
@@ -152,6 +152,7 @@ void hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {
     if (pin == CC_Pin_CS) {
         digitalWrite(CC1100_CS_PIN, state);
     } else if (pin == CC_Pin_Out) {
+        pinMode(GDO0_PIN, OUTPUT);
         digitalWrite(GDO0_PIN, state);
     }
 }
