@@ -479,3 +479,20 @@ dumpmem(uint8_t *addr, uint16_t len)
   }
   DNL();
 }
+
+#ifdef ESP32
+extern uint32_t gdo_isr_count;
+#endif
+
+void
+display_debug(char *in)
+{
+#ifdef ESP32
+  DS_P(PSTR("GDO0_INT_COUNT: "));
+  DU(gdo_isr_count, 1);
+  DNL();
+  DS_P(PSTR("TICKS: "));
+  DU(ticks, 1);
+  DNL();
+#endif
+}

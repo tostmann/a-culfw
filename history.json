@@ -1457,5 +1457,85 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 --target upload --upload-port /dev/ttyACM0 && /root/.platformio/penv/bin/python3 slowrf_test.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 24837 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nSHA digest in image updated\nCompressed 12464 bytes to 9064...\nWriting at 0x00000000... (100 %)\nWrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 449.0 kbit/s)...\nHash of data verified.\nCompressed 3072 bytes to 146...\nWriting at 0x00008000... (100 %)\nWrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 463.3 kbit/s)...\nHash of data verified.\nCompressed 8192 bytes to 47...\nWriting at 0x0000e000... (100 %)\nWrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 752.9 kbit/s)...\nHash of data verified.\nCompressed 283440 bytes to 158423...\nWriting at 0x00010000... (10 %)\nWriting at 0x0001b0ef... (20 %)\nWriting at 0x000230d0... (30 %)\nWriting at 0x0002a348... (40 %)\nWriting at 0x000302b5... (50 %)\nWriting at 0x000364c6... (60 %)\nWriting at 0x0003c469... (70 %)\nWriting at 0x000440fa... (80 %)\nWriting at 0x0004ac3f... (90 %)\nWriting at 0x00050d99... (100 %)\nWrote 283440 bytes (158423 compressed) at 0x00010000 in 2.2 seconds (effective 1034.4 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n========================= [SUCCESS] Took 21.07 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:21.070\n========================= 1 succeeded in 00:00:21.070 =========================\nSetting ESP32 to X07...\nSending FS20 from REF...\nSend 1/5\nSend 2/5\nSend 3/5\nSend 4/5\nSend 5/5\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/fncollection.c"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include \"board.h\"                      // IWYU pragma: keep\n\n#include <avr/eeprom.h>                 // for __eerd_byte_UNKNOWN, etc\n#include <avr/interrupt.h>              // for cli\n#include <avr/io.h>                     // for bit_is_set\n#include <avr/pgmspace.h>               // for PSTR\n\n#ifndef bit_is_set\n#include <avr/sfr_defs.h>               // for bit_is_set\n#endif\n#include <stdint.h>                     // for uint8_t, uint16_t, int8_t\n\n#include \"../version.h\"                 // for VERSION_1, VERSION_2, etc\n#include \"cc1100.h\"                     // for cc_factory_reset\n#include \"cdc_uart.h\"                   // for EE_write_baud\n#include \"display.h\"                    // for DC, DS_P, DH2, DNL, DU, DH\n#include \"fband.h\"                      // for checkFrequency, IS433MHZ\n#include \"fncollection.h\"\n#include \"led.h\"                        // for LED_OFF, LED_ON\n#include \"qfs.h\"                        // for fs_sync\n#include \"stringfunc.h\"                 // for fromhex, fromip, fromdec\n#include \"hw_autodetect.h\"\n#ifdef HAS_USB\n#ifdef SAM7\n#include <usb/device/cdc-serial/CDCDSerialDriver.h>\n#include <utility/trace.h>\n#include \"delay.h\"\n#elif defined STM32\n#include \"usb_device.h\"\n#else\n#include <Drivers/USB/LowLevel/LowLevel.h>  // for USB_ShutDown\n#endif\n#endif\n#include <avr/wdt.h>                    // for WDTO_15MS, wdt_enable\n\n#include \"ethernet.h\"                   // for ethernet_reset\n#include \"fswrapper.h\"                  // for fs\n#include \"mysleep.h\"                    // for sleep_time\n#include \"multi_CC.h\"\n\n#ifdef USE_HAL\n#include \"hal.h\"\n#endif\n\n#ifdef ESP32\n#include \"esp_system.h\"\n#endif\n\nuint8_t led_mode = 2;   // Start blinking\n\n#ifdef XLED\n#include \"xled.h\"\n#endif\n\n#if defined(CDC_COUNT) && CDC_COUNT > 1\n#include \"cdc_uart.h\"                   // for EE_write_baud\n#endif\n\n#if defined STM32\n#define RTC_BOOTLOADER_FLAG 0x424C\n#define RTC_BOOTLOADER_JUST_UPLOADED 0x424D\n#include <stm32f103xb.h>\n#endif\n//////////////////////////////////////////////////\n// EEprom\n\n// eeprom_write_byte is inlined and it is too big\n__attribute__((__noinline__)) \nvoid\newb(uint8_t *p, uint8_t v)\n{\n  eeprom_write_byte(p, v);\n  eeprom_busy_wait();\n}\n\n// eeprom_read_byte is inlined and it is too big\n__attribute__((__noinline__)) \nuint8_t\nerb(uint8_t *p)\n{\n  return eeprom_read_byte(p);\n}\n\nstatic void\ndisplay_ee_bytes(uint8_t *a, uint8_t cnt)\n{\n  while(cnt--) {\n    DH2(erb(a++));\n    if(cnt)\n      DC(':');\n  }\n\n}\n\nstatic void\ndisplay_ee_mac(uint8_t *a)\n{\n  display_ee_bytes( a, 6 );\n}\n\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\nstatic void\ndisplay_ee_ip4(uint8_t *a)\n{\n  uint8_t cnt = 4;\n  while(cnt--) {\n    DU(erb(a++),1);\n    if(cnt)\n      DC('.');\n  }\n  \n}\n#endif\n\nvoid\nread_eeprom(char *in)\n{\n  uint8_t hb[2], d;\n  uint16_t addr;\n\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\n  if(in[1] == 'i') {\n           if(in[2] == 'm') { display_ee_mac(EE_MAC_ADDR);\n    } else if(in[2] == 'd') { DH2(erb(EE_USE_DHCP));\n    } else if(in[2] == 'a') { display_ee_ip4(EE_IP4_ADDR);\n    } else if(in[2] == 'n') { display_ee_ip4(EE_IP4_NETMASK);\n    } else if(in[2] == 'g') { display_ee_ip4(EE_IP4_GATEWAY);\n    } else if(in[2] == 'N') { display_ee_ip4(EE_IP4_NTPSERVER);\n    } else if(in[2] == 'o') { DH2(erb(EE_IP4_NTPOFFSET));\n    } else if(in[2] == 'p') {\n      DU(eeprom_read_word((uint16_t *)EE_IP4_TCPLINK_PORT), 0);\n    }\n  } else \n#endif\n  if(in[1] == 'M') { display_ee_mac(EE_DUDETTE_MAC); }  \n  else if(in[1] == 'P') { display_ee_bytes(EE_DUDETTE_PUBL, 16); }  \n  else {\n    hb[0] = hb[1] = 0;\n    d = fromhex(in+1, hb, 2);\n    if(d == 2)\n      addr = (hb[0] << 8) | hb[1];\n    else\n      addr = hb[0];\n\n#ifdef HAS_MULTI_CC\n#if NUM_SLOWRF > 1\n    if(CC1101.instance == 1) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG1;\n      }\n    }\n#endif\n#if NUM_SLOWRF > 2\n    if(CC1101.instance == 2) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG2;\n      }\n    }\n#endif\n#endif\n\n    d = erb((uint8_t *)addr);\n    DC('R');                    // prefix\n    DH(addr,4);                 // register number\n    DS_P( PSTR(\" = \") );\n    DH2(d);                    // result, hex\n    DS_P( PSTR(\" / \") );\n    DU(d,2);                    // result, decimal\n  }\n  DNL();\n}\n\nvoid\nwrite_eeprom(char *in)\n{\n  uint8_t hb[6], d = 0;\n\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\n  if(in[1] == 'i') {\n    uint8_t *addr = 0;\n           if(in[2] == 'm') { d=6; fromhex(in+3,hb,6); addr=EE_MAC_ADDR;\n    } else if(in[2] == 'd') { d=1; fromdec(in+3,hb);   addr=EE_USE_DHCP;\n    } else if(in[2] == 'a') { d=4; fromip (in+3,hb,4); addr=EE_IP4_ADDR;\n    } else if(in[2] == 'n') { d=4; fromip (in+3,hb,4); addr=EE_IP4_NETMASK;\n    } else if(in[2] == 'g') { d=4; fromip (in+3,hb,4); addr=EE_IP4_GATEWAY;\n    } else if(in[2] == 'p') { d=2; fromdec(in+3,hb);   addr=EE_IP4_TCPLINK_PORT;\n    } else if(in[2] == 'N') { d=4; fromip (in+3,hb,4); addr=EE_IP4_NTPSERVER;\n    } else if(in[2] == 'o') { d=1; fromhex(in+3,hb,1); addr=EE_IP4_NTPOFFSET;\n#ifdef HAS_NTP\n      extern int8_t ntp_gmtoff;\n      ntp_gmtoff = hb[0];\n#endif\n    }\n    for(uint8_t i = 0; i < d; i++)\n      ewb(addr++, hb[i]);\n\n  } else \n#endif\n  {\n    uint16_t addr;\n    d = fromhex(in+1, hb, 3);\n    if(d < 2)\n      return;\n    if(d == 2)\n      addr = hb[0];\n    else\n      addr = (hb[0] << 8) | hb[1];\n\n#ifdef HAS_MULTI_CC\n#if NUM_SLOWRF > 1\n    if(CC1101.instance == 1) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG1;\n      }\n    }\n#endif\n#if NUM_SLOWRF > 2\n    if(CC1101.instance == 2) {\n      if((addr >= (uint32_t)EE_CC1100_CFG) && (addr < (uint32_t)EE_CC1100_CFG + EE_CC1100_CFG_SIZE)) {\n        addr = addr - (uint32_t)EE_CC1100_CFG + (uint32_t)EE_CC1100_CFG2;\n      }\n    }\n#endif\n#endif\n\n    ewb((uint8_t*)addr, hb[d-1]);\n\n    if (addr == 15 || addr == 16 || addr == 17)\n      checkFrequency();\n\n    // If there are still bytes left, then write them too\n    in += (2*d+1);\n    while(in[0]) {\n      if(!fromhex(in, hb, 1))\n        return;\n      ewb((uint8_t*)++addr, hb[0]);\n      in += 2;\n    }\n  }\n}\n\nvoid\neeprom_init(void)\n{\n#ifdef USE_HAL\n  hal_eeprom_init();\n#endif\n\n  if(erb(EE_MAGIC_OFFSET)   != VERSION_1 ||\n     erb(EE_MAGIC_OFFSET+1) != VERSION_2)\n       eeprom_factory_reset(0);\n\n  led_mode = erb(EE_LED);\n#ifdef XLED\n  switch (led_mode) {\n    case 0:\n      xled_pattern = 0;\n      break;\n    case 1:\n      xled_pattern = 0xffff;\n      break;\n    case 2:\n      xled_pattern = 0xff00;\n      break;\n    case 3:\n      xled_pattern = 0xa000;\n      break;\n    case 4:\n      xled_pattern = 0xaa00;\n      break;\n  }\n#endif\n#ifdef HAS_SLEEP\n  sleep_time = erb(EE_SLEEPTIME);\n#endif\n}\n\nvoid\neeprom_factory_reset(char *in)\n{\n\n  ewb(EE_MAGIC_OFFSET  , VERSION_1);\n  ewb(EE_MAGIC_OFFSET+1, VERSION_2);\n\n  cc_factory_reset();\n  checkFrequency();\n\n  ewb(EE_RF_ROUTER_ID, 0);\n  ewb(EE_RF_ROUTER_ROUTER, 0);\n  ewb(EE_REQBL, 0);\n  ewb(EE_LED, 2);\n\n#ifdef HAS_LCD\n  ewb(EE_CONTRAST,   0x40);\n  ewb(EE_BRIGHTNESS, 0x80);\n  ewb(EE_SLEEPTIME, 30);\n#endif\n#if defined(HAS_ETHERNET) | defined(HAS_WIZNET)\n  ethernet_reset();\n#endif\n#ifdef HAS_FS\n  ewb(EE_LOGENABLED, 0x00);\n#endif\n#ifdef HAS_RF_ROUTER\n  ewb(EE_RF_ROUTER_ID, 0x00);\n  ewb(EE_RF_ROUTER_ROUTER, 0x00);\n#endif\n\n#ifdef HAS_WIZNET\n  EE_write_baud(0,CDC_BAUD_RATE);\n  EE_write_baud(1,CDC_BAUD_RATE);\n#endif\n\n  if(in && in[1] != 'x')\n    prepare_boot(0);\n}\n\n// LED\nvoid\nledfunc(char *in)\n{\n  fromhex(in+1, &led_mode, 1);\n#ifdef XLED\n  switch (led_mode) {\n    case 0:\n      xled_pattern = 0; \n      break;\n    case 1:\n      xled_pattern = 0xffff; \n      break;\n    case 2:\n      xled_pattern = 0xff00; \n      break;\n    case 3:\n      xled_pattern = 0xa000; \n      break;\n    case 4:\n      xled_pattern = 0xaa00; \n      break;\n  }\n#else\n  if(led_mode & 1)\n    LED_ON();\n  else\n    LED_OFF();\n#endif\n\n  ewb(EE_LED, led_mode);\n}\n\n//////////////////////////////////////////////////\n// boot\nvoid\nprepare_boot(char *in)\n{\n  uint8_t bl = 0;\n  if(in)\n    fromhex(in+1, &bl, 1);\n\n  if(bl == 0xff) {            // Allow testing\n    while(1);\n  }\n    \n#ifdef SAM7\n\n\tunsigned char volatile * const ram = (unsigned char *) AT91C_ISRAM;\n\n\t//Reset\n\tif(bl)\n\t\t*ram = 0xaa;\t\t// Next reboot we'd like to jump to the bootloader.\n\n\tUSBD_Disconnect();\n\tmy_delay_ms(250);\n\tmy_delay_ms(250);\n\tmy_delay_ms(250);\n\tmy_delay_ms(250);\n\tAT91C_BASE_RSTC->RSTC_RCR = AT91C_RSTC_PROCRST | AT91C_RSTC_PERRST | AT91C_RSTC_EXTRST   | 0xA5<<24;\n\twhile (1);\n\n#elif defined STM32\n\tUSBD_Disconnect();\n\n\tRCC->APB1ENR |= (RCC_APB1ENR_PWREN | RCC_APB1ENR_BKPEN);\n\t    PWR->CR |= PWR_CR_DBP;\n\tif(bl) {\n\t  // Next reboot we'd like to jump to the bootloader.\n    BKP->DR10 = RTC_BOOTLOADER_FLAG;\n\t} else {\n    BKP->DR10 = RTC_BOOTLOADER_JUST_UPLOADED;\n\t}\n\tPWR->CR &=~ PWR_CR_DBP;\n\n\twdt_enable(WDTO_2S);\n\n\twhile (1);                 // go to bed, the wathchdog will take us to reset\n#else\n  if(bl)                     // Next reboot we'd like to jump to the bootloader.\n    ewb( EE_REQBL, 1 );      // Simply jumping to the bootloader from here\n                             // wont't work. Neither helps to shutdown USB\n                             // first.\n                             \n#ifdef HAS_USB\n  USB_ShutDown();            // ??? Needed?\n#endif\n#ifdef HAS_FS\n  fs_sync(&fs);              // Sync the filesystem\n#endif\n\n#ifdef ESP32\n  esp_restart();\n#else\n  TIMSK0 = 0;                // Disable the clock which resets the watchdog\n  cli();\n  \n  wdt_enable(WDTO_15MS);       // Make sure the watchdog is running \n  while (1);                 // go to bed, the wathchdog will take us to reset\n#endif\n#endif\n}\n\nvoid\nversion(char *in)\n{\n  MULTICC_PREFIX();\n#if defined(CUL_HW_REVISION)\n  if (in[1] == 'H') {\n    DS_P( PSTR(CUL_HW_REVISION) );\n    DNL();\n    return;\n  }\n#endif\n  DS_P( PSTR(\"V \" VERSION \" \" FW_NAME \" Build: \" BUILD_NUMBER \" (\" BUILD_DATE \") \"));\n#ifdef MULTI_FREQ_DEVICE     // check 433MHz version marker\n  if (!bit_is_set(MARK433_PIN, MARK433_BIT))\n     DS_P( PSTR(BOARD_ID_STR433) );\n  else\n#endif\n    DS_P( PSTR(BOARD_ID_STR) );\n#ifdef USE_HW_AUTODETECT\n  DC('_');\n  DH2(get_hw_features());\n#endif\n  if (IS433MHZ) {\n     DS_P( PSTR(\" (F-Band: 433MHz)\") );\n  } else {\n     DS_P( PSTR(\" (F-Band: 868MHz)\") );\n  }\n#ifdef HAS_I2CSLAVE\n\t\tDS_P( PSTR(\" (I2C: 0x\") );\n\t\tdisplay_hex2(i2cSlaveAddr);\n\t\tDS_P( PSTR(\")\") );\n#endif\t\n  DNL();\n}\n\nvoid\ndumpmem(uint8_t *addr, uint16_t len)\n{\n  for(uint16_t i = 0; i < len; i += 16) {\n    uint8_t l = len;\n    if(l > 16)\n      l = 16;\n    DH(i,4);\n    DC(':'); DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      DH2(addr[j]);\n      if(j&1)\n        DC(' ');\n    }\n    DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      if(addr[j] >= ' ' && addr[j] <= '~')\n        DC(addr[j]);\n      else\n        DC('.');\n    }\n    addr += 16;\n    DNL();\n  }\n  DNL();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void\ndumpmem(uint8_t *addr, uint16_t len)\n{\n  for(uint16_t i = 0; i < len; i += 16) {\n    uint8_t l = len;\n    if(l > 16)\n      l = 16;\n    DH(i,4);\n    DC(':'); DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      DH2(addr[j]);\n      if(j&1)\n        DC(' ');\n    }\n    DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      if(addr[j] >= ' ' && addr[j] <= '~')\n        DC(addr[j]);\n      else\n        DC('.');\n    }\n    addr += 16;\n    DNL();\n  }\n  DNL();\n}\n\n#ifdef ESP32\nextern uint32_t gdo_isr_count;\n#endif\n\nvoid\ndisplay_debug(char *in)\n{\n#ifdef ESP32\n  DS_P(PSTR(\"GDO0_INT_COUNT: \"));\n  DU(gdo_isr_count, 1);\n  DNL();\n  DS_P(PSTR(\"TICKS: \"));\n  DU(ticks, 1);\n  DNL();\n#endif\n}\n",
+            "path": "culfw/clib/fncollection.c",
+            "original_text": "void\ndumpmem(uint8_t *addr, uint16_t len)\n{\n  for(uint16_t i = 0; i < len; i += 16) {\n    uint8_t l = len;\n    if(l > 16)\n      l = 16;\n    DH(i,4);\n    DC(':'); DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      DH2(addr[j]);\n      if(j&1)\n        DC(' ');\n    }\n    DC(' ');\n    for(uint8_t j = 0; j < l; j++) {\n      if(addr[j] >= ' ' && addr[j] <= '~')\n        DC(addr[j]);\n      else\n        DC('.');\n    }\n    addr += 16;\n    DNL();\n  }\n  DNL();\n}\n"
+          }
+        }
+      }
+    ]
   }
 ]
