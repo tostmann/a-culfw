@@ -407,7 +407,7 @@ prepare_boot(char *in)
 #endif
 
 #ifdef ESP32
-  ESP.restart();
+  esp_restart();
 #else
   TIMSK0 = 0;                // Disable the clock which resets the watchdog
   cli();
