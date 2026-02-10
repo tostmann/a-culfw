@@ -1,13 +1,40 @@
-activate
-activate.csh
-activate.fish
-Activate.ps1
-httpx
-normalizer
-pip
-pip3
-pip3.11
-python
-python3
-python3.11
-tqdm
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/FrameworkArduino/esp32-hal-time.c.o: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/FrameworkArduino/HardwareSerial.cpp.o: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.elf: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/libFrameworkArduino.a: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/FrameworkArduino/esp32-hal-time.c.o: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/FrameworkArduino/HardwareSerial.cpp.o: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.elf: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/libFrameworkArduino.a: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-time.c.o: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/FrameworkArduino/HardwareSerial.cpp.o: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.elf: binary file matches
+grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/libFrameworkArduino.a: binary file matches
+culfw/Devices/CUL-HM-CFG/clock-arch.h:#define CLOCK_CONF_SECOND (clock_time_t)125
+culfw/Devices/CUNO2/clock-arch.h:#define CLOCK_CONF_SECOND (clock_time_t)125
+culfw/Devices/CUN/clock-arch.h:#define CLOCK_CONF_SECOND (clock_time_t)125
+culfw/Devices/CUBe/clock-arch.h:#define CLOCK_CONF_SECOND (clock_time_t)125
+culfw/Devices/CUNO/clock-arch.h:#define CLOCK_CONF_SECOND (clock_time_t)125
+culfw/avr-uip/uip/timer.h:  clock_time_t start;
+culfw/avr-uip/uip/timer.h:  clock_time_t interval;
+culfw/avr-uip/uip/timer.h:void timer_set(struct timer *t, clock_time_t interval);
+culfw/avr-uip/uip/clock.h:clock_time_t clock_time(void);
+culfw/avr-uip/uip/clock.h:#define CLOCK_SECOND (clock_time_t)32
+culfw/avr-uip/uip/timer.c:timer_set(struct timer *t, clock_time_t interval)
+culfw/avr-uip/uip/timer.c:  return (clock_time_t)(clock_time() - t->start) >= (clock_time_t)t->interval;
+culfw/Wiznet/Internet/SNTP/sntp.c:tstamp changedatetime_to_seconds(void)
+culfw/Wiznet/Internet/SNTP/sntp.h:tstamp changedatetime_to_seconds(void);
+culfw/Wiznet/Internet/SNMP/snmp.c:static time_t startTime = 0;
+culfw/Wiznet/Internet/SNMP/snmp.c:	time_t curTime = getSNMPTimeTick();
+culfw/clib/clock.c:clock_time_t
+culfw/clib/clock.c:  return (clock_time_t)actticks;
+culfw/clib/clock.h:typedef uint16_t clock_time_t;
+culfw/clib/clock.h:clock_time_t clock_time(void);
+culfw/clib/ntp.c:time_t        ntp_sec = 3461476149U; // 2009-09-09 09:09:09 (GMT)
+culfw/clib/ntp.c:ntp_sec2tm(time_t sec, tm_t *t)
+culfw/clib/ntp.c:time_t
+culfw/clib/ntp.c:  return (((time_t)day*24+
+culfw/clib/ntp.h:typedef uint32_t time_t;
+culfw/clib/ntp.h:void ntp_sec2tm(time_t sec, tm_t *t);
+culfw/clib/ntp.h:time_t ntp_tm2sec(tm_t *t);
+culfw/clib/ntp.h:extern time_t   ntp_sec;
