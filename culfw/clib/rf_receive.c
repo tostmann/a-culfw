@@ -681,6 +681,7 @@ ISR(TIMER1_COMPA_vect)
   } else {
 
     bucket_nrused[CC_INSTANCE]++;
+    if(TX_REPORT & REP_MONITOR) DC('t');
     bucket_in[CC_INSTANCE]++;
     if(bucket_in[CC_INSTANCE] == RCV_BUCKETS)
       bucket_in[CC_INSTANCE] = 0;
