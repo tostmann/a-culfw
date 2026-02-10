@@ -1,4 +1,21 @@
-#ifndef IRAM_ATTR
-#define IRAM_ATTR
-pulse_t IRAM_ATTR makeavg(pulse_t i, pulse_t j)
-void IRAM_ATTR addbit(bucket_t *b, uint8_t bit)
+    return;
+  }
+#endif
+#ifdef LONG_PULSE
+  #ifdef SAM7
+  uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE) / 6;   // catch the time and make it smaller
+  #elif defined STM32 || defined ESP32
+  uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE);
+  #else
+  uint16_t c = (TCNT1>>4);               // catch the time and make it smaller
+  #endif
+#else
+  #ifdef SAM7
+  uint8_t c = HAL_timer_get_counter_value(CC_INSTANCE) / 6;   // catch the time and make it smaller
+  #elif defined STM32 || defined ESP32
+  uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE);
+  #else
+  uint8_t c = (TCNT1>>4);               // catch the time and make it smaller
+  #endif
+#endif
+
