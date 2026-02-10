@@ -3,722 +3,6 @@
     "role": "user",
     "parts": [
       {
-        "text": "entwirf ein Kommandozeile Script was Dir beim Testen hilft! Das Testscript sollte einen Port und ein Kommando und Timeout entgegen nehmen, dann Port \u00f6ffnen Kommando senden Resulttat (ggfs. Timeout) zur\u00fcck geben.\n\nNutze die legency Hardware CUL868 mit culfw an port ACM1 zum testen."
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Ich habe ein robustes Python-Testscript entworfen, das die PlatformIO-Umgebung nutzt (da `pyserial` dort garantiert vorhanden ist).\n\n### 1. Das Test-Script erstellen\n\n"
-      },
-      {
-        "function_call": {
-          "name": "write_file",
-          "args": {
-            "content": "#!/root/.platformio/penv/bin/python3\nimport serial\nimport sys\nimport time\nimport argparse\n\ndef main():\n    parser = argparse.ArgumentParser(description='CULFW Serial Test Tool')\n    parser.add_argument('port', help='Serial port (e.g. /dev/ttyACM1)')\n    parser.add_argument('command', help='Command to send (e.g. V)')\n    parser.add_argument('--timeout', type=float, default=2.0, help='Timeout in seconds')\n    parser.add_argument('--baud', type=int, default=115200, help='Baudrate')\n    \n    args = parser.parse_args()\n\n    try:\n        # Initialisiere Port mit spezifischen ESP32-C3 Einstellungen (DTR/RTS)\n        # F\u00fcr den alten CUL868 (ATmega) schaden diese Einstellungen nicht.\n        ser = serial.Serial(\n            port=args.port,\n            baudrate=args.baud,\n            timeout=args.timeout,\n            xonxoff=False,\n            rtscts=False,\n            dsrdtr=False\n        )\n        \n        # Reset-Vermeidung/Handshake\n        ser.dtr = True\n        ser.rts = True\n        time.sleep(0.1) \n\n        # Puffer leeren\n        ser.reset_input_buffer()\n        \n        # Kommando senden (mit \\r\\n f\u00fcr culfw)\n        cmd_bytes = (args.command + '\\r\\n').encode('utf-8')\n        ser.write(cmd_bytes)\n        \n        # Antwort lesen (bis zum n\u00e4chsten Prompt oder Timeout)\n        # Wir lesen bis zu 1024 Bytes oder bis der Timeout greift\n        response = b\"\"\n        start_time = time.time()\n        \n        while (time.time() - start_time) < args.timeout:\n            if ser.in_waiting > 0:\n                chunk = ser.read(ser.in_waiting)\n                response += chunk\n                # Wenn wir ein Newline nach dem Befehl sehen, k\u00f6nnte das die Antwort sein\n                if len(response) > len(cmd_bytes) and b'\\r\\n' in response[len(cmd_bytes):]:\n                    break\n            time.sleep(0.05)\n\n        if response:\n            print(response.decode('utf-8', errors='ignore').strip())\n        else:\n            print(\"TIMEOUT\")\n            sys.exit(1)\n\n    except Exception as e:\n        print(f\"ERROR: {e}\")\n        sys.exit(1)\n    finally:\n        if 'ser' in locals() and ser.is_open:\n            ser.close()\n\nif __name__ == \"__main__\":\n    main()\n",
-            "path": "cul_test.py"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "write_file",
-          "response": {
-            "result": "Wrote to cul_test.py"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "### 2. Script ausf\u00fchrbar machen und Testlauf (Legacy CUL868)\n\nIch teste das Script nun gegen den **CUL868** an `/dev/ttyACM1` mit dem Befehl `V` (Version abfragen).\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "chmod +x cul_test.py && ./cul_test.py /dev/ttyACM1 V --timeout 2"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nV 1.26.31 a-culfw Build: 31 (2026-02-06 00:28:38) CUL868 (F-Band: 868MHz)\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Das Script funktioniert einwandfrei mit der Legacy-Hardware.\n\n### 3. Test des XIAO-ESP32-C3 (Aktuelles Ziel)\nJetzt nutze ich das Tool, um zu pr\u00fcfen, ob der XIAO auf `/dev/ttyACM0` antwortet (dort l\u00e4uft momentan der \"SIMPLE BOOT TEST\").\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "./cul_test.py /dev/ttyACM0 \"AnyKey\" --timeout 5"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 1\nOutput:\nTIMEOUT\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Das Script best\u00e4tigt: **Keine Antwort vom XIAO-ESP32-C3**, nicht einmal der \"Alive...\" Heartbeat.\n\n### Ursachen-Eingrenzung:\n1.  **Bootloader-Falle:** Der Chip meldet sich laut `dmesg` als \"USB JTAG/serial debug unit\". Wenn er im \"wait usb download\" Modus feststeckt, startet die Applikation nicht.\n2.  **CDC-Initialisierung:** Bei ESP32-C3 muss `Serial` oft erst \"aufgeweckt\" werden oder die Baudrate muss exakt passen.\n\n### N\u00e4chster Versuch:\nIch flashe jetzt die CULFW32 wieder in einer **funktionsf\u00e4higen Basis-Konfiguration**, aber mit erzwungenem USB-Output-Fix (`-DARDUINO_USB_MODE=1` und `-DARDUINO_USB_CDC_ON_BOOT=1` sind bereits gesetzt, ich pr\u00fcfe aber die `board.h` f\u00fcr den XIAO).\n\nZuvor pr\u00fcfe ich noch einmal kurz die Hardware-Anbindung in `dmesg`.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "dmesg | tail -n 10"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\n[ 5811.941407] usb 1-2: Product: ATm32U4DFU\n[ 5811.941410] usb 1-2: Manufacturer: ATMEL\n[ 5811.941412] usb 1-2: SerialNumber: 1.0.0\n[ 6027.652571] usb 1-2: USB disconnect, device number 2\n[ 6078.947288] usb 1-2: new full-speed USB device number 3 using xhci-hcd\n[ 6079.124348] usb 1-2: New USB device found, idVendor=03eb, idProduct=204b, bcdDevice= 0.00\n[ 6079.124354] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0\n[ 6079.124358] usb 1-2: Product: CUL868\n[ 6079.124361] usb 1-2: Manufacturer: busware.de\n[ 6079.352428] cdc_acm 1-2:1.0: ttyACM1: USB ACM device\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Der XIAO scheint momentan nicht im System (kein `/dev/ttyACM0` in `dmesg` am Ende). Ich liste alle verf\u00fcgbaren seriellen Ports auf.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "ls -l /dev/serial/by-id/"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\ntotal 0\nlrwxrwxrwx 1 root root 13 Feb 10 13:39 usb-busware.de_CUL868-if00 -> ../../ttyACM1\nlrwxrwxrwx 1 root root 13 Feb 10 12:23 usb-Espressif_USB_JTAG_serial_debug_unit_54:32:04:89:48:D0-if00 -> ../../ttyACM0\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Der XIAO ist noch auf `ttyACM0` vorhanden. Ich stelle die CULFW `main.cpp` wieder her, verbessere aber die Initialisierung f\u00fcr den ESP32-C3 USB-CDC.\n\n**\u00c4nderungen:**\n1.  Verwendung von `USBSerial` falls `Serial` nicht auf den USB-Port zeigt.\n2.  `Serial.setTxTimeoutMs(0)` um blockierende Ausgaben zu verhindern.\n3.  Korrekte ISR-Registrierung f\u00fcr GDO0.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "write_file",
-          "args": {
-            "content": "#include <Arduino.h>\n#include \"board.h\"\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"clock.h\"\n#include \"rf_receive.h\"\n#include \"rf_send.h\"\n#include \"cc1100.h\"\n#include \"ttydata.h\"\n#include \"ringbuffer.h\"\n#include \"fncollection.h\"\n#include \"display.h\"\n#include \"fastrf.h\"\n#include \"fband.h\"\n#include \"rf_mode.h\"\n#include \"version.h\"\n#include \"fht.h\"\n\nextern volatile uint32_t gdo_isr_count;\n\n#ifdef HAS_ASKSIN\n#include \"rf_asksin.h\"\n#endif\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"\n#endif\n#ifdef HAS_RWE\n#include \"rf_rwe.h\"\n#endif\n#ifdef HAS_RFNATIVE\n#include \"rf_native.h\"\n#endif\n#ifdef HAS_INTERTECHNO\n#include \"intertechno.h\"\n#endif\n#ifdef HAS_SOMFY_RTS\n#include \"somfy_rts.h\"\n#endif\n#ifdef HAS_MBUS\n#include \"rf_mbus.h\"\n#endif\n\nvoid eeprom_init(void);\nextern const t_fntab fntab[];\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);\n}\n\n#define rb_is_empty(rb) ((rb)->nbytes == 0)\n\nextern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_INTERTECHNO\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n  { 'A', asksin_func },\n#endif\n#ifdef HAS_MORITZ\n  { 'Z', moritz_func },\n#endif\n#ifdef HAS_RFNATIVE\n  { 'N', native_func },\n#endif\n#ifdef HAS_RWE\n  { 'E', rwe_func },\n#endif\n  { 'R', read_eeprom },\n  { 'T', fhtsend },\n  { 'V', version },\n  { 'W', write_eeprom },\n  { 'X', set_txreport },\n  { 'e', eeprom_factory_reset },\n#ifdef HAS_FASTRF\n  { 'f', fastrf_func },\n#endif\n  { 'l', ledfunc },\n  { 't', gettime },\n  { 'x', ccsetpa },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n#ifdef HAS_SOMFY_RTS\n  { 'Y', somfy_rts_func },\n#endif\n  { 0, 0 },\n};\n\nvoid setup() {\n    // USB CDC Initialisierung f\u00fcr ESP32-C3\n    Serial.begin(115200);\n    Serial.setTxTimeoutMs(0); // Non-blocking\n    \n    // Warte kurz auf Serial, aber nicht ewig (verhindert h\u00e4ngen ohne USB)\n    unsigned long start = millis();\n    while (!Serial && (millis() - start) < 2000);\n\n    Serial.println(\"\\r\\n--- CULFW32 Starting ---\");\n    \n    hal_timer_init();\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    // Interrupt erst nach Initialisierung aktivieren\n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}\n\nvoid loop() {\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    RfAnalyze_Task();\n    \n#ifdef HAS_FASTRF\n    FastRF_Task();\n#endif\n#ifdef HAS_ASKSIN\n    rf_asksin_task();\n#endif\n#ifdef HAS_MORITZ\n    rf_moritz_task();\n#endif\n#ifdef HAS_RWE\n    rf_rwe_task();\n#endif\n#ifdef HAS_MBUS\n    rf_mbus_task();\n#endif\n#ifdef HAS_RFNATIVE\n    native_task();\n#endif\n\n    // 4. Write from Tx Buffer to Serial\n    while (!rb_is_empty(&TTY_Tx_Buffer)) {\n        if (Serial.availableForWrite() > 0) {\n            Serial.write(rb_get(&TTY_Tx_Buffer));\n        } else {\n            break; \n        }\n    }\n    \n    yield();\n}\n",
-            "path": "culfw/Devices/ESP32/main.cpp"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "write_file",
-          "response": {
-            "result": "Wrote to culfw/Devices/ESP32/main.cpp"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Ich flashe nun die korrigierte Version.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 --target upload --upload-port /dev/ttyACM0"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 24742 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nFlash will be erased from 0x0000e000 to 0x0000ffff...\nFlash will be erased from 0x00010000 to 0x00055fff...\nSHA digest in image updated\nCompressed 12464 bytes to 9064...\nWriting at 0x00000000... (100 %)\nWrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 453.1 kbit/s)...\nHash of data verified.\nCompressed 3072 bytes to 146...\nWriting at 0x00008000... (100 %)\nWrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 465.0 kbit/s)...\nHash of data verified.\nCompressed 8192 bytes to 47...\nWriting at 0x0000e000... (100 %)\nWrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 772.4 kbit/s)...\nHash of data verified.\nCompressed 283280 bytes to 158242...\nWriting at 0x00010000... (10 %)\nWriting at 0x0001b155... (20 %)\nWriting at 0x000230d6... (30 %)\nWriting at 0x0002a443... (40 %)\nWriting at 0x0003032f... (50 %)\nWriting at 0x0003652b... (60 %)\nWriting at 0x0003c486... (70 %)\nWriting at 0x0004418e... (80 %)\nWriting at 0x0004acb6... (90 %)\nWriting at 0x00050df1... (100 %)\nWrote 283280 bytes (158242 compressed) at 0x00010000 in 2.2 seconds (effective 1031.5 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n========================= [SUCCESS] Took 13.87 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:13.871\n========================= 1 succeeded in 00:00:13.871 =========================\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Flash war erfolgreich. Jetzt teste ich mit `cul_test.py`, ob die Version (`V`) vom XIAO zur\u00fcckgegeben wird.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "sleep 2 && ./cul_test.py /dev/ttyACM0 V --timeout 5"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 1\nOutput:\nTIMEOUT\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Immer noch Timeout. Ich versuche nun, den Port mit Python zu \u00f6ffnen und *alles* zu lesen, was ankommt, ohne ein Kommando zu senden \u2013 falls der Bootloader-Output oder der Start-String erscheint.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/python3 -c \"import serial, time; ser=serial.Serial('/dev/ttyACM0', 115200, timeout=5); ser.dtr=True; ser.rts=True; time.sleep(1); print('Reading...'); print(ser.read(100).decode('utf-8', 'ignore'))\""
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nReading...\n\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Keine Daten. Das ist h\u00f6chst ungew\u00f6hnlich f\u00fcr einen ESP32-C3. Ich pr\u00fcfe die `platformio.ini` f\u00fcr das XIAO-Target auf korrekte Flags f\u00fcr USB-CDC.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "grep -A 20 \"\\[env:XIAO-ESP32-C3\\]\" culfw/Devices/ESP32/platformio.ini"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\n[env:XIAO-ESP32-C3]\nplatform = espressif32\nboard = seeed_xiao_esp32c3\nframework = arduino\nmonitor_speed = 115200\n\n; Flash settings for better compatibility\nboard_build.flash_mode = dio\nboard_build.f_flash = 40000000L\n\nextra_scripts = \n    pre:scripts/increment_version.py\n    post:scripts/merge_bin.py\n    post:scripts/collect_binaries.py\n\nbuild_flags = \n    -DESP32_C3\n    -DUSE_HAL\n    -DARDUINO_USB_MODE=1\n    -DARDUINO_USB_CDC_ON_BOOT=1\n    -DHAS_CC1100\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Die Flags sind korrekt. Ich habe den Verdacht, dass das Board im Bootloader feststeckt oder direkt beim Start abst\u00fcrzt.\n\nUm Hardwarefehler oder Bootloader-Loops auszuschlie\u00dfen, flashe ich jetzt einen **absoluten Minimal-Sketch**, der nur eine LED blinkt und \"Hello\" sendet.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "write_file",
-          "args": {
-            "content": "#include <Arduino.h>\n\nvoid setup() {\n    Serial.begin(115200);\n    pinMode(21, OUTPUT);\n}\n\nvoid loop() {\n    digitalWrite(21, HIGH);\n    delay(500);\n    digitalWrite(21, LOW);\n    delay(500);\n    Serial.println(\"HELLO_XIAO\");\n}\n",
-            "path": "culfw/Devices/ESP32/main.cpp"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "write_file",
-          "response": {
-            "result": "Wrote to culfw/Devices/ESP32/main.cpp"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Minimal-Sketch flashen.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 --target upload --upload-port /dev/ttyACM0"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 24709 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nFlash will be erased from 0x00008000 to 0x00008fff...\nFlash will be erased from 0x0000e000 to 0x0000ffff...\nFlash will be erased from 0x00010000 to 0x0004cfff...\nSHA digest in image updated\nCompressed 12464 bytes to 9064...\nWriting at 0x00000000... (100 %)\nWrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 453.1 kbit/s)...\nHash of data verified.\nCompressed 3072 bytes to 146...\nWriting at 0x00008000... (100 %)\nWrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 465.2 kbit/s)...\nHash of data verified.\nCompressed 8192 bytes to 47...\nWriting at 0x0000e000... (100 %)\nWrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 754.6 kbit/s)...\nHash of data verified.\nCompressed 246048 bytes to 137012...\nWriting at 0x00010000... (11 %)\nWriting at 0x0001af3c... (22 %)\nWriting at 0x00022b75... (33 %)\nWriting at 0x00028b79... (44 %)\nWriting at 0x0002ed0f... (55 %)\nWriting at 0x00034ca6... (66 %)\nWriting at 0x0003c95f... (77 %)\nWriting at 0x00043688... (88 %)\nWriting at 0x00049a8a... (100 %)\nWrote 246048 bytes (137012 compressed) at 0x00010000 in 2.1 seconds (effective 926.8 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n========================= [SUCCESS] Took 21.00 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:20.997\n========================= 1 succeeded in 00:00:20.997 =========================\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Testen, ob \"HELLO_XIAO\" erscheint.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/python3 -c \"import serial, time; ser=serial.Serial('/dev/ttyACM0', 115200, timeout=5); ser.dtr=True; ser.rts=True; time.sleep(1); print('Reading...'); print(ser.read(100).decode('utf-8', 'ignore'))\""
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nReading...\n\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Immer noch nichts. Es ist m\u00f6glich, dass `Serial` trotz der Flags auf die physischen Pins geroutet wird. Ich versuche nun im Code explizit `USBSerial` zu verwenden, um sicherzugehen, dass der integrierte USB-Controller angesprochen wird.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "write_file",
-          "args": {
-            "content": "#include <Arduino.h>\n\n#if !ARDUINO_USB_CDC_ON_BOOT\n// Wenn CDC_ON_BOOT nicht gesetzt ist, m\u00fcssen wir USBSerial nehmen\n#define MySerial USBSerial\n#else\n#define MySerial Serial\n#endif\n\nvoid setup() {\n    MySerial.begin(115200);\n    pinMode(21, OUTPUT);\n}\n\nvoid loop() {\n    digitalWrite(21, HIGH);\n    delay(100);\n    digitalWrite(21, LOW);\n    delay(100);\n    MySerial.println(\"HELLO_XIAO_USB\");\n}\n",
-            "path": "culfw/Devices/ESP32/main.cpp"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "write_file",
-          "response": {
-            "result": "Wrote to culfw/Devices/ESP32/main.cpp"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Nochmal flashen.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 --target upload --upload-port /dev/ttyACM0"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 24709 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nFlash will be erased from 0x00008000 to 0x00008fff...\nFlash will be erased from 0x0000e000 to 0x0000ffff...\nFlash will be erased from 0x00010000 to 0x0004cfff...\nSHA digest in image updated\nCompressed 12464 bytes to 9064...\nWriting at 0x00000000... (100 %)\nWrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 443.1 kbit/s)...\nHash of data verified.\nCompressed 3072 bytes to 146...\nWriting at 0x00008000... (100 %)\nWrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 483.6 kbit/s)...\nHash of data verified.\nCompressed 8192 bytes to 47...\nWriting at 0x0000e000... (100 %)\nWrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 754.8 kbit/s)...\nHash of data verified.\nCompressed 246048 bytes to 136999...\nWriting at 0x00010000... (11 %)\nWriting at 0x0001af43... (22 %)\nWriting at 0x00022b7c... (33 %)\nWriting at 0x00028b7a... (44 %)\nWriting at 0x0002ed23... (55 %)\nWriting at 0x00034cb5... (66 %)\nWriting at 0x0003c971... (77 %)\nWriting at 0x00043692... (88 %)\nWriting at 0x00049a96... (100 %)\nWrote 246048 bytes (136999 compressed) at 0x00010000 in 2.1 seconds (effective 930.7 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n========================= [SUCCESS] Took 48.33 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:48.331\n========================= 1 succeeded in 00:00:48.331 =========================\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Erneut lesen versuchen.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/python3 -c \"import serial, time; ser=serial.Serial('/dev/ttyACM0', 115200, timeout=5); ser.dtr=True; ser.rts=True; time.sleep(1); print('Reading...'); print(ser.read(200).decode('utf-8', 'ignore'))\""
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nReading...\n\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Der Reset via RTS scheint nicht auszureichen, um den Chip aus dem Bootloader zu holen, oder es gibt ein Timing-Problem. Ich pr\u00fcfe `dmesg`, ob sich das Ger\u00e4t nach dem Flashen neu angemeldet hat.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "dmesg | tail -n 20"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\n[ 1526.266938] usb 3-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3\n[ 1526.266941] usb 3-2: Product: USB JTAG/serial debug unit\n[ 1526.266944] usb 3-2: Manufacturer: Espressif\n[ 1526.266947] usb 3-2: SerialNumber: 54:32:04:89:48:D0\n[ 1533.857439] cdc_acm 3-2:1.0: ttyACM0: USB ACM device\n[ 1533.857476] usbcore: registered new interface driver cdc_acm\n[ 1533.857480] cdc_acm: USB Abstract Control Model driver for USB modems and ISDN adapters\n[ 5811.775304] usb 1-2: new full-speed USB device number 2 using xhci-hcd\n[ 5811.941397] usb 1-2: New USB device found, idVendor=03eb, idProduct=2ff4, bcdDevice= 0.00\n[ 5811.941403] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=3\n[ 5811.941407] usb 1-2: Product: ATm32U4DFU\n[ 5811.941410] usb 1-2: Manufacturer: ATMEL\n[ 5811.941412] usb 1-2: SerialNumber: 1.0.0\n[ 6027.652571] usb 1-2: USB disconnect, device number 2\n[ 6078.947288] usb 1-2: new full-speed USB device number 3 using xhci-hcd\n[ 6079.124348] usb 1-2: New USB device found, idVendor=03eb, idProduct=204b, bcdDevice= 0.00\n[ 6079.124354] usb 1-2: New USB device strings: Mfr=1, Product=2, SerialNumber=0\n[ 6079.124358] usb 1-2: Product: CUL868\n[ 6079.124361] usb 1-2: Manufacturer: busware.de\n[ 6079.352428] cdc_acm 1-2:1.0: ttyACM1: USB ACM device\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "`dmesg` zeigt keine neue USB-Aktivit\u00e4t f\u00fcr `ttyACM0` seit dem ersten Anschluss. Da der ESP32-C3 einen integrierten USB-Serial/JTAG Controller hat, ist das zwar normal (kein Re-Enumeration n\u00f6tig), aber die Stille ist besorgniserregend.\n\nIch pr\u00fcfe mit `esptool.py`, ob der Chip noch ansprechbar ist (Flash-ID auslesen).\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/python3 /root/.platformio/packages/tool-esptoolpy/esptool.py --port /dev/ttyACM0 flash_id"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nesptool.py v4.9.0\nSerial port /dev/ttyACM0\nConnecting...\nDetecting chip type... ESP32-C3\nChip is ESP32-C3 (QFN32) (revision v0.4)\nFeatures: WiFi, BLE, Embedded Flash 4MB (XMC)\nCrystal is 40MHz\nUSB mode: USB-Serial/JTAG\nMAC: 54:32:04:89:48:d0\nUploading stub...\nRunning stub...\nStub running...\nManufacturer: 20\nDevice: 4016\nDetected flash size: 4MB\nHard resetting via RTS pin...\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Der Chip reagiert auf `esptool.py`, startet aber danach die Applikation nicht. Ich versuche nun einen manuellen Reset-Zyklus via Python, um den Chip aus dem Bootloader-Modus in den normalen Ausf\u00fchrungsmodus zu zwingen.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/python3 -c \"import serial, time; ser=serial.Serial('/dev/ttyACM0', 115200); ser.dtr=False; ser.rts=False; time.sleep(0.1); ser.dtr=True; ser.rts=True; time.sleep(0.1); ser.close();\" && sleep 1 && ./cul_test.py /dev/ttyACM0 V --timeout 2"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 1\nOutput:\nTIMEOUT\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Immer noch Timeout. M\u00f6glicherweise ist die Partitionstabelle oder der Bootloader besch\u00e4digt. Ich versuche nun, das komplette `factory.bin` ab Adresse `0x0` zu flashen. Zuerst suche ich nach dem Speicherort der generierten `factory.bin`.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "find culfw/ -name \"*factory.bin*\""
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nculfw/Devices/ESP32/.pio/build/ESP32-C6/ESP32-C6-factory.bin\nculfw/Devices/ESP32/.pio/build/ESP32-C3/ESP32-C3-factory.bin\nculfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin\nculfw/Devices/binaries/ESP32-C6-factory.bin\nculfw/Devices/binaries/XIAO-ESP32-C3-factory.bin\nculfw/Devices/binaries/ESP32-C3-factory.bin\nculfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Ich flashe `culfw/Devices/binaries/XIAO-ESP32-C3-factory.bin` auf Adresse `0x0`.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/python3 /root/.platformio/packages/tool-esptoolpy/esptool.py --port /dev/ttyACM0 --baud 921600 write_flash 0x0 culfw/Devices/binaries/XIAO-ESP32-C3-factory.bin"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nesptool.py v4.9.0\nSerial port /dev/ttyACM0\nConnecting...\nDetecting chip type... ESP32-C3\nChip is ESP32-C3 (QFN32) (revision v0.4)\nFeatures: WiFi, BLE, Embedded Flash 4MB (XMC)\nCrystal is 40MHz\nUSB mode: USB-Serial/JTAG\nMAC: 54:32:04:89:48:d0\nUploading stub...\nRunning stub...\nStub running...\nChanging baud rate to 921600\nChanged.\nConfiguring flash size...\nFlash will be erased from 0x00000000 to 0x0003bfff...\nCompressed 245120 bytes to 115147...\nWriting at 0x00000000... (12 %)\nWriting at 0x000138de... (25 %)\nWriting at 0x00018f12... (37 %)\nWriting at 0x00024403... (50 %)\nWriting at 0x0002a2ec... (62 %)\nWriting at 0x000302d9... (75 %)\nWriting at 0x00035d83... (87 %)\nWriting at 0x0003bb26... (100 %)\nWrote 245120 bytes (115147 compressed) at 0x00000000 in 2.0 seconds (effective 989.9 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Flash fertig. Mal sehen, ob jetzt etwas \u00fcber den Port kommt. Ich nutze `cat` mit Timeout.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "timeout 5s cat /dev/ttyACM0"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Immer noch Funkstille. Ich habe den Verdacht, dass das \"USB JTAG/serial debug unit\" Interface unter Linux eine spezielle Behandlung ben\u00f6tigt. Ich versuche, die Baudrate explizit mit `stty` zu setzen, bevor ich `cat` starte.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "stty -F /dev/ttyACM0 115200 raw -echo && timeout 5s cat /dev/ttyACM0"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 124\nOutput:\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "`Exit 124` bedeutet, der Timeout hat gegriffen \u2013 also keine Daten. Ich versuche nun, den Port mit Python zu \u00f6ffnen, ohne DTR/RTS zu ber\u00fchren, um einen ungewollten Reset zu verhindern.\n\n"
-      },
-      {
-        "function_call": {
-          "name": "execute_shell",
-          "args": {
-            "command": "/root/.platformio/penv/bin/python3 -c \"import serial, time; ser=serial.Serial('/dev/ttyACM0', 115200, timeout=10); print('Waiting for data...'); print(ser.read(100))\""
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
-        "function_response": {
-          "name": "execute_shell",
-          "response": {
-            "result": "Exit: 0\nOutput:\nWaiting for data...\nb''\n"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "role": "model",
-    "parts": [
-      {
-        "text": "Ich habe die Ursache f\u00fcr das Schweigen des XIAO-ESP32-C3 h\u00f6chstwahrscheinlich gefunden: **Strapping Pins.**\n\n### Analyse:\n*   **GPIO 9** (beim XIAO Pin D9) ist ein Strapping-Pin. Wenn dieser beim Reset auf **Low** gezogen wird, wechselt der ESP32-C3 in den **Bootloader-Modus** (\"wait usb download\").\n*   In meiner Konfiguration liegt **MISO** auf GPIO 9. Da der CC1101 am SPI-Bus h\u00e4ngt, kann er diese Leitung beim Starten beeinflussen und so den Bootvorgang der Applikation verhindern.\n*   **GPIO 8** und **GPIO 2** sind ebenfalls Strapping-Pins, die in meiner Konfiguration (SCK auf 8) kritisch sein k\u00f6nnen.\n\n### Erreichte Ergebnisse:\n1.  **Test-Script bereit:** `cul_test.py` ist voll funktionsf\u00e4hig und hat den CUL868 erfolgreich getestet.\n2.  **Fehler identifiziert:** Die Hardware-Beschaltung (SPI auf Strapping-Pins) verhindert vermutlich den Start der Firmware.\n3.  **Minimal-Firmware:** Ich habe eine minimalistische Test-Firmware geflasht, die nun als Basis f\u00fcr die weitere Fehlersuche dient.\n\n### Empfehlung f\u00fcr den n\u00e4chsten Schritt:\n\u00c4nderung der Pin-Belegung in `board.h` und `platformio.ini`, um die Strapping-Pins (insbesondere GPIO 9) f\u00fcr den SPI-Bus zu vermeiden, oder Sicherstellung durch Hardware-Pullups (falls m\u00f6glich), dass diese Pins beim Booten auf \"High\" liegen."
-      }
-    ]
-  },
-  {
-    "role": "user",
-    "parts": [
-      {
         "text": "bitte schlage ein pinning vor, welches ich dann nach Deiner Aufforderung herstelle"
       }
     ]
@@ -1087,6 +371,134 @@
     "parts": [
       {
         "text": "The safe pinning was the key! The **XIAO-ESP32-C3** is now fully functional and communicating with the CC1101.\n\n### Zusammenfassung der Ergebnisse:\n1.  **Boot-Problem gel\u00f6st:** Durch das Umlegen der SPI-Leitungen weg von den Strapping-Pins (GPIO 8 und 9) bootet der XIAO nun zuverl\u00e4ssig in die Applikation.\n2.  **SPI-Kommunikation verifiziert:** Wir k\u00f6nnen CC1101-Register (z. B. `C00`, `C01`, `C02`) erfolgreich lesen.\n3.  **Firmware stabil:** Die Version `1.26.82` meldet sich korrekt als `XIAO-ESP32-C3`.\n4.  **USB-CDC funktioniert:** Die Kommunikation \u00fcber `/dev/ttyACM0` ist stabil.\n\n### Aktuelles Pinning (im Code & Hardware):\n*   **SCK:** GPIO 6 (D4)\n*   **MISO:** GPIO 10 (D10)\n*   **MOSI:** GPIO 7 (D5)\n*   **CS:** GPIO 5 (D3)\n*   **GDO0:** GPIO 3 (D1)\n*   **GDO2:** GPIO 4 (D2)\n*   **LED:** GPIO 21 (D6)\n\nDas Projekt ist nun auf dem XIAO-ESP32-C3 einsatzbereit. Soll ich mit weiteren Funktionstests (z. B. Empfangstest) weitermachen oder gibt es andere Priorit\u00e4ten?"
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "text": "Ziel soll nun die vollst\u00e4ndige Pr\u00fcfung der Firmware des ESP32 sein. erweitere dazu Dein Testscript um Daten zwischen den beiden USB Sticks zu senden. Beginne mit einfachen FiFO Basierten Protokollen - bis hoch zu Slow RF - wo Timing entscheidend sein wird. Teste in Beide Richtungen"
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "cul_test.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#!/root/.platformio/penv/bin/python3\nimport serial\nimport sys\nimport time\nimport argparse\n\ndef main():\n    parser = argparse.ArgumentParser(description='CULFW Serial Test Tool')\n    parser.add_argument('port', help='Serial port (e.g. /dev/ttyACM1)')\n    parser.add_argument('command', help='Command to send (e.g. V)')\n    parser.add_argument('--timeout', type=float, default=2.0, help='Timeout in seconds')\n    parser.add_argument('--baud', type=int, default=115200, help='Baudrate')\n    \n    args = parser.parse_args()\n\n    try:\n        # Initialisiere Port mit spezifischen ESP32-C3 Einstellungen (DTR/RTS)\n        # F\u00fcr den alten CUL868 (ATmega) schaden diese Einstellungen nicht.\n        ser = serial.Serial(\n            port=args.port,\n            baudrate=args.baud,\n            timeout=args.timeout,\n            xonxoff=False,\n            rtscts=False,\n            dsrdtr=False\n        )\n        \n        # Reset-Vermeidung/Handshake\n        ser.dtr = True\n        ser.rts = True\n        time.sleep(0.1) \n\n        # Puffer leeren\n        ser.reset_input_buffer()\n        \n        # Kommando senden (mit \\r\\n f\u00fcr culfw)\n        cmd_bytes = (args.command + '\\r\\n').encode('utf-8')\n        ser.write(cmd_bytes)\n        \n        # Antwort lesen (bis zum n\u00e4chsten Prompt oder Timeout)\n        # Wir lesen bis zu 1024 Bytes oder bis der Timeout greift\n        response = b\"\"\n        start_time = time.time()\n        \n        while (time.time() - start_time) < args.timeout:\n            if ser.in_waiting > 0:\n                chunk = ser.read(ser.in_waiting)\n                response += chunk\n                # Wenn wir ein Newline nach dem Befehl sehen, k\u00f6nnte das die Antwort sein\n                if len(response) > len(cmd_bytes) and b'\\r\\n' in response[len(cmd_bytes):]:\n                    break\n            time.sleep(0.05)\n\n        if response:\n            print(response.decode('utf-8', errors='ignore').strip())\n        else:\n            print(\"TIMEOUT\")\n            sys.exit(1)\n\n    except Exception as e:\n        print(f\"ERROR: {e}\")\n        sys.exit(1)\n    finally:\n        if 'ser' in locals() and ser.is_open:\n            ser.close()\n\nif __name__ == \"__main__\":\n    main()\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "write_file",
+          "args": {
+            "content": "#!/root/.platformio/penv/bin/python3\nimport serial\nimport time\nimport sys\nimport argparse\nimport threading\n\nclass CUL:\n    def __init__(self, port, name, baud=115200, timeout=1):\n        self.port = port\n        self.name = name\n        self.ser = serial.Serial(port, baud, timeout=timeout)\n        self.ser.dtr = True\n        self.ser.rts = True\n        time.sleep(0.5)\n        self.ser.reset_input_buffer()\n        self.received_lines = []\n        self.running = True\n        self.thread = threading.Thread(target=self._listen, daemon=True)\n        self.thread.start()\n\n    def _listen(self):\n        buffer = b\"\"\n        while self.running:\n            if self.ser.in_waiting > 0:\n                char = self.ser.read(1)\n                if char == b'\\n':\n                    line = buffer.decode('utf-8', errors='ignore').strip()\n                    if line:\n                        self.received_lines.append(line)\n                    buffer = b\"\"\n                elif char != b'\\r':\n                    buffer += char\n            else:\n                time.sleep(0.01)\n\n    def send(self, cmd):\n        print(f\"[{self.name}] Sending: {cmd}\")\n        self.ser.write((cmd + '\\r\\n').encode('utf-8'))\n\n    def wait_for_line(self, pattern, timeout=2):\n        start = time.time()\n        while (time.time() - start) < timeout:\n            for i, line in enumerate(self.received_lines):\n                if pattern in line:\n                    return self.received_lines.pop(i)\n            time.sleep(0.1)\n        return None\n\n    def close(self):\n        self.running = False\n        self.ser.close()\n\ndef test_communication(sender, receiver, test_name, cmd, expected_pattern, timeout=5):\n    print(f\"\\n--- Test: {test_name} ---\")\n    receiver.received_lines.clear()\n    sender.send(cmd)\n    \n    match = receiver.wait_for_line(expected_pattern, timeout)\n    if match:\n        print(f\"SUCCESS: {receiver.name} received '{match}'\")\n        return True\n    else:\n        print(f\"FAILED: {receiver.name} did not receive expected pattern '{expected_pattern}'\")\n        if receiver.received_lines:\n            print(f\"Last received lines on {receiver.name}: {receiver.received_lines[-5:]}\")\n        return False\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument('--esp', default='/dev/ttyACM0')\n    parser.add_argument('--ref', default='/dev/ttyACM1')\n    args = parser.parse_args()\n\n    print(f\"Initializing ESP32 on {args.esp} and Reference CUL on {args.ref}\")\n    try:\n        esp = CUL(args.esp, \"ESP32\")\n        ref = CUL(args.ref, \"REF\")\n\n        # Basic Sanity\n        esp.send('V')\n        ref.send('V')\n        time.sleep(0.5)\n        print(f\"ESP32 Version: {esp.received_lines.pop(0) if esp.received_lines else 'TIMEOUT'}\")\n        print(f\"REF Version: {ref.received_lines.pop(0) if ref.received_lines else 'TIMEOUT'}\")\n\n        # Initial Setup for both: 868.3 MHz, X21 (Report all RF)\n        for dev in [esp, ref]:\n            dev.send('X21') # Receiver mode\n            dev.send('t01') # Enable timestamps if needed (optional)\n\n        # TEST 1: ESP32 sends, REF receives (FS20)\n        # F + 4 hex (housecode) + 2 hex (addr) + 2 hex (cmd)\n        # We use a dummy FS20 command\n        test_communication(esp, ref, \"ESP -> REF (FS20)\", \"F12340111\", \"F12340111\")\n\n        # TEST 2: REF sends, ESP32 receives (FS20)\n        test_communication(ref, esp, \"REF -> ESP (FS20)\", \"F56780222\", \"F56780222\")\n\n        # TEST 3: SlowRF / Intertechno (if enabled)\n        # Sending 'i' command\n        test_communication(esp, ref, \"ESP -> REF (Intertechno)\", \"is000000000FFF\", \"i000000\")\n        test_communication(ref, esp, \"REF -> ESP (Intertechno)\", \"isAAAAAAAAAAAA\", \"iAAAAAA\")\n\n    except KeyboardInterrupt:\n        pass\n    except Exception as e:\n        print(f\"Error: {e}\")\n    finally:\n        if 'esp' in locals(): esp.close()\n        if 'ref' in locals(): ref.close()\n\nif __name__ == \"__main__\":\n    main()\n",
+            "path": "cul_exchange_test.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "write_file",
+          "response": {
+            "result": "Wrote to cul_exchange_test.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "chmod +x cul_exchange_test.py && ./cul_exchange_test.py --esp /dev/ttyACM0 --ref /dev/ttyACM1"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\nInitializing ESP32 on /dev/ttyACM0 and Reference CUL on /dev/ttyACM1\n[ESP32] Sending: V\n[REF] Sending: V\nESP32 Version: V 1.26.82 a-culfw Build: 82 (2026-02-10 14:11:32) XIAO-ESP32-C3 (F-Band: 868MHz)\nREF Version: V 1.26.31 a-culfw Build: 31 (2026-02-06 00:28:38) CUL868 (F-Band: 868MHz)\n[ESP32] Sending: X21\n[ESP32] Sending: t01\n[REF] Sending: X21\n[REF] Sending: t01\n\n--- Test: ESP -> REF (FS20) ---\n[ESP32] Sending: F12340111\nFAILED: REF did not receive expected pattern 'F12340111'\nLast received lines on REF: ['00077EF3']\n\n--- Test: REF -> ESP (FS20) ---\n[REF] Sending: F56780222\nFAILED: ESP32 did not receive expected pattern 'F56780222'\n\n--- Test: ESP -> REF (Intertechno) ---\n[ESP32] Sending: is000000000FFF\nFAILED: REF did not receive expected pattern 'i000000'\n\n--- Test: REF -> ESP (Intertechno) ---\n[REF] Sending: isAAAAAAAAAAAA\nFAILED: ESP32 did not receive expected pattern 'iAAAAAA'\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "./cul_test.py /dev/ttyACM0 C && ./cul_test.py /dev/ttyACM1 C"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 1\nOutput:\nTIMEOUT\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "  { 't', gettime },\n  { 'x', ccsetpa },\n  { 'y', [](unsigned char*){ \n      extern volatile uint32_t gdo_isr_count;\n      Serial.printf(\"GDO_ISR_COUNT: %u\\r\\n\", gdo_isr_count);\n  } },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "  { 't', gettime },\n  { 'x', ccsetpa },\n#ifdef HAS_MBUS\n  { 'b', rf_mbus_func },\n#endif\n"
+          }
+        }
       }
     ]
   }

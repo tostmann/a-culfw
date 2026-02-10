@@ -81,6 +81,10 @@ extern "C" const t_fntab fntab[] = {
   { 'l', ledfunc },
   { 't', gettime },
   { 'x', ccsetpa },
+  { 'y', [](unsigned char*){ 
+      extern volatile uint32_t gdo_isr_count;
+      Serial.printf("GDO_ISR_COUNT: %u\r\n", gdo_isr_count);
+  } },
 #ifdef HAS_MBUS
   { 'b', rf_mbus_func },
 #endif

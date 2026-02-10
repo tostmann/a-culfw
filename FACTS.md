@@ -1,3 +1,7 @@
+
+*ZIEL*
+Portierung und Testung von culfw auf ESP32 
+
 *PLATFORMIO*
 
 is in $HOME/.platformio/penv/bin
