@@ -46,7 +46,12 @@ volatile uint8_t  clock_hsec;
 // count & compute in the interrupt, else long runnning tasks would block
 // a "minute" task too long
 #ifdef USE_HAL
+#ifdef ESP32
+#include <esp_attr.h>
+void IRAM_ATTR clock_TimerElapsedCallback(void)
+#else
 void clock_TimerElapsedCallback(void)
+#endif
 {
 #else
 ISR(TIMER0_COMPA_vect, ISR_BLOCK)
