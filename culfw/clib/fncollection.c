@@ -484,6 +484,9 @@ dumpmem(uint8_t *addr, uint16_t len)
 extern uint32_t gdo_isr_count;
 #endif
 
+#include "rf_receive_bucket.h"
+extern uint8_t bucket_nrused[NUM_SLOWRF];
+
 void
 display_debug(char *in)
 {
@@ -493,6 +496,9 @@ display_debug(char *in)
   DNL();
   DS_P(PSTR("TICKS: "));
   DU(ticks, 1);
+  DNL();
+  DS_P(PSTR("BUCKET_USED: "));
+  DU(bucket_nrused[0], 1);
   DNL();
 #endif
 }
