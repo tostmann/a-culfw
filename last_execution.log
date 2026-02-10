@@ -1,3 +1,15 @@
-total 0
-lrwxrwxrwx 1 root root 13 Feb 10 13:39 usb-busware.de_CUL868-if00 -> ../../ttyACM1
-lrwxrwxrwx 1 root root 13 Feb 10 14:10 usb-Espressif_USB_JTAG_serial_debug_unit_54:32:04:89:48:D0-if00 -> ../../ttyACM0
+Testing Serial on /dev/ttyACM0...
+Received: ESP-ROM:esp32c3-api1-20210207
+Received: Build:Feb  7 2021
+Received: rst:0x15 (USB_UART_CHIP_RESET),boot:0xe (SPI_FAST_FLASH_BOOT)
+Received: Saved PC:0x4200012a
+Received: SPIWP:0xee
+Received: mode:DIO, clock div:2
+Received: load:0x3fcd5810,len:0x38c
+Received: load:0x403cc710,len:0x6a0
+Received: load:0x403ce710,len:0x2624
+Received: entry 0x403cc710
+Received: 
+Received: --- CULFW32 Starting (Minimal) ---
+Received: Ready.
+Found expected output!
