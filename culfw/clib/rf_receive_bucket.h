@@ -44,10 +44,10 @@
 //#define MAXMSGVALS (MAXMSG*8)
 #endif
 
-#define TSCALE(x)  (x/16)      // Scaling time to enable 8bit arithmetic
+#define TSCALE(x)  (x)      // No scaling on 32-bit platforms
 
 
-#define TDIFF      TSCALE(160) // tolerated diff to previous/avg high/low/total
+#define TDIFF      TSCALE(200) // tolerated diff to previous/avg high/low/total
 
 #define STATE_RESET   0
 
