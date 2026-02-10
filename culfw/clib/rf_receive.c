@@ -366,8 +366,9 @@ RfAnalyze_Task(void)
 #endif
     }
     if(TX_REPORT & REP_MONITOR) {
-      DC('r'); if(TX_REPORT & REP_BINTIME) DC(hightime[CC_INSTANCE]);
-      DC('f'); if(TX_REPORT & REP_BINTIME) DC(lowtime[CC_INSTANCE]);
+      DC('r'); if(TX_REPORT & REP_BINTIME) { DU(hightime[CC_INSTANCE], 0); DC(' '); }
+      DC('f'); if(TX_REPORT & REP_BINTIME) { DU(lowtime[CC_INSTANCE], 0); DC(' '); }
+      DNL();
     }
 #endif // NO_RF_DEBUG
     lowtime[CC_INSTANCE] = 0;
