@@ -138,8 +138,6 @@ void setup() {
 }
 
 void loop() {
-    hal_timer_task();
-
     // 1. Read from Serial into Rx Buffer
     while (Serial.available()) {
         uint8_t c = Serial.read();
@@ -154,7 +152,6 @@ void loop() {
     
     // 3. Background Tasks
     Minute_Task();
-    RfAnalyze_Task();
     
 #ifdef HAS_FASTRF
     FastRF_Task();

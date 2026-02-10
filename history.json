@@ -1549,5 +1549,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void loop() {\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        // Serial.printf(\"Processing %d bytes\\n\", TTY_Rx_Buffer.nbytes);\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    \n#ifdef HAS_FASTRF\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "void loop() {\n    hal_timer_task();\n\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n    \n    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        // Serial.printf(\"Processing %d bytes\\n\", TTY_Rx_Buffer.nbytes);\n        analyze_ttydata(DISPLAY_USB);\n    }\n    \n    // 3. Background Tasks\n    Minute_Task();\n    RfAnalyze_Task();\n    \n#ifdef HAS_FASTRF\n"
+          }
+        }
+      }
+    ]
   }
 ]
