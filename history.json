@@ -1211,5 +1211,60 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "write_file",
+          "args": {
+            "content": "import serial\nimport time\nimport sys\n\n# ESP32\nesp_port = '/dev/ttyACM0'\n# CUL (Reference)\ncul_port = '/dev/ttyACM1'\n\ntry:\n    esp = serial.Serial(esp_port, 115200, timeout=1)\n    cul = serial.Serial(cul_port, 38400, timeout=1)\nexcept Exception as e:\n    print(f\"Error opening serial: {e}\")\n    sys.exit(1)\n\nprint(\"Setting up ESP32...\")\nesp.write(b'X3F\\r\\n') # Monitor mode + Binary timings + Known packets\ntime.sleep(0.5)\n\nprint(\"Sending FS20 from CUL...\")\n# FS20 command: F123401 (Housecode 1234, Address 01, Command on)\n# Raw FS20 for CUL: F123401\ncul.write(b'F123401\\r\\n')\ntime.sleep(0.5)\n\nprint(\"Monitoring ESP32 for 5 seconds...\")\nstart_time = time.time()\nwhile time.time() - start_time < 5:\n    if esp.in_available:\n        line = esp.readline().decode('ascii', errors='replace').strip()\n        if line:\n            print(f\"[ESP32] {line}\")\n    time.sleep(0.01)\n\nesp.close()\ncul.close()\n",
+            "path": "test_send.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "write_file",
+          "response": {
+            "result": "Wrote to test_send.py"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "while time.time() - start_time < 5:\n    if esp.in_waiting:\n        line = esp.readline().decode('ascii', errors='replace').strip()\n        if line:\n            print(f\"[ESP32] {line}\")\n    time.sleep(0.01)\n",
+            "path": "test_send.py",
+            "original_text": "while time.time() - start_time < 5:\n    if esp.in_available:\n        line = esp.readline().decode('ascii', errors='replace').strip()\n        if line:\n            print(f\"[ESP32] {line}\")\n    time.sleep(0.01)\n"
+          }
+        }
+      }
+    ]
   }
 ]
