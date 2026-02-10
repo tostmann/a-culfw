@@ -96,17 +96,16 @@ extern "C" const t_fntab fntab[] = {
 
 void setup() {
     Serial.begin(115200);
-    delay(2000); // Give USB CDC time to connect
-    Serial.println("\r\n!!! CULFW32 BOOT START !!!");
+    // No delay here, we want to see if it even reaches this
     
-    HAL_LED_Init();
-    Serial.println("LED Init...");
-    for(int i=0; i<3; i++) {
-        HAL_LED_Set(LED0, LED_on);
-        delay(100);
-        HAL_LED_Set(LED0, LED_off);
-        delay(100);
-    }
+    // HAL_LED_Init(); // Disable LED for now to avoid GPIO 21 conflict
+    
+    // Use a loop to wait for Serial connection (USB CDC needs this sometimes)
+    long start = millis();
+    while (!Serial && millis() - start < 5000); 
+
+    Serial.println("\r\n!!! CULFW32 BOOT START !!!");
+    Serial.println("Serial started.");
     
     Serial.println("Timer Init...");
     hal_timer_init();
