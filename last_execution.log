@@ -1,4 +1,3 @@
-Warning! Ignore unknown configuration option `src_dir` in section [env:ESP32-C3]
 Warning! Ignore unknown configuration option `src_dir` in section [env:XIAO-ESP32-C3]
 Processing XIAO-ESP32-C3 (platform: espressif32; board: seeed_xiao_esp32c3; framework: arduino)
 --------------------------------------------------------------------------------
@@ -8,9 +7,9 @@ Verbose mode can be enabled via `-v, --verbose` option
 * FIRMWARE VERSION UPDATE                 *
 *******************************************
 * Base Version: 0.00
-* Build Number: 5
-* New Version:  0.00.5
-* Build Date:   2026-02-10 10:28:14
+* Build Number: 6
+* New Version:  0.00.6
+* Build Date:   2026-02-10 10:28:21
 *******************************************
 
 CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
@@ -28,11 +27,38 @@ LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
 LDF Modes: Finder ~ chain, Compatibility ~ soft
 Found 25 compatible libraries
 Scanning dependencies...
-No dependencies
-Error: Nothing to build. Please put your source code files to the '/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/Devices/ESP32/src' folder
-========================== [FAILED] Took 0.55 seconds ==========================
+Dependency Graph
+|-- EEPROM @ 3.1.0
+|-- SPI @ 3.1.0
+Building in release mode
+Compiling .pio/build/ESP32/hal.cpp.o
+Compiling .pio/build/clib/cc1100.c.o
+Compiling .pio/build/clib/cc1101_pllcheck.c.o
+/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/clib/cc1100.c:1:10: fatal error: avr/pgmspace.h: No such file or directory
+    1 | #include <avr/pgmspace.h>               // for PROGMEM, __LPM, PSTR
+      |          ^~~~~~~~~~~~~~~~
+compilation terminated.
+/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/clib/cc1101_pllcheck.c:1:10: fatal error: avr/pgmspace.h: No such file or directory
+    1 | #include <avr/pgmspace.h>               // for PSTR
+      |          ^~~~~~~~~~~~~~~~
+compilation terminated.
+Compiling .pio/build/clib/clock.c.o
+*** [.pio/build/clib/cc1100.c.o] Error 1
+*** [.pio/build/clib/cc1101_pllcheck.c.o] Error 1
+/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/clib/clock.c:1:10: fatal error: avr/io.h: No such file or directory
+    1 | #include <avr/io.h>                     // for SREG
+      |          ^~~~~~~~~~
+compilation terminated.
+*** [.pio/build/clib/clock.c.o] Error 1
+In file included from /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/ESP32/hal.cpp:15:
+/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/clib/rf_receive.h:4:10: fatal error: avr/io.h: No such file or directory
+    4 | #include <avr/io.h>                     // for _BV
+      |          ^~~~~~~~~~
+compilation terminated.
+*** [.pio/build/ESP32/hal.cpp.o] Error 1
+========================== [FAILED] Took 1.25 seconds ==========================
 
 Environment    Status    Duration
 -------------  --------  ------------
-XIAO-ESP32-C3  FAILED    00:00:00.546
-==================== 1 failed, 0 succeeded in 00:00:00.546 ====================
+XIAO-ESP32-C3  FAILED    00:00:01.252
+==================== 1 failed, 0 succeeded in 00:00:01.252 ====================
