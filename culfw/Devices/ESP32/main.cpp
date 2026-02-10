@@ -124,6 +124,9 @@ void setup() {
     ccInitChip(EE_CC1100_CFG);
     tx_init();
     
+    // Explicitly enable GDO interrupt AFTER initialization
+    hal_enable_CC_GDOin_int(0, 1);
+    
     Serial.println("Ready.");
 }
 

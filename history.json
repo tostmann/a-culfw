@@ -711,5 +711,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    // Explicitly enable GDO interrupt AFTER initialization\n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    Serial.println(\"Ready.\");\n}"
+          }
+        }
+      }
+    ]
   }
 ]
