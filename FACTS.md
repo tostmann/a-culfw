@@ -27,3 +27,8 @@ lrwxrwxrwx 1 root root 13 Feb 10 12:23 usb-Espressif_USB_JTAG_serial_debug_unit_
 
 usb-busware.de_CUL868-if00 - Referenz CUL auf ATMEGA32u4 Basis mit culfw
 usb-Espressif_USB_JTAG_serial_debug_unit_54:32:04:89:48:D0-if00 - Zielhardware XIAO ESP32-C3
+
+*GIT*
+
+repository: ssh git@github.com:tostmann/a-culfw.git
+branch: feature/esp32-support

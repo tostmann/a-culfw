@@ -1,4 +1,3 @@
-```markdown
 ## 1. General Project Information
 *   **Project Name:** CULFW32 (Portierung der a-culfw auf 32-Bit-Mikrocontroller)
 *   **Repository:** `tostmann/a-culfw.git` (forked)
@@ -84,15 +83,16 @@
     *   Anpassungen in `culfw/clib/rf_receive.c` (in `CC1100_in_callback` im `STATE_COLLECT`-Zweig) um `wave_equals` mit `hightime[CC_INSTANCE]` und `lowtime[CC_INSTANCE]` für die initiale Bit-Erkennung korrekt zu verwenden.
     *   FS20/FHT-Pakete werden nun erfolgreich dekodiert und im `X3F`-Monitor-Modus mit Bit-Streams angezeigt (z.B. `F66666600E1`).
 *   **Protokoll-Unterstützung (DONE):** Die Flags `HAS_IT`, `HAS_INTERTECHNO`, `HAS_HMS`, `HAS_ESA`, `HAS_TCM97001`, `HAS_SOMFY_RTS` wurden in `culfw/Devices/ESP32/board.h` für die ESP32-Targets aktiviert. Der `i`-Befehl für Intertechno und der `Y`-Befehl für Somfy RTS wurden in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt verknüpft. Die Sendefunktion für Intertechno und Somfy RTS (via GDO0 Bit-Banging) wurde implementiert und erfolgreich im Build verifiziert. Der Empfang für FS20/FHT ist stabil und funktional.
-*   **GDO0 Pin Mode Handling for TX Bit-Banging (DONE):** `hal.cpp` wurde aktualisiert, um den `pinMode` von `GDO0_PIN` dynamisch zwischen `INPUT` (für RX) und `OUTPUT` (für TX Bit-Banging) umzuschalten. Dies ermöglicht Protokollen wie Intertechno und Somfy RTS, das GDO0-Signal für ASK-Modulation korrekt zu treiben, während die Empfangsfähigkeit für SlowRF erhalten bleibt. `hal_CC_Pin_Set` schaltet nun bei Zugriff auf `CC_Pin_Out` automatisch auf `OUTPUT`, während `hal_enable_CC_GDOin_int` und `hal_CC_GDO_init` den Pin auf `INPUT` zurücksetzen.
+*   **GDO0 Pin Mode Handling for TX Bit-Banging (DONE):** Die `hal_CC_GDO_init` Funktion wurde in `intertechno.c` und `somfy_rts.c` angepasst, um den GDO0-Pin für Sendeprotokolle initial auf `OUTPUT` zu konfigurieren (relevant für STM32/AVR). Für ESP32-Targets erfolgt das dynamische Umschalten des `GDO0_PIN` zwischen `INPUT` (für RX) und `OUTPUT` (für TX Bit-Banging) primär durch die `hal_CC_Pin_Set` Funktion bei direktem Zugriff auf `CC_Pin_Out`. Dies ermöglicht Protokollen wie Intertechno und Somfy RTS, das GDO0-Signal für ASK-Modulation korrekt zu treiben, während die Empfangsfähigkeit für SlowRF erhalten bleibt. Beim Wechsel in den Empfangsmodus (via `hal_enable_CC_GDOin_int` oder `hal_CC_GDO_init` für RX-Mode) wird der Pin jeweils wieder auf `INPUT` gesetzt.
 *   **Compiler Warning Reduction (DONE):** Einsatz von `#pragma GCC system_header` in den AVR-Kompatibilitäts-Headern (`io.h`, `interrupt.h`), um massenhafte Redefinition-Warnungen zu unterdrücken und den Build-Output zu bereinigen.
 *   **Linker Fixes (DONE):** Korrekte Verwendung von `extern "C"` Blöcken in `hal.cpp` für globale Variablen (`ticks`, `SREG`, `TIMSK0`), um Verknüpfungsfehler zwischen C- und C++-Modulen zu vermeiden.
+*   **Git SSH Key Generierung (DONE):** Ein neues SSH-Schlüsselpaar wurde unter `/root/.ssh/id_rsa` und `/root/.ssh/id_rsa.pub` generiert, um den Zugriff auf GitHub via SSH zu ermöglichen.
 
 ## 4. Known Issues & Next Steps
+*   **GitHub SSH Key Integration:** Der generierte öffentliche SSH-Schlüssel (`/root/.ssh/id_rsa.pub`) muss im GitHub-Profil oder als Deploy-Key für das `tostmann/a-culfw`-Repository hinterlegt werden, damit `git push` erfolgreich ist.
 *   **Weitere Entwicklung:**
     *   **Validierung weiterer Protokolle:** Durchführung von Tests für den Empfang von Intertechno (IT), Somfy RTS, HMS, ESA mit realer Hardware.
     *   **Langzeit-Stabilitätstests:** Umfangreiche Tests unter hoher Funklast zur Erkennung von Paketverlusten oder Instabilitäten.
     *   **Optimierung FreeRTOS Task-Prioritäten:** Feinabstimmung des `background_task` zur weiteren Minimierung der Latenz bei extrem hoher Funklast.
     *   **Dokumentation:** Finalisierung der Portierungs-Dokumentation in der README.
     *   **Langfristig:** Implementierung eines Web-Interfaces für ESP32.
-```
