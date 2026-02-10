@@ -92,9 +92,9 @@ packetCheckValues_t packetCheckValues[NUM_SLOWRF];
 static uint8_t obuf[MAXMSG]; // parity-stripped output
 
 static bucket_t bucket_array[NUM_SLOWRF][RCV_BUCKETS];
-uint8_t bucket_in[NUM_SLOWRF];                 // Pointer to the in(terrupt) queue
-uint8_t bucket_out[NUM_SLOWRF];                // Pointer to the out (analyze) queue
-uint8_t bucket_nrused[NUM_SLOWRF];             // Number of unprocessed buckets
+volatile uint8_t bucket_in[NUM_SLOWRF];                 // Pointer to the in(terrupt) queue
+volatile uint8_t bucket_out[NUM_SLOWRF];                // Pointer to the out (analyze) queue
+volatile uint8_t bucket_nrused[NUM_SLOWRF];             // Number of unprocessed buckets
 static uint8_t nibble; // parity-stripped output
 static uint8_t roby[NUM_SLOWRF], robuf[NUM_SLOWRF][MAXMSG];       // for Repeat check: buffer and time
 static uint32_t reptime[NUM_SLOWRF];
