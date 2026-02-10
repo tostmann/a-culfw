@@ -67,7 +67,7 @@ pio run -e XIAO_ESP32C3 -t upload
 
 ## Repository Structure & Git
 
-To keep the repository clean, only the final products in the `binaries/` folder are tracked. Temporary build files are ignored.
+To keep the repository clean, only the final products in the `binaries/` folder and the core source code are tracked. Diagnostic tools and temporary build files are ignored or moved to `tools/`.
 
 **Git Whitelist Principle:**
 Only `.hex`, `.bin` and the `manifest.json` in the `/binaries/` folder are explicitly allowed in the `.gitignore`. All other artifacts in the `.pio/` folder remain local.
