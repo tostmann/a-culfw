@@ -119,6 +119,7 @@ void HAL_LED_Toggle(LED_List led) {
 }
 
 void IRAM_ATTR gdo_interrupt_handler() {
+    last_isr_time_val = (uint32_t)esp_timer_get_time();
     gdo_isr_count++;
     if (digitalRead(GDO0_PIN)) gdo_high_count++;
     else gdo_low_count++;
