@@ -1,43 +1,11 @@
-grep: culfw/.pio/build/XIAO-ESP32-C3/src/ESP32/hal.cpp.o: binary file matches
-grep: culfw/.pio/build/XIAO-ESP32-C3/firmware.elf: binary file matches
-culfw/.pio/build/XIAO-ESP32-C3/firmware.map:__attachInterrupt                                 esp32-hal-gpio.c.o (symbol from plugin)
-culfw/.pio/build/XIAO-ESP32-C3/firmware.map:__attachInterruptArg                              esp32-hal-gpio.c.o (symbol from plugin)
-culfw/.pio/build/XIAO-ESP32-C3/firmware.map:__attachInterruptFunctionalArg                    esp32-hal-gpio.c.o (symbol from plugin)
-culfw/.pio/build/XIAO-ESP32-C3/firmware.map:attachInterrupt                                   esp32-hal-gpio.c.o (symbol from plugin)
-culfw/.pio/build/XIAO-ESP32-C3/firmware.map:attachInterrupt(unsigned char, std::function<void ()>, int) FunctionalInterrupt.cpp.o (symbol from plugin)
-culfw/.pio/build/XIAO-ESP32-C3/firmware.map:attachInterruptArg                                esp32-hal-gpio.c.o (symbol from plugin)
-grep: culfw/.pio/build/XIAO-ESP32-C3/FrameworkArduino/FunctionalInterrupt.cpp.o: binary file matches
-grep: culfw/.pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-gpio.c.o: binary file matches
-grep: culfw/.pio/build/XIAO-ESP32-C3/libFrameworkArduino.a: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.elf: binary file matches
-culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.map:__attachInterrupt                                 esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.map:__attachInterruptArg                              esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.map:__attachInterruptFunctionalArg                    esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.map:attachInterrupt                                   esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.map:attachInterrupt(unsigned char, std::function<void ()>, int) FunctionalInterrupt.cpp.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C6/firmware.map:attachInterruptArg                                esp32-hal-gpio.c.o (symbol from plugin)
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/FrameworkArduino/FunctionalInterrupt.cpp.o: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/FrameworkArduino/esp32-hal-gpio.c.o: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C6/libFrameworkArduino.a: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.elf: binary file matches
-culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.map:__attachInterrupt                                 esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.map:__attachInterruptArg                              esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.map:__attachInterruptFunctionalArg                    esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.map:attachInterrupt                                   esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.map:attachInterrupt(unsigned char, std::function<void ()>, int) FunctionalInterrupt.cpp.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/ESP32-C3/firmware.map:attachInterruptArg                                esp32-hal-gpio.c.o (symbol from plugin)
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/FrameworkArduino/FunctionalInterrupt.cpp.o: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/FrameworkArduino/esp32-hal-gpio.c.o: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/ESP32-C3/libFrameworkArduino.a: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.elf: binary file matches
-culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.map:__attachInterrupt                                 esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.map:__attachInterruptArg                              esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.map:__attachInterruptFunctionalArg                    esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.map:attachInterrupt                                   esp32-hal-gpio.c.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.map:attachInterrupt(unsigned char, std::function<void ()>, int) FunctionalInterrupt.cpp.o (symbol from plugin)
-culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/firmware.map:attachInterruptArg                                esp32-hal-gpio.c.o (symbol from plugin)
-grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/FrameworkArduino/FunctionalInterrupt.cpp.o: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/FrameworkArduino/esp32-hal-gpio.c.o: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/XIAO-ESP32-C3/libFrameworkArduino.a: binary file matches
-grep: culfw/Devices/ESP32/.pio/build/ESP32/hal.cpp.o: binary file matches
-culfw/ESP32/hal.cpp:        attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
+ESP32/hal.cpp: In function 'void onTickTimer()':
+ESP32/hal.cpp:26:5: warning: '++' expression of 'volatile'-qualified type is deprecated [-Wvolatile]
+   26 |     ticks++;
+      |     ^~~~~
+ESP32/hal.cpp: In function 'void hal_CC_GDO_init(uint8_t, uint8_t)':
+ESP32/hal.cpp:137:54: error: 'gdo_interrupt_handler' was not declared in this scope
+  137 |     attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
+      |                                                      ^~~~~~~~~~~~~~~~~~~~~
+ESP32/hal.cpp: In function 'void gdo_interrupt_handler()':
+ESP32/hal.cpp:141:5: warning: '++' expression of 'volatile'-qualified type is deprecated [-Wvolatile]
+  141 |     gdo_isr_count++;
