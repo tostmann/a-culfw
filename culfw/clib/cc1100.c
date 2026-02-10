@@ -164,9 +164,9 @@ const PROGMEM const uint8_t CC1100_CFG1[EE_CC1100_CFG_SIZE] = {
 #if defined(HAS_FASTRF) || defined(HAS_RF_ROUTER)
 const PROGMEM const uint8_t FASTRF_CFG[EE_CC1100_CFG_SIZE] = {
 // CULFW   IDX NAME     
-   0x07, // 00 IOCFG2 (x)    INT when a packet with CRC OK has been received
+   0x2E, // 00 IOCFG2 
    0x2E, // 01 IOCFG1        3-State
-   0x05, // 02 IOCFG0D (x)   Interrupt in TX underflow
+   0x07, // 02 IOCFG0D (x)   INT when a packet with CRC OK has been received
    0x0D, // 03 FIFOTHR (x)   TX:9 / RX:56, but irrelevant, see IOCFG2/IOCFG0
    0xD3, // 04 SYNC1       
    0x91, // 05 SYNC0       
