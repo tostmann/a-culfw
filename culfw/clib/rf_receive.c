@@ -103,7 +103,7 @@ static uint16_t maxLevel[NUM_SLOWRF];
 
 static void delbit(bucket_t *b);
 
-uint8_t wave_equals(wave_t *a, uint8_t htime, uint8_t ltime, uint8_t state);
+uint8_t wave_equals(wave_t *a, pulse_t htime, pulse_t ltime, uint8_t state);
 
 
 static volatile pulse_t hightime[NUM_SLOWRF], lowtime[NUM_SLOWRF];
@@ -532,9 +532,9 @@ RfAnalyze_Task(void)
 #if defined(HAS_TCM97001)
         if (b->state == STATE_TCM97001) {
 		  DC(';');
-		  DU(b->syncbit.hightime  *16, 5);
+		  DU(b->syncbit.hightime  , 5);
 		  DC(':');
-		  DU(b->syncbit.lowtime  *16, 5);
+		  DU(b->syncbit.lowtime  , 5);
 	    }
 #endif
       DNL();
@@ -548,24 +548,24 @@ RfAnalyze_Task(void)
     MULTICC_PREFIX();
     DC('p');
     DU(b->state,        2);
-    DU(b->zero.hightime*16, 5);
-    DU(b->zero.lowtime *16, 5);
-    DU(b->one.hightime *16, 5);
-    DU(b->one.lowtime  *16, 5);
-    DU(b->two.hightime *16, 5);
-    DU(b->two.lowtime  *16, 5);
+    DU(b->zero.hightime, 5);
+    DU(b->zero.lowtime , 5);
+    DU(b->one.hightime , 5);
+    DU(b->one.lowtime  , 5);
+    DU(b->two.hightime , 5);
+    DU(b->two.lowtime  , 5);
     DU(b->valCount,     4);
     DU(b->sync,         3);
     DU(b->byteidx,      3);
     DU(7-b->bitidx,     2);
 #if defined(HAS_IT) || defined(HAS_TCM97001) 
     DC(' ');
-    DU(b->syncbit.hightime *16, 5);
+    DU(b->syncbit.hightime , 5);
     DC(' ');
-    DU(b->syncbit.lowtime  *16, 5);
+    DU(b->syncbit.lowtime  , 5);
     DC(' ');
 #endif
-    DU(b->clockTime  *16, 5);
+    DU(b->clockTime  , 5);
     DC(' ');
     if(TX_REPORT & REP_RSSI) {
       DH2(cc1100_readReg(CC1100_RSSI));
@@ -1036,7 +1036,7 @@ retry_sync:
       #else
           OCR1A = (lowtime[CC_INSTANCE] - 16) * 16; //End of message
          	//OCR1A = 2200; // end of message
-          //OCR1A = b->syncbit.lowtime*16 - 1000;
+          //OCR1A = b->syncbit.lowtime - 1000;
       #endif
       #ifdef USE_HAL
           hal_enable_CC_timer_int(CC_INSTANCE,TRUE);
@@ -1230,9 +1230,9 @@ retry_sync:
     default:
       /* TODO: Receive other sync packages
       if (b->state == STATE_COLLECT) {
-        DU(hightime[CC_INSTANCE]*16, 5);
+        DU(hightime[CC_INSTANCE], 5);
         DC(':');
-        DU(lowtime[CC_INSTANCE] *16, 5);
+        DU(lowtime[CC_INSTANCE] , 5);
         DC(',');
       }*/
       if(wave_equals(&b->one, hightime[CC_INSTANCE], lowtime[CC_INSTANCE], b->state)) {
