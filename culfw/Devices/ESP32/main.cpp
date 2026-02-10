@@ -100,35 +100,16 @@ extern "C" const t_fntab fntab[] = {
 
 void setup() {
     Serial.begin(115200);
-    
-    long start = millis();
-    while (!Serial && millis() - start < 5000); 
-
-    Serial.println("\r\n!!! CULFW32 BOOT START !!!");
-    Serial.println("Serial started.");
-    
-    Serial.println("Timer Init...");
-    hal_timer_init();
-    Serial.println("EEPROM Init...");
-    eeprom_init();
-    
-    rb_reset(&TTY_Rx_Buffer);
-    rb_reset(&TTY_Tx_Buffer);
-    
-    input_handle_func = analyze_ttydata;
-    display_channel = DISPLAY_USB;
-    
-    Serial.println("SPI Init...");
-    spi_init();
-    Serial.println("CC1101 Init...");
-    ccInitChip(EE_CC1100_CFG);
-    Serial.println("TX Init...");
-    tx_init();
-    
-    hal_enable_CC_GDOin_int(0, 1);
-    
-    Serial.println("Ready.");
+    delay(2000);
+    Serial.println("\r\n!!! SIMPLE BOOT TEST !!!");
 }
+
+void loop() {
+    Serial.println("Alive...");
+    delay(1000);
+}
+
+void setup_old() {
 
 void loop() {
     static uint32_t last_isr_count = 0;

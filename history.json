@@ -1417,5 +1417,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void setup() {\n    Serial.begin(115200);\n    delay(2000);\n    Serial.println(\"\\r\\n!!! SIMPLE BOOT TEST !!!\");\n}\n\nvoid loop() {\n    Serial.println(\"Alive...\");\n    delay(1000);\n}\n\nvoid setup_old() {",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "void setup() {\n    Serial.begin(115200);\n    \n    long start = millis();\n    while (!Serial && millis() - start < 5000); \n\n    Serial.println(\"\\r\\n!!! CULFW32 BOOT START !!!\");\n    Serial.println(\"Serial started.\");\n    \n    Serial.println(\"Timer Init...\");\n    hal_timer_init();\n    Serial.println(\"EEPROM Init...\");\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    Serial.println(\"SPI Init...\");\n    spi_init();\n    Serial.println(\"CC1101 Init...\");\n    ccInitChip(EE_CC1100_CFG);\n    Serial.println(\"TX Init...\");\n    tx_init();\n    \n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}"
+          }
+        }
+      }
+    ]
   }
 ]
