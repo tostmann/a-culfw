@@ -30,12 +30,11 @@ void IRAM_ATTR onTickTimer() {
 }
 
 // Timer for RF Silence timeout
-static esp_timer_handle_t rf_silence_timer = NULL;
+static hw_timer_t * rf_hw_timer = NULL;
 static volatile uint32_t rf_reload_val = 4000;
 static volatile bool rf_timer_enabled = false;
 
-void IRAM_ATTR onRfSilenceTimer(void* arg) {
-    rf_timer_enabled = false;
+void IRAM_ATTR onRfTimer() {
     rf_receive_TimerElapsedCallback();
 }
 
@@ -44,18 +43,18 @@ void hal_timer_init(void) {
     tick_timer = timerBegin(1000000); // 1MHz
     timerAttachInterrupt(tick_timer, &onTickTimer);
     timerAlarm(tick_timer, 1000, true, 0); // 1ms
+    
+    rf_hw_timer = timerBegin(1000000); // 1MHz
+    timerAttachInterrupt(rf_hw_timer, &onRfTimer);
 #else
     tick_timer = timerBegin(0, 80, true); // 1MHz
     timerAttachInterrupt(tick_timer, &onTickTimer, true);
     timerAlarmWrite(tick_timer, 1000, true);
     timerAlarmEnable(tick_timer);
-#endif
 
-    esp_timer_create_args_t rf_timer_args = {};
-    rf_timer_args.callback = onRfSilenceTimer;
-    rf_timer_args.name = "rf_silence";
-    rf_timer_args.dispatch_method = ESP_TIMER_TASK; // Run in timer task
-    esp_timer_create(&rf_timer_args, &rf_silence_timer);
+    rf_hw_timer = timerBegin(1, 80, true); // 1MHz
+    timerAttachInterrupt(rf_hw_timer, &onRfTimer, true);
+#endif
 }
 
 uint32_t hal_get_ticks(void) {
@@ -63,16 +62,26 @@ uint32_t hal_get_ticks(void) {
 }
 
 void hal_timer_task(void) {
-    // Legacy polling not needed with esp_timer, but kept for compatibility
 }
 
 // RF Timer HAL
 void IRAM_ATTR hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {
-    esp_timer_stop(rf_silence_timer);
     if (enable) {
-        esp_timer_start_once(rf_silence_timer, rf_reload_val);
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+        timerRestart(rf_hw_timer);
+        timerAlarm(rf_hw_timer, rf_reload_val, false, 0);
+#else
+        timerAlarmWrite(rf_hw_timer, rf_reload_val, false);
+        timerAlarmEnable(rf_hw_timer);
+        timerWrite(rf_hw_timer, 0);
+#endif
         rf_timer_enabled = true;
     } else {
+#if ESP_ARDUINO_VERSION_MAJOR >= 3
+        timerStop(rf_hw_timer);
+#else
+        timerAlarmDisable(rf_hw_timer);
+#endif
         rf_timer_enabled = false;
     }
 }
