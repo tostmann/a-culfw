@@ -622,7 +622,7 @@ void reset_input(void)
 // Timer Compare Interrupt Handler. If we are called, then there was no
 // data for SILENCE time, and we can put the data to be analysed
 #ifdef USE_HAL
-void rf_receive_TimerElapsedCallback() {
+void IRAM_ATTR rf_receive_TimerElapsedCallback() {
 #else
 ISR(TIMER1_COMPA_vect)
 {
