@@ -24,12 +24,6 @@ void clock_TimerElapsedCallback(void);
 
 void IRAM_ATTR gdo_interrupt_handler();
 
-// Timer for system ticks (125Hz / 8ms)
-static hw_timer_t * tick_timer = NULL;
-void IRAM_ATTR onTickTimer() {
-    clock_TimerElapsedCallback();
-}
-
 // Timer for RF Silence timeout
 static hw_timer_t * rf_hw_timer = NULL;
 static volatile uint32_t rf_reload_val = 4000;
@@ -41,18 +35,9 @@ void IRAM_ATTR onRfTimer() {
 
 void hal_timer_init(void) {
 #if ESP_ARDUINO_VERSION_MAJOR >= 3
-    tick_timer = timerBegin(1000000); // 1MHz
-    timerAttachInterrupt(tick_timer, &onTickTimer);
-    timerAlarm(tick_timer, 8000, true, 0); // 125Hz / 8ms
-    
     rf_hw_timer = timerBegin(1000000); // 1MHz
     timerAttachInterrupt(rf_hw_timer, &onRfTimer);
 #else
-    tick_timer = timerBegin(0, 80, true); // 1MHz
-    timerAttachInterrupt(tick_timer, &onTickTimer, true);
-    timerAlarmWrite(tick_timer, 8000, true); // 125Hz / 8ms
-    timerAlarmEnable(tick_timer);
-
     rf_hw_timer = timerBegin(1, 80, true); // 1MHz
     timerAttachInterrupt(rf_hw_timer, &onRfTimer, true);
 #endif
@@ -63,6 +48,12 @@ uint32_t hal_get_ticks(void) {
 }
 
 void hal_timer_task(void) {
+    static uint32_t last_tick_ms = 0;
+    uint32_t now = millis();
+    if (now - last_tick_ms >= 8) { // 125Hz approx
+        last_tick_ms = now;
+        clock_TimerElapsedCallback();
+    }
 }
 
 // RF Timer HAL
