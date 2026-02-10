@@ -1353,5 +1353,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void loop() {\n    static uint32_t last_isr_print = 0;\n    if (millis() - last_isr_print > 1000) {\n        last_isr_print = millis();\n        // Serial.printf(\"ISR Count: %u, Ticks: %u\\n\", gdo_isr_count, ticks);\n    }\n\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "void loop() {\n    // 1. Read from Serial into Rx Buffer\n    while (Serial.available()) {\n        uint8_t c = Serial.read();\n        rb_put(&TTY_Rx_Buffer, c);\n    }\n"
+          }
+        }
+      }
+    ]
   }
 ]
