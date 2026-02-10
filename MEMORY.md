@@ -1,5 +1,5 @@
 ```markdown
-        ## 1. General Project Information
+## 1. General Project Information
 *   **Project Name:** CULFW32 (Portierung der a-culfw auf 32-Bit-Mikrocontroller)
 *   **Repository:** `tostmann/a-culfw.git` (forked)
 *   **Local Codebase:** `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/`
@@ -7,7 +7,7 @@
 *   **Target Architectures:** AVR, STM32, ESP32 (RISC-V)
 
 ## 2. Supported Boards & Firmware Versions
-*   **Firmware Version:** 1.26.140 (latest build, automatisch inkrementiert nach Fixes)
+*   **Firmware Version:** 1.26.145 (latest build, automatisch inkrementiert nach Fixes)
 *   **AVR Targets (Verified):**
     *   `CUL_V3.hex`
     *   `nanoCUL868.hex`
@@ -83,14 +83,14 @@
     *   Das `SILENCE`-Makro in `culfw/clib/rf_receive_bucket.h` wurde von `15000` auf `50000` Mikrosekunden erhöht, um vorzeitige Timeouts während der Paketverarbeitung zu verhindern. Dieser Wert ist nun stabil und wurde bestätigt.
     *   Anpassungen in `culfw/clib/rf_receive.c` (in `CC1100_in_callback` im `STATE_COLLECT`-Zweig) um `wave_equals` mit `hightime[CC_INSTANCE]` und `lowtime[CC_INSTANCE]` für die initiale Bit-Erkennung korrekt zu verwenden.
     *   FS20/FHT-Pakete werden nun erfolgreich dekodiert und im `X3F`-Monitor-Modus mit Bit-Streams angezeigt (z.B. `F66666600E1`).
-*   **Protokoll-Unterstützung (DONE):** Die Flags `HAS_IT`, `HAS_INTERTECHNO`, `HAS_HMS`, `HAS_ESA`, `HAS_TCM97001`, `HAS_SOMFY_RTS` wurden in `culfw/Devices/ESP32/board.h` für die ESP32-Targets aktiviert. Der `i`-Befehl für Intertechno wurde in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt mit `it_func` verknüpft, ebenso `Y` für Somfy RTS.
+*   **Protokoll-Unterstützung (DONE):** Die Flags `HAS_IT`, `HAS_INTERTECHNO`, `HAS_HMS`, `HAS_ESA`, `HAS_TCM97001`, `HAS_SOMFY_RTS` wurden in `culfw/Devices/ESP32/board.h` für die ESP32-Targets aktiviert. Der `i`-Befehl für Intertechno und der `Y`-Befehl für Somfy RTS wurden in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt verknüpft. Die Sendefunktion für Intertechno und Somfy RTS (via GDO0 Bit-Banging) wurde implementiert und erfolgreich im Build verifiziert. Der Empfang für FS20/FHT ist stabil und funktional.
 *   **GDO0 Pin Mode Handling for TX Bit-Banging (DONE):** `hal.cpp` wurde aktualisiert, um den `pinMode` von `GDO0_PIN` dynamisch zwischen `INPUT` (für RX) und `OUTPUT` (für TX Bit-Banging) umzuschalten. Dies ermöglicht Protokollen wie Intertechno und Somfy RTS, das GDO0-Signal für ASK-Modulation korrekt zu treiben, während die Empfangsfähigkeit für SlowRF erhalten bleibt. `hal_CC_Pin_Set` schaltet nun bei Zugriff auf `CC_Pin_Out` automatisch auf `OUTPUT`, während `hal_enable_CC_GDOin_int` und `hal_CC_GDO_init` den Pin auf `INPUT` zurücksetzen.
 *   **Compiler Warning Reduction (DONE):** Einsatz von `#pragma GCC system_header` in den AVR-Kompatibilitäts-Headern (`io.h`, `interrupt.h`), um massenhafte Redefinition-Warnungen zu unterdrücken und den Build-Output zu bereinigen.
 *   **Linker Fixes (DONE):** Korrekte Verwendung von `extern "C"` Blöcken in `hal.cpp` für globale Variablen (`ticks`, `SREG`, `TIMSK0`), um Verknüpfungsfehler zwischen C- und C++-Modulen zu vermeiden.
 
 ## 4. Known Issues & Next Steps
 *   **Weitere Entwicklung:**
-    *   **Validierung weiterer Protokolle:** Durchführung von Tests für Intertechno (IT), HMS, ESA mit realer Hardware.
+    *   **Validierung weiterer Protokolle:** Durchführung von Tests für den Empfang von Intertechno (IT), Somfy RTS, HMS, ESA mit realer Hardware.
     *   **Langzeit-Stabilitätstests:** Umfangreiche Tests unter hoher Funklast zur Erkennung von Paketverlusten oder Instabilitäten.
     *   **Optimierung FreeRTOS Task-Prioritäten:** Feinabstimmung des `background_task` zur weiteren Minimierung der Latenz bei extrem hoher Funklast.
     *   **Dokumentation:** Finalisierung der Portierungs-Dokumentation in der README.
