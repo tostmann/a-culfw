@@ -94,13 +94,13 @@ extern "C" const t_fntab fntab[] = {
   { 0, 0 },
 };
 
+#if !ARDUINO_USB_CDC_ON_BOOT
+#define Serial USBSerial
+#endif
+
 void setup() {
     Serial.begin(115200);
-    // No delay here, we want to see if it even reaches this
     
-    // HAL_LED_Init(); // Disable LED for now to avoid GPIO 21 conflict
-    
-    // Use a loop to wait for Serial connection (USB CDC needs this sometimes)
     long start = millis();
     while (!Serial && millis() - start < 5000); 
 
