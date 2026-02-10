@@ -113,8 +113,6 @@ void setup() {
     unsigned long start = millis();
     while (!Serial && (millis() - start) < 2000);
 
-    Serial.println("\r\n--- CULFW32 Starting (Full) ---");
-    
     hal_timer_init();
     eeprom_init();
     
@@ -130,17 +128,9 @@ void setup() {
     
     xTaskCreate(background_task, "bg", 4096, NULL, 1, NULL);
     hal_enable_CC_GDOin_int(0, 1);
-    
-    Serial.println("Ready.");
 }
 
 void loop() {
-    static uint32_t last_isr_print = 0;
-    if (millis() - last_isr_print > 1000) {
-        last_isr_print = millis();
-        Serial.printf("ISR H/L/T: %u/%u/%u, Ticks: %u, BucketUsed: %u\n", gdo_high_count, gdo_low_count, gdo_isr_count, ticks, bucket_nrused[0]);
-    }
-
     // 1. Read from Serial into Rx Buffer
     while (Serial.available()) {
         uint8_t c = Serial.read();

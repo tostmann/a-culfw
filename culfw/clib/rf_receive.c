@@ -256,7 +256,6 @@ analyze(bucket_t *b, uint8_t t, uint8_t *oby)
     if(obi == -1) {                                    // next byte
       if(t == TYPE_FS20) {
         if(parity_even_bit(obuf[i]) != bit) {
-          if(TX_REPORT & REP_MONITOR) { DC('P'); DH2(obuf[i]); DC('?'); DC(bit+'0'); }
           return 0;
         }
       }
@@ -400,7 +399,9 @@ RfAnalyze_Task(void)
 
   if (b->state == STATE_COLLECT) {
     if(!datatype) {
+#if defined(ESP32) || defined(STM32)
       addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
+#endif
       if(analyze(b, TYPE_FS20, &oby)) { // Can be FS10 (433Mhz) or FS20 (868MHz)
         oby--;                                  // Separate the checksum byte
         uint8_t fs_csum = cksum1(6,obuf,oby);
@@ -1134,7 +1135,6 @@ retry_sync:
           b->state = STATE_COLLECT;
           if(TX_REPORT & REP_MONITOR) {
               DC('C');
-              DC('<'); DU(b->zero.hightime, 0); DC('/'); DU(b->zero.lowtime, 0); DC('>');
           }
         }
 

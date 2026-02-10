@@ -491,14 +491,8 @@ void
 display_debug(char *in)
 {
 #ifdef ESP32
-  DS_P(PSTR("GDO0_INT_COUNT: "));
-  DU(gdo_isr_count, 1);
-  DNL();
-  DS_P(PSTR("TICKS: "));
+  DS_P(PSTR("Debug: Ticks: "));
   DU(ticks, 1);
-  DNL();
-  DS_P(PSTR("BUCKET_USED: "));
-  DU(bucket_nrused[0], 1);
   DNL();
 #endif
 }

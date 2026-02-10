@@ -54,9 +54,15 @@ const PROGMEM const uint8_t CC1100_PA[] = {
 
 const PROGMEM const uint8_t CC1100_CFG[EE_CC1100_CFG_SIZE] = {
 // CULFW   IDX NAME     RESET STUDIO COMMENT
+#if defined(ESP32) || defined(STM32)
    0x2E, // 00 IOCFG2   Tri-State
    0x2E, // 01 IOCFG1    2E    2E    Tri-State
    0x0D, // 02 IOCFG0   Serial Data Output
+#else
+   0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
+   0x2E, // 01 IOCFG1    2E    2E    Tri-State
+   0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input
+#endif
    0x07, // 03 FIFOTHR   07   *47    
    0xD3, // 04 SYNC1     D3    D3    
    0x91, // 05 SYNC0     91    91    
@@ -164,9 +170,15 @@ const PROGMEM const uint8_t CC1100_CFG1[EE_CC1100_CFG_SIZE] = {
 #if defined(HAS_FASTRF) || defined(HAS_RF_ROUTER)
 const PROGMEM const uint8_t FASTRF_CFG[EE_CC1100_CFG_SIZE] = {
 // CULFW   IDX NAME     
+#if defined(ESP32) || defined(STM32)
    0x2E, // 00 IOCFG2 
    0x2E, // 01 IOCFG1        3-State
    0x07, // 02 IOCFG0D (x)   INT when a packet with CRC OK has been received
+#else
+   0x07, // 00 IOCFG2 (x)    INT when a packet with CRC OK has been received
+   0x2E, // 01 IOCFG1        3-State
+   0x05, // 02 IOCFG0D (x)   Interrupt in TX underflow
+#endif
    0x0D, // 03 FIFOTHR (x)   TX:9 / RX:56, but irrelevant, see IOCFG2/IOCFG0
    0xD3, // 04 SYNC1       
    0x91, // 05 SYNC0       

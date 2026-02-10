@@ -35,7 +35,11 @@
 pulse_t IRAM_ATTR makeavg(pulse_t i, pulse_t j)
 {
   if (i == 0) return j;
+#if defined(ESP32) || defined(STM32) || defined(LONG_PULSE)
   return (pulse_t)(((uint32_t)i * 3 + j) / 4);
+#else
+  return (pulse_t)(((uint16_t)i * 3 + j) / 4);
+#endif
 }
 
 /*
@@ -71,7 +75,7 @@ void IRAM_ATTR addbit(bucket_t *b, uint8_t bit)
     return;
   }
   
-  if(TX_REPORT & REP_MONITOR) DC(bit ? '1' : '0');
+  // if(TX_REPORT & REP_MONITOR) DC(bit ? '1' : '0'); // Too verbose for normal operation
 
   if(bit)
     b->data[b->byteidx] |= _BV(b->bitidx);

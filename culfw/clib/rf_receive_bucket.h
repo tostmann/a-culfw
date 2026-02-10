@@ -44,17 +44,20 @@
 //#define MAXMSGVALS (MAXMSG*8)
 #endif
 
+#if defined(ESP32) || defined(STM32)
 #define TSCALE(x)  (x)      // No scaling on 32-bit platforms
-
-
 #define TDIFF      TSCALE(120) // tolerated diff to previous/avg high/low/total
+#define SILENCE    50000       // End of message (50ms for stability)
+#else
+#define TSCALE(x)  (x/16)      // Scaling time to enable 8bit arithmetic
+#define TDIFF      TSCALE(200) // tolerated diff to previous/avg high/low/total
+#define SILENCE    4000        // End of message
+#endif
 
 #define STATE_RESET   0
 
-#define SILENCE    50000       // End of message (50ms for stability)
 
-
-#if defined(HAS_REVOLT) || defined (HAS_IT) || defined (HAS_TCM97001)
+#if defined(HAS_REVOLT) || defined (HAS_IT) || defined (HAS_TCM97001) || defined(ESP32) || defined(STM32)
 #define LONG_PULSE
 typedef uint16_t pulse_t;
 #else
