@@ -96,7 +96,7 @@
 
 #define E2END 511
 
-#define RCV_BUCKETS 8
+#define RCV_BUCKETS 16
 
 #define USB_IsConnected 0
 
