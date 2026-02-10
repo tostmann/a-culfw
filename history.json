@@ -1502,5 +1502,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT); // No pullup, CC1101 is push-pull\n    pinMode(GDO2_PIN, INPUT);\n}\n",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT_PULLUP);\n    pinMode(GDO2_PIN, INPUT);\n    // Interrupt will be enabled explicitly later or via hal_enable_CC_GDOin_int\n}\n"
+          }
+        }
+      }
+    ]
   }
 ]
