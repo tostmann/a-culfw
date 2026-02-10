@@ -44,6 +44,10 @@ uint8_t cksum3(uint8_t *buf, uint8_t len);
 
 #ifndef USE_RF_MODE
 extern uint8_t tx_report;
+#define TX_REPORT tx_report
+#else
+#include "rf_mode.h"
+#define TX_REPORT (RF_mode.report)
 #endif
 
 void RfAnalyze_Task(void);
