@@ -885,5 +885,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    if (mode == INIT_MODE_OUT_CS_IN) {\n        pinMode(GDO0_PIN, OUTPUT);\n    } else {\n        pinMode(GDO0_PIN, INPUT);\n    }\n    pinMode(GDO2_PIN, INPUT);\n}",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT); // No pullup, CC1101 is push-pull\n    pinMode(GDO2_PIN, INPUT);\n}"
+          }
+        }
+      }
+    ]
   }
 ]

@@ -132,7 +132,11 @@ void IRAM_ATTR gdo_interrupt_handler() {
 }
 
 void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
-    pinMode(GDO0_PIN, INPUT); // No pullup, CC1101 is push-pull
+    if (mode == INIT_MODE_OUT_CS_IN) {
+        pinMode(GDO0_PIN, OUTPUT);
+    } else {
+        pinMode(GDO0_PIN, INPUT);
+    }
     pinMode(GDO2_PIN, INPUT);
 }
 
