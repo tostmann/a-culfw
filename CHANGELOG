@@ -31,6 +31,16 @@
 - MapleCUN: Move serial console to DBG UART if USB is not connected
 - MapleCUN: Some bugfix
 
+#### 1.26.145
+- **ESP32 Support (Initial Release):**
+  - Full port of culfw to ESP32 (RISC-V, e.g., XIAO ESP32-C3).
+  - High-precision SlowRF pulse detection using FreeRTOS and ESP timers.
+  - Improved TTY buffer (1024 bytes) and ringbuffer logic for 32-bit platforms.
+  - Dynamic GDO0 pin handling for TX bit-banging (Intertechno, Somfy RTS).
+  - Support for FS20, FHT, HMS, ESA, Intertechno, and Somfy RTS protocols.
+  - Automated PlatformIO build system for multiple ESP32 targets.
+  - Unified binary export to `binaries/` with manifest support.
+
 #### 1.26.01
 - MapleCUN/CUBe: Fix SlowRF/ethernet keepalive
 

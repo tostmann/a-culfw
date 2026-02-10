@@ -58,3 +58,11 @@ binaries/*
 
 # PlatformIO Build-Ordner im culfw-Unterverzeichnis komplett ignorieren
 culfw/.pio/
+
+# --- Project specific ignores ---
+FACTS.md
+MEMORY.md
+history.json
+*.log
+a-culfw-repo/
+a-culfw-src/
