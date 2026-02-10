@@ -35,8 +35,8 @@ extern "C" uint8_t bucket_nrused[];
 #ifdef HAS_RFNATIVE
 #include "rf_native.h"
 #endif
-#ifdef HAS_IT
-#include "rf_receive_it.h"
+#ifdef HAS_INTERTECHNO
+#include "intertechno.h"
 #endif
 #ifdef HAS_SOMFY_RTS
 #include "somfy_rts.h"
