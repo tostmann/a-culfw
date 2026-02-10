@@ -637,5 +637,215 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "/root/.platformio/penv/bin/pio run -d culfw/ -e XIAO-ESP32-C3 --target upload --upload-port /dev/ttyACM0"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n... [OUTPUT TRUNCATED. Total size: 24742 bytes. Showing last 1500 bytes. Full output saved in 'last_execution.log'. Use 'grep' or 'read_file last_execution.log' to analyze!]\nFlash will be erased from 0x0000e000 to 0x0000ffff...\nFlash will be erased from 0x00010000 to 0x00055fff...\nSHA digest in image updated\nCompressed 12464 bytes to 9064...\nWriting at 0x00000000... (100 %)\nWrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 453.1 kbit/s)...\nHash of data verified.\nCompressed 3072 bytes to 146...\nWriting at 0x00008000... (100 %)\nWrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 472.1 kbit/s)...\nHash of data verified.\nCompressed 8192 bytes to 47...\nWriting at 0x0000e000... (100 %)\nWrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 770.5 kbit/s)...\nHash of data verified.\nCompressed 283616 bytes to 158410...\nWriting at 0x00010000... (10 %)\nWriting at 0x0001b15c... (20 %)\nWriting at 0x000230ff... (30 %)\nWriting at 0x0002a428... (40 %)\nWriting at 0x000302ea... (50 %)\nWriting at 0x000364fe... (60 %)\nWriting at 0x0003c3c4... (70 %)\nWriting at 0x000441a7... (80 %)\nWriting at 0x0004ad06... (90 %)\nWriting at 0x00050e41... (100 %)\nWrote 283616 bytes (158410 compressed) at 0x00010000 in 2.2 seconds (effective 1036.0 kbit/s)...\nHash of data verified.\n\nLeaving...\nHard resetting via RTS pin...\n========================= [SUCCESS] Took 20.76 seconds =========================\n\nEnvironment    Status    Duration\n-------------  --------  ------------\nXIAO-ESP32-C3  SUCCESS   00:00:20.758\n========================= 1 succeeded in 00:00:20.758 =========================\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "./cul_test.py /dev/ttyACM0 y --timeout 1 && ./cul_test.py /dev/ttyACM1 F12340111 --timeout 1 && ./cul_test.py /dev/ttyACM0 y --timeout 1"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 1\nOutput:\nGDO0_INT_COUNT: 0\nTIMEOUT\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "./cul_test.py /dev/ttyACM0 C35 --timeout 1"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\nC35 = 01 /  1\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "./cul_test.py /dev/ttyACM0 X21 --timeout 1 && ./cul_test.py /dev/ttyACM0 C35 --timeout 1"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 1\nOutput:\nTIMEOUT\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "./cul_test.py /dev/ttyACM0 W0006 --timeout 1 && ./cul_test.py /dev/ttyACM0 C00 --timeout 1"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 1\nOutput:\nTIMEOUT\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/clib/cc1100.c"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <avr/pgmspace.h>               // for PROGMEM, __LPM, PSTR\n#include <stdint.h>                     // for uint8_t\n\n#include \"cc1100.h\"\n#include \"delay.h\"                      // for my_delay_us, my_delay_ms\n#include \"display.h\"                    // for DH2, DNL, DS_P, DC, DU\n#include \"fncollection.h\"               // for ewb, EE_CC1100_CFG, erb, etc\n#include \"rf_asksin.h\"                  // for asksin_on\n#include \"stringfunc.h\"                 // for fromhex\n#include \"rf_mode.h\"\n#include \"multi_CC.h\"\n\n#ifdef HAS_MORITZ\n#include \"rf_moritz.h\"                  // for moritz_on\n#endif\n\n#ifdef USE_HAL\n#include \"hal.h\"\n#endif\n\n#ifndef USE_RF_MODE\nuint8_t cc_on;\n#endif\n\n// NOTE: FS20 devices can receive/decode signals sent with PA ramping,\n// but the CC1101 cannot\n#ifdef FULL_CC1100_PA\nconst PROGMEM const uint8_t CC1100_PA[] = {\n\n  0x00,0x03,0x0F,0x1E,0x26,0x27,0x00,0x00,      //-10 dBm with PA ramping\n  0x00,0x03,0x0F,0x1E,0x25,0x36,0x38,0x67,      // -5 dBm\n  0x00,0x03,0x0F,0x25,0x67,0x40,0x60,0x50,      //  0 dBm\n  0x00,0x03,0x0F,0x27,0x51,0x88,0x83,0x81,      //  5 dBm\n  0x00,0x03,0x0F,0x27,0x50,0xC8,0xC3,0xC2,      // 10 dBm\n\n  0x00,0x27,0x00,0x00,0x00,0x00,0x00,0x00,      //-10 dBm no PA ramping\n  0x00,0x67,0x00,0x00,0x00,0x00,0x00,0x00,      // -5 dBm\n  0x00,0x50,0x00,0x00,0x00,0x00,0x00,0x00,      //  0 dBm\n  0x00,0x81,0x00,0x00,0x00,0x00,0x00,0x00,      //  5 dBm\n  0x00,0xC2,0x00,0x00,0x00,0x00,0x00,0x00,      // 10 dBm\n\n};\n#else\nconst PROGMEM const uint8_t CC1100_PA[] = {\n\n  0x27,   //-10 dBm\n  0x67,   // -5 dBm (yes it is 67, checked 3 times!)\n  0x50,   //  0 dBm\n  0x81,   //  5 dBm\n  0xC2,   // 10 dBm\n};\n#endif\n\n\nconst PROGMEM const uint8_t CC1100_CFG[EE_CC1100_CFG_SIZE] = {\n// CULFW   IDX NAME     RESET STUDIO COMMENT\n   0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output\n   0x2E, // 01 IOCFG1    2E    2E    Tri-State\n   0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input\n   0x07, // 03 FIFOTHR   07   *47    \n   0xD3, // 04 SYNC1     D3    D3    \n   0x91, // 05 SYNC0     91    91    \n   0x3D, // 06 PKTLEN   *FF    3D    \n   0x04, // 07 PKTCTRL1  04    04    \n   0x32, // 08 PKTCTRL0 *45    32    \n   0x00, // 09 ADDR      00    00    \n   0x00, // 0A CHANNR    00    00    \n   0x06, // 0B FSCTRL1  *0F    06    152kHz IF Frquency\n   0x00, // 0C FSCTRL0   00    00    \n   0x21, // 0D FREQ2    *1E    21    868.3 (def:800MHz)\n   0x65, // 0E FREQ1    *C4    65    \n   0x6a, // 0F FREQ0    *EC    e8    \n   //0x55, // 10 MDMCFG4  *8C    55    bWidth 325kHz\n   0x57, // 10 MDMCFG4  *8C    55    bWidth 325kHz\n   //0xe4, // 11 MDMCFG3  *22   *43    Drate:1500 ((256+228)*2^5)*26000000/2^28\n   0xC4, // 11 MDMCFG3 (x)   DataRate: 5603,79 Baud ((256+196)*2^7)*26000000/(2^28)\n   0x30, // 12 MDMCFG2  *02   *B0    Modulation: ASK\n   0x23, // 13 MDMCFG1  *22    23    \n   0xb9, // 14 MDMCFG0  *F8    b9    ChannelSpace: 350kHz\n   0x00, // 15 DEVIATN  *47    00    \n   0x07, // 16 MCSM2     07    07    \n   0x00, // 17 MCSM1     30    30    \n   0x18, // 18 MCSM0    *04    18    Calibration: RX/TX->IDLE\n   0x14, // 19 FOCCFG   *36    14    \n   0x6C, // 1A BSCFG     6C    6C    \n   0x07, // 1B AGCCTRL2 *03   *03    42 dB instead of 33dB\n   0x00, // 1C AGCCTRL1 *40   *40    \n   0x90, // 1D AGCCTRL0 *91   *92    4dB decision boundery\n   0x87, // 1E WOREVT1   87    87    \n   0x6B, // 1F WOREVT0   6B    6B    \n   0xF8, // 20 WORCTRL   F8    F8    \n   0x56, // 21 FREND1    56    56    \n   0x11, // 22 FREND0   *16    17    0x11 for no PA ramping\n   0xE9, // 23 FSCAL3   *A9    E9    \n   0x2A, // 24 FSCAL2   *0A    2A\n   0x00, // 25 FSCAL1    20    00\n   0x1F, // 26 FSCAL0    0D    1F    \n   0x41, // 27 RCCTRL1   41    41    \n   0x00, // 28 RCCTRL0   00    00    \n\n /*                                   \n Conf1: SmartRF Studio:               \n   Xtal: 26Mhz, RF out: 0dB, PA ramping, Dev:5kHz, Data:1kHz, Modul: ASK/OOK,\n   RF: 868.30MHz, Chan:350kHz, RX Filter: 325kHz\n   SimpleRX: Async, SimpleTX: Async+Unmodulated\n */\n};\n#if defined(HAS_MULTI_CC) && (NUM_SLOWRF > 1)\nconst PROGMEM const uint8_t CC1100_CFG1[EE_CC1100_CFG_SIZE] = {\n// CULFW   IDX NAME     RESET STUDIO COMMENT\n   0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output\n   0x2E, // 01 IOCFG1    2E    2E    Tri-State\n   0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input\n   0x07, // 03 FIFOTHR   07   *47\n   0xD3, // 04 SYNC1     D3    D3\n   0x91, // 05 SYNC0     91    91\n   0x3D, // 06 PKTLEN   *FF    3D\n   0x04, // 07 PKTCTRL1  04    04\n   0x32, // 08 PKTCTRL0 *45    32\n   0x00, // 09 ADDR      00    00\n   0x00, // 0A CHANNR    00    00\n   0x06, // 0B FSCTRL1  *0F    06    152kHz IF Frquency\n   0x00, // 0C FSCTRL0   00    00\n   0x10, // 0D FREQ2    *1E    21    433.92 (def:800MHz)\n   0xb0, // 0E FREQ1    *C4    65\n   0x71, // 0F FREQ0    *EC    e8\n   //0x55, // 10 MDMCFG4  *8C    55    bWidth 325kHz\n   0x57, // 10 MDMCFG4  *8C    55    bWidth 325kHz\n   //0xe4, // 11 MDMCFG3  *22   *43    Drate:1500 ((256+228)*2^5)*26000000/2^28\n   0xC4, // 11 MDMCFG3 (x)   DataRate: 5603,79 Baud ((256+196)*2^7)*26000000/(2^28)\n   0x30, // 12 MDMCFG2  *02   *B0    Modulation: ASK\n   0x23, // 13 MDMCFG1  *22    23\n   0xb9, // 14 MDMCFG0  *F8    b9    ChannelSpace: 350kHz\n   0x00, // 15 DEVIATN  *47    00\n   0x07, // 16 MCSM2     07    07\n   0x00, // 17 MCSM1     30    30\n   0x18, // 18 MCSM0    *04    18    Calibration: RX/TX->IDLE\n   0x14, // 19 FOCCFG   *36    14\n   0x6C, // 1A BSCFG     6C    6C\n   0x07, // 1B AGCCTRL2 *03   *03    42 dB instead of 33dB\n   0x00, // 1C AGCCTRL1 *40   *40\n   0x90, // 1D AGCCTRL0 *91   *92    4dB decision boundery\n   0x87, // 1E WOREVT1   87    87\n   0x6B, // 1F WOREVT0   6B    6B\n   0xF8, // 20 WORCTRL   F8    F8\n   0x56, // 21 FREND1    56    56\n   0x11, // 22 FREND0   *16    17    0x11 for no PA ramping\n   0xE9, // 23 FSCAL3   *A9    E9\n   0x2A, // 24 FSCAL2   *0A    2A\n   0x00, // 25 FSCAL1    20    00\n   0x1F, // 26 FSCAL0    0D    1F\n   0x41, // 27 RCCTRL1   41    41\n   0x00, // 28 RCCTRL0   00    00\n\n /*\n Conf1: SmartRF Studio:\n   Xtal: 26Mhz, RF out: 0dB, PA ramping, Dev:5kHz, Data:1kHz, Modul: ASK/OOK,\n   RF: 868.30MHz, Chan:350kHz, RX Filter: 325kHz\n   SimpleRX: Async, SimpleTX: Async+Unmodulated\n */\n};\n#endif\n\n#if defined(HAS_FASTRF) || defined(HAS_RF_ROUTER)\nconst PROGMEM const uint8_t FASTRF_CFG[EE_CC1100_CFG_SIZE] = {\n// CULFW   IDX NAME     \n   0x07, // 00 IOCFG2 (x)    INT when a packet with CRC OK has been received\n   0x2E, // 01 IOCFG1        3-State\n   0x05, // 02 IOCFG0D (x)   Interrupt in TX underflow\n   0x0D, // 03 FIFOTHR (x)   TX:9 / RX:56, but irrelevant, see IOCFG2/IOCFG0\n   0xD3, // 04 SYNC1       \n   0x91, // 05 SYNC0       \n   0xFF, // 06 PKTLEN (x)    infinite\n   0x08, // 07 PKTCTRL1 (x)  CRC_AUTOFLUSH, no ADDR check, Append RSSI/LQI\n   0x05, // 08 PKTCTRL0 (x)  Packet Mode, Check CRC, Variable paket len\n   0x00, // 09 ADDR (x)    \n   0x00, // 0A CHANNR (x)  \n   0x0C, // 0B FSCTRL1 (x)   305kHz IF Freq (26000000/1024*12)\n   0x00, // 0C FSCTRL0 (x)   Freq Off\n   0x21, // 0D FREQ2 (x)     868.3MHz\n   0x65, // 0E FREQ1 (x)   \n   0x6A, // 0F FREQ0 (x)   \n   0x2D, // 10 MDMCFG4 (x)   Channel Bandwith: 203.1kHz 26000000/(8*(4+0)*2^2)\n   0x3B, // 11 MDMCFG3 (x)   DataRate: 250kHz ((256+59)*2^13)*26000000/(2^28)\n   0x13, // 12 MDMCFG2 (x)   Modulation: GFSK, Sync 30/32\n   0x22, // 13 MDMCFG1 (x)   Preamble: 4bytes\n   0xF8, // 14 MDMCFG0 (x)   Channel: 200kHz 26000000*(256+248)*2^2/2^18\n   0x62, // 15 DEVIATN (x)   127kHz 26000000/131072*(8+2)*2^6\n   0x07, // 16 MCSM2\n   0x3F, // 17 MCSM1         CCA: RSSI&RX, RX->RX, TX->RX\n   0x18, // 18 MCSM0 (x)     Calibration: IDLE->TX/RX\n   0x1D, // 19 FOCCFG (x)  \n   0x1C, // 1A BSCFG (x)   \n   0xC7, // 1B AGCCTRL2 (x)  No 3 highest DVGA gain, Max LNA, 42dB\n   0x00, // 1C AGCCTRL1 (x)\n   0xB0, // 1D AGCCTRL0 (x)  Avg.Len: 8samples\n   0x87, // 1E WOREVT1\n   0x6B, // 1F WOREVT0\n   0xF8, // 20 WORCTRL\n   0xB6, // 21 FREND1 (x)\n   0x11, // 22 FREND0 (x)\n   0xEA, // 23 FSCAL3 (x)\n   0x2A, // 24 FSCAL2 (x)\n   0x00, // 25 FSCAL1 (x)\n   0x1F, // 26 FSCAL0 (x)\n   0x41, // 27 RCCTRL1\n   0x00, // 28 RCCTRL0\n};\n\n#endif\n\nuint8_t\ncc1100_sendbyte(uint8_t data)\n{\n#ifdef USE_HAL\n  return spi_send(data);\n#else\n  SPDR = data;\t\t        // send byte\n  while (!(SPSR & _BV (SPIF)));\t// wait until transfer finished\n  return SPDR;\n#endif\n}\n\n\nvoid\nccInitChip(uint8_t *cfg)\n{\n#ifndef USE_RF_MODE\n#ifdef HAS_MORITZ\n  moritz_on = 0; //loading this configuration overwrites moritz cfg\n#endif\n#endif\n\n#ifdef USE_HAL\n  hal_CC_GDO_init(CC_INSTANCE,INIT_MODE_IN_CS_IN);\n#else\n  EIMSK &= ~_BV(CC1100_INT);                 \n  SET_BIT( CC1100_CS_DDR, CC1100_CS_PIN ); // CS as output\n#endif\n\n  CC1100_DEASSERT;                           // Toggle chip select signal\n  my_delay_us(30);\n  CC1100_ASSERT;\n  my_delay_us(30);\n  CC1100_DEASSERT;\n  my_delay_us(45);\n\n  ccStrobe( CC1100_SRES );                   // Send SRES command\n  my_delay_us(100);\n\n  CC1100_ASSERT;                             // load configuration\n  cc1100_sendbyte( 0 | CC1100_WRITE_BURST );\n  for(uint8_t i = 0; i < EE_CC1100_CFG_SIZE; i++) {\n    cc1100_sendbyte(erb(cfg++));\n  }\n  CC1100_DEASSERT;\n\n  uint8_t *pa = EE_CC1100_PA;\n  CC1100_ASSERT;                             // setup PA table\n  cc1100_sendbyte( CC1100_PATABLE | CC1100_WRITE_BURST );\n  for (uint8_t i = 0;i<8;i++) {\n    cc1100_sendbyte(erb(pa++));\n  }\n  CC1100_DEASSERT;\n\n  ccStrobe( CC1100_SCAL );\n  my_delay_ms(1);\n#ifdef USE_HAL\n  hal_CC_GDO_init(CC_INSTANCE,INIT_MODE_OUT_CS_IN);\n#endif\n}\n\n//--------------------------------------------------------------------\n\nvoid\ncc_set_pa(uint8_t idx)\n{\n  uint8_t *t = EE_CC1100_PA;\n\n  if(idx > 9)\n    idx = 8;\n\n#ifdef FULL_CC1100_PA\n  const uint8_t *f = CC1100_PA+idx*8;\n  for (uint8_t i = 0; i < 8; i++)\n    ewb(t++, __LPM(f+i));\n\n  // Correct the FREND0\n  ewb(EE_CC1100_CFG+0x22, (idx > 4 && idx < 10) ? 0x11 : 0x17);\n\n#else\n  if(idx > 4)\n    idx -= 5;\n\n  for (uint8_t i = 0; i < 8; i++)\n    ewb(t++, i == 1 ? __LPM(CC1100_PA+idx) : 0);\n\n#endif\n}\n\n\n//--------------------------------------------------------------------\nvoid\ncc_factory_reset(void)\n{\n  uint8_t *t = EE_CC1100_CFG;\n  for(uint8_t i = 0; i < sizeof(CC1100_CFG); i++)\n    ewb(t++, __LPM(CC1100_CFG+i));\n#if defined(HAS_FASTRF) || defined(HAS_RF_ROUTER)\n  t = EE_FASTRF_CFG;\n  for(uint8_t i = 0; i < sizeof(FASTRF_CFG); i++)\n    ewb(t++, __LPM(FASTRF_CFG+i));\n#endif\n#if defined(HAS_MULTI_CC)\n#if NUM_SLOWRF > 1\n  t = EE_CC1100_CFG1;\n  for(uint8_t i = 0; i < sizeof(CC1100_CFG); i++)\n    ewb(t++, __LPM(CC1100_CFG1+i));\n#endif\n#if NUM_SLOWRF > 2\n  t = EE_CC1100_CFG2;\n  for(uint8_t i = 0; i < sizeof(CC1100_CFG); i++)\n    ewb(t++, __LPM(CC1100_CFG+i));\n#endif\n#endif\n\n#ifdef MULTI_FREQ_DEVICE\n  // check 433MHz version marker and patch default frequency\n  if (!bit_is_set(MARK433_PIN, MARK433_BIT)) {\n    t = EE_CC1100_CFG + 0x0d;\n    ewb(t++, 0x10);\n    ewb(t++, 0xb0);\n    ewb(t++, 0x71);\n#if defined(HAS_FASTRF) || defined(HAS_RF_ROUTER)\n    t = EE_FASTRF_CFG + 0x0d;\n    ewb(t++, 0x10);\n    ewb(t++, 0xb0);\n    ewb(t++, 0x71);\n#endif   \n  }\n#endif   \n  cc_set_pa(8);\n}\n\n//--------------------------------------------------------------------\nvoid\nccsetpa(char *in)\n{\n  uint8_t hb = 2;\n  fromhex(in+1, &hb, 1);\n  cc_set_pa(hb);\n  ccInitChip(EE_CC1100_CFG);\n}\n\n//--------------------------------------------------------------------\nvoid\nccTX(void)\n{\n  uint8_t cnt = 0xff;\n#ifdef USE_HAL\n  hal_enable_CC_GDOin_int(CC_INSTANCE,FALSE);\n#else\n  EIMSK  &= ~_BV(CC1100_INT);\n#endif\n  // Going from RX to TX does not work if there was a reception less than 0.5\n  // sec ago. Due to CCA? Using IDLE helps to shorten this period(?)\n  ccStrobe(CC1100_SIDLE);\n  while(cnt-- &&\n        (ccStrobe(CC1100_STX) & CC1100_STATUS_STATE_BM) != CC1100_STATE_TX)\n    my_delay_us(10);\n}\n\n//--------------------------------------------------------------------\nvoid\nccRX(void)\n{\n  uint8_t cnt = 0xff;\n\n  while(cnt-- &&\n        (ccStrobe(CC1100_SRX) & CC1100_STATUS_STATE_BM) != CC1100_STATE_RX)\n    my_delay_us(10);\n#ifdef USE_HAL\n    hal_enable_CC_GDOin_int(CC_INSTANCE,TRUE);\n#else\n  EIMSK |= _BV(CC1100_INT);\n#endif\n}\n\n\n//--------------------------------------------------------------------\nvoid\nccreg(char *in)\n{\n  uint8_t hb, out, addr;\n\n  if(in[1] == 'w' && fromhex(in+2, &addr, 1) && fromhex(in+4, &hb, 1)) {\n    cc1100_writeReg(addr, hb);\n    ccStrobe( CC1100_SCAL );\n    ccRX();\n    DH2(addr); DH2(hb); DNL();\n\n  } else if(fromhex(in+1, &hb, 1)) {\n\n    if(hb == 0x99) {\n      for(uint8_t i = 0; i < 0x30; i++) {\n#ifdef HAS_MULTI_CC\n        if((i&7) == 0)\n          multiCC_prefix();\n#endif\n        DH2(cc1100_readReg(i));\n        if((i&7) == 7)\n          DNL();\n      }\n    } else {\n      out = cc1100_readReg(hb);\n      MULTICC_PREFIX();\n      DC('C');                    // prefix\n      DH2(hb);                    // register number\n      DS_P( PSTR(\" = \") );\n      DH2(out);                  // result, hex\n      DS_P( PSTR(\" / \") );\n      DU(out,2);                  // result, decimal\n      DNL();\n    }\n\n  }\n}\n\n//--------------------------------------------------------------------\nuint8_t\ncc1100_readReg(uint8_t addr)\n{\n  CC1100_ASSERT;\n  cc1100_sendbyte( addr|CC1100_READ_BURST );\n  uint8_t ret = cc1100_sendbyte( 0 );\n  CC1100_DEASSERT;\n  return ret;\n}\n\nvoid\ncc1100_writeReg(uint8_t addr, uint8_t data)\n{\n  CC1100_ASSERT;\n  cc1100_sendbyte( addr|CC1100_WRITE_BURST );\n  cc1100_sendbyte( data );\n  CC1100_DEASSERT;\n}\n\n\n//--------------------------------------------------------------------\nuint8_t\nccStrobe(uint8_t strobe)\n{\n  CC1100_ASSERT;\n  uint8_t ret = cc1100_sendbyte( strobe );\n  CC1100_DEASSERT;\n  return ret;\n}\n\n//--------------------------------------------------------------------\n\nvoid\nset_ccoff(void)\n{\n#ifdef BUSWARE_CUR\n  uint8_t cnt = 0xff;\n  while(cnt-- && (ccStrobe( CC1100_SIDLE ) & 0x70) != 0)\n    my_delay_us(10);\n  ccStrobe(CC1100_SPWD);\n#else\n  ccStrobe(CC1100_SIDLE);\n#endif\n#ifndef USE_RF_MODE\n  cc_on = 0;\n\n#ifdef HAS_ASKSIN\n  asksin_on = 0;\n#endif\n\n#ifdef HAS_MORITZ\n  moritz_on = 0;\n#endif\n#endif\n}\n\nvoid\nset_ccon(void)\n{\n#ifdef HAS_MULTI_CC\n  if (0) {}\n#if NUM_SLOWRF > 1\n  else if(CC1101.instance == 1)\n    ccInitChip(EE_CC1100_CFG1);\n#endif\n#if NUM_SLOWRF > 2\n  else if(CC1101.instance == 2)\n      ccInitChip(EE_CC1100_CFG2);\n#endif\n  else\n    ccInitChip(EE_CC1100_CFG);\n#else\n  ccInitChip(EE_CC1100_CFG);\n#endif\n\n#ifndef USE_RF_MODE\n  cc_on = 1;\n\n#ifdef HAS_ASKSIN\n#ifndef CC1100_ASKSIN\n  asksin_on = 0;\n#endif\n#endif\n\n#ifdef HAS_MORITZ\n#ifndef CC1100_MORITZ\n  moritz_on = 0;\n#endif\n#endif\n#endif\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include <SPI.h>\n#include <EEPROM.h>\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n#include \"board.h\"\n\nextern \"C\" volatile uint32_t ticks = 0;\nextern \"C\" uint8_t SREG = 0;\nextern \"C\" uint8_t TIMSK0 = 0;\nvolatile uint32_t gdo_isr_count = 0;\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"rf_receive.h\"\n\n// Forward declarations of CULFW functions\nvoid rf_receive_TimerElapsedCallback(void);\nvoid CC1100_in_callback(void);\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler();\n\n// Timer for system ticks (1ms)\nstatic hw_timer_t * tick_timer = NULL;\nvoid IRAM_ATTR onTickTimer() {\n    ticks++;\n}\n\n// Timer for RF Silence timeout\nstatic hw_timer_t * rf_timer = NULL;\nstatic volatile uint32_t rf_reload_val = 0;\nstatic bool rf_timer_enabled = false;\n\nvoid IRAM_ATTR onRfTimer() {\n    rf_receive_TimerElapsedCallback();\n}\n\nvoid hal_timer_init(void) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    tick_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer);\n    timerAlarm(tick_timer, 1000, true, 0); // 1ms\n    \n    rf_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(rf_timer, &onRfTimer);\n#else\n    tick_timer = timerBegin(0, 80, true); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer, true);\n    timerAlarmWrite(tick_timer, 1000, true);\n    timerAlarmEnable(tick_timer);\n\n    rf_timer = timerBegin(1, 80, true); // 1MHz\n    timerAttachInterrupt(rf_timer, &onRfTimer, true);\n#endif\n}\n\nuint32_t hal_get_ticks(void) {\n    return ticks;\n}\n\n// RF Timer HAL\nvoid hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {\n    if (enable) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerAlarm(rf_timer, rf_reload_val, false, 0);\n        timerStart(rf_timer);\n#else\n        timerAlarmWrite(rf_timer, rf_reload_val, false);\n        timerAlarmEnable(rf_timer);\n        timerStart(rf_timer);\n#endif\n        rf_timer_enabled = true;\n    } else {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerStop(rf_timer);\n#else\n        timerAlarmDisable(rf_timer);\n        timerStop(rf_timer);\n#endif\n        rf_timer_enabled = false;\n    }\n}\n\nuint32_t HAL_timer_get_reload_register(uint8_t instance) {\n    return rf_reload_val;\n}\n\nvoid HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {\n    rf_reload_val = value;\n    if (rf_timer_enabled) {\n        hal_enable_CC_timer_int(instance, true);\n    }\n}\n\nstatic uint32_t rf_counter_offset = 0;\nuint32_t HAL_timer_get_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    return (uint32_t)timerRead(rf_timer) - rf_counter_offset;\n#else\n    return timerRead(rf_timer) - rf_counter_offset;\n#endif\n}\n\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    rf_counter_offset = (uint32_t)timerRead(rf_timer) - value;\n#else\n    rf_counter_offset = timerRead(rf_timer) - value;\n#endif\n}\n\nvoid HAL_timer_reset_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    timerWrite(rf_timer, 0);\n#else\n    timerWrite(rf_timer, 0);\n#endif\n    rf_counter_offset = 0;\n}\n\n// GPIO stuff\nvoid HAL_LED_Init(void) {\n    pinMode(LED_PIN, OUTPUT);\n}\n\nvoid HAL_LED_Set(LED_List led, LED_State state) {\n    digitalWrite(LED_PIN, state == LED_on ? HIGH : LOW);\n}\n\nvoid HAL_LED_Toggle(LED_List led) {\n    digitalWrite(LED_PIN, !digitalRead(LED_PIN));\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler() {\n    gdo_isr_count++;\n    CC1100_in_callback();\n}\n\nvoid hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT_PULLUP);\n    pinMode(GDO2_PIN, INPUT);\n    // Interrupt will be enabled explicitly later or via hal_enable_CC_GDOin_int\n}\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {\n    if (enable) {\n        attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n    } else {\n        detachInterrupt(digitalPinToInterrupt(GDO0_PIN));\n    }\n}\n\nvoid hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {\n    if (pin == CC_Pin_CS) {\n        digitalWrite(CC1100_CS_PIN, state);\n    }\n}\n\nuint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {\n    if (pin == CC_Pin_In) {\n        return digitalRead(GDO0_PIN);\n    }\n    return 0;\n}\n\n// SPI stuff\nvoid spi_init(void) {\n    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);\n    pinMode(SPI_SS, OUTPUT);\n    digitalWrite(SPI_SS, HIGH);\n}\n\nuint8_t spi_send(uint8_t data) {\n    return SPI.transfer(data);\n}\n\n// Delay\nextern \"C\" void my_delay_ms(uint8_t ms) {\n    delay(ms);\n}\n\nextern \"C\" void my_delay_us(uint16_t us) {\n    delayMicroseconds(us);\n}\n\n// EEPROM emulation\nextern \"C\" void hal_eeprom_init(void) {\n    if (!EEPROM.begin(512)) {\n    }\n}\n\nextern \"C\" uint8_t eeprom_read_byte(uint8_t *addr) {\n    return EEPROM.read((size_t)addr);\n}\n\nextern \"C\" void eeprom_write_byte(uint8_t *addr, uint8_t value) {\n    EEPROM.write((size_t)addr, value);\n    EEPROM.commit();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        // Serial.printf(\"Processing %d bytes\\n\", TTY_Rx_Buffer.nbytes);\n        analyze_ttydata(DISPLAY_USB);\n    }\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "    // 2. Process Commands\n    if (!rb_is_empty(&TTY_Rx_Buffer)) {\n        analyze_ttydata(DISPLAY_USB);\n    }\n"
+          }
+        }
+      }
+    ]
   }
 ]

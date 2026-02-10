@@ -135,6 +135,7 @@ void loop() {
     
     // 2. Process Commands
     if (!rb_is_empty(&TTY_Rx_Buffer)) {
+        // Serial.printf("Processing %d bytes\n", TTY_Rx_Buffer.nbytes);
         analyze_ttydata(DISPLAY_USB);
     }
     
