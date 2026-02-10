@@ -999,5 +999,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "// Timer for system ticks (125Hz / 8ms)\nstatic hw_timer_t * tick_timer = NULL;\nvoid IRAM_ATTR onTickTimer() {\n    clock_TimerElapsedCallback();\n}\n",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "// Timer for system ticks (1ms)\nstatic hw_timer_t * tick_timer = NULL;\nvoid IRAM_ATTR onTickTimer() {\n    ticks++;\n}\n"
+          }
+        }
+      }
+    ]
   }
 ]

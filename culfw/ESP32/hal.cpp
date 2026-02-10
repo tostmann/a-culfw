@@ -24,10 +24,10 @@ void clock_TimerElapsedCallback(void);
 
 void IRAM_ATTR gdo_interrupt_handler();
 
-// Timer for system ticks (1ms)
+// Timer for system ticks (125Hz / 8ms)
 static hw_timer_t * tick_timer = NULL;
 void IRAM_ATTR onTickTimer() {
-    ticks++;
+    clock_TimerElapsedCallback();
 }
 
 // Timer for RF Silence timeout
