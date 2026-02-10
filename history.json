@@ -1427,5 +1427,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#if defined(HAS_IT) || defined(HAS_TCM97001) \n  if(datatype == 0 && b->state == STATE_SYNC_PACKAGE) {\n    // unknown sync package\n    uint8_t ix;\n    for (ix=0;ix<b->byteidx;ix++)\n      obuf[ix]=b->data[ix];\n\n    if (7-b->bitidx != 0) {\n      obuf[ix]=b->data[ix];\n      ix++; \n    }    \n    oby = ix;\n  }\n#endif\n",
+            "path": "culfw/clib/rf_receive.c",
+            "original_text": "#if defined(HAS_IT) || defined(HAS_TCM97001) \n  if(datatype == 0 && b->state == STATE_SYNC_PACKAGE) {\n    // unknown sync package\n    uint8_t ix;\n    for (ix=0;ix<b->byteidx;ix++)\n      obuf[ix]=b->data[ix];\n\n    if (7-b->bitidx != 0) {\n      obuf[ix]=b->data[ix];\n      ix++; \n    }    \n    oby = ix;\n  }\n#endif\n"
+          }
+        }
+      }
+    ]
   }
 ]
