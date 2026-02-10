@@ -128,25 +128,6 @@ void setup() {
     hal_enable_CC_GDOin_int(0, 1);
     
     Serial.println("Ready.");
-    Serial.print("Board: "); Serial.println(BOARD_NAME);
-    
-    hal_timer_init();
-    eeprom_init();
-    
-    rb_reset(&TTY_Rx_Buffer);
-    rb_reset(&TTY_Tx_Buffer);
-    
-    input_handle_func = analyze_ttydata;
-    display_channel = DISPLAY_USB;
-    
-    spi_init();
-    ccInitChip(EE_CC1100_CFG);
-    tx_init();
-    
-    // Explicitly enable GDO interrupt AFTER initialization
-    hal_enable_CC_GDOin_int(0, 1);
-    
-    Serial.println("Ready.");
 }
 
 void loop() {

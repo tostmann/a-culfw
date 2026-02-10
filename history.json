@@ -1257,5 +1257,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "    Serial.println(\"Ready.\");\n}",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "    Serial.println(\"Ready.\");\n    Serial.print(\"Board: \"); Serial.println(BOARD_NAME);\n    \n    hal_timer_init();\n    eeprom_init();\n    \n    rb_reset(&TTY_Rx_Buffer);\n    rb_reset(&TTY_Tx_Buffer);\n    \n    input_handle_func = analyze_ttydata;\n    display_channel = DISPLAY_USB;\n    \n    spi_init();\n    ccInitChip(EE_CC1100_CFG);\n    tx_init();\n    \n    // Explicitly enable GDO interrupt AFTER initialization\n    hal_enable_CC_GDOin_int(0, 1);\n    \n    Serial.println(\"Ready.\");\n}"
+          }
+        }
+      }
+    ]
   }
 ]
