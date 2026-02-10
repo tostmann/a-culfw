@@ -23,7 +23,15 @@
 #include <avr/io.h>                     // for _BV
 #include <stdint.h>                     // for uint8_t
 
-uint8_t makeavg(uint8_t i, uint8_t j)
+#ifdef ESP32
+#include <esp_attr.h>
+#else
+#ifndef IRAM_ATTR
+#define IRAM_ATTR
+#endif
+#endif
+
+uint8_t IRAM_ATTR makeavg(uint8_t i, uint8_t j)
 {
   return (i+i+i+j)/4;
 }
