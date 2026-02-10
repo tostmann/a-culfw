@@ -1609,5 +1609,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "void IRAM_ATTR hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {\n    if (enable) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerAlarm(rf_hw_timer, rf_reload_val, false, 0);\n        timerRestart(rf_hw_timer);\n#else\n        timerAlarmDisable(rf_hw_timer);\n        timerAlarmWrite(rf_hw_timer, rf_reload_val, false);\n        timerWrite(rf_hw_timer, 0);\n        timerAlarmEnable(rf_hw_timer);\n#endif\n        rf_timer_enabled = true;\n    } else {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerStop(rf_hw_timer);\n#else\n        timerAlarmDisable(rf_hw_timer);\n#endif\n        rf_timer_enabled = false;\n    }\n}",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "void IRAM_ATTR hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {\n    if (enable) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerRestart(rf_hw_timer);\n        timerAlarm(rf_hw_timer, rf_reload_val, false, 0);\n#else\n        timerAlarmWrite(rf_hw_timer, rf_reload_val, false);\n        timerAlarmEnable(rf_hw_timer);\n        timerWrite(rf_hw_timer, 0);\n#endif\n        rf_timer_enabled = true;\n    } else {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerStop(rf_hw_timer);\n#else\n        timerAlarmDisable(rf_hw_timer);\n#endif\n        rf_timer_enabled = false;\n    }\n}"
+          }
+        }
+      }
+    ]
   }
 ]
