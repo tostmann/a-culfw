@@ -102,7 +102,7 @@ void HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {
 }
 
 void HAL_timer_reset_counter_value(uint8_t instance) {
-    rf_counter_offset = (uint32_t)esp_timer_get_time();
+    rf_counter_offset = last_isr_time_val;
 }
 
 // GPIO stuff
