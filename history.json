@@ -1553,5 +1553,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "#ifndef _AVR_INTERRUPT_H\n#define _AVR_INTERRUPT_H\n#pragma GCC system_header",
+            "path": "culfw/ESP32/avr/avr/interrupt.h",
+            "original_text": "#ifndef _AVR_INTERRUPT_H\n#define _AVR_INTERRUPT_H"
+          }
+        }
+      }
+    ]
   }
 ]
