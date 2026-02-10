@@ -62,7 +62,7 @@
         4.  Der Interrupt wird nun explizit durch `hal_enable_CC_GDOin_int(0, 1)` am Ende der `setup()`-Funktion in `culfw/Devices/ESP32/main.cpp` aktiviert, *nachdem* der CC1101 vollständig initialisiert ist (`ccInitChip`, `tx_init`).
         5.  Ein `volatile uint32_t gdo_isr_count` wurde in `culfw/ESP32/hal.cpp` hinzugefügt und wird in der `gdo_interrupt_handler()` inkrementiert. Eine periodische Ausgabe des Zählerstands über die serielle Schnittstelle in `culfw/Devices/ESP32/main.cpp` wurde implementiert, um die Aktivität des Interrupts zu überwachen.
     *   Diese Maßnahmen haben die Systemblockade und die mangelnde Reaktion auf serielle Eingaben behoben.
-*   **Git-Integration (DONE):** Projektänderungen (alle ESP32-Fixes, C3/C6 und XIAO-Targets) in einem neuen Feature-Branch (`feature/esp32-support`) committet und erfolgreich via SSH nach GitHub gepusht. Ein neuer SSH-Key wurde auf dem VPS generiert und dem Benutzer zur Registrierung bei GitHub bereitgestellt, um den Push zu ermöglichen.
+*   **Git-Integration (DONE):** Projektänderungen (alle ESP32-Fixes, C3/C6 und XIAO-Targets) in einem neuen Feature-Branch (`feature/esp32-support`) committet und erfolgreich via SSH nach GitHub gepusst. Ein neuer SSH-Key wurde auf dem VPS generiert und dem Benutzer zur Registrierung bei GitHub bereitgestellt, um den Push zu ermöglichen.
 
 ## 4. Known Issues & Next Steps
 *   **XIAO-ESP32-C3 SlowRF Reception Debugging (In Progress):**
@@ -72,7 +72,11 @@
         1.  Ein neues Image (Version 1.26.65) mit Debugging-Instrumentierung (`gdo_isr_count`) wurde erfolgreich erstellt und das System ist auf serielle Eingaben responsiv.
         2.  Das Problem der Systemblockade durch einen frühen "Interrupt Storm" wurde behoben.
         3.  Der `gdo_isr_count` wird bei jedem GDO0-Interrupt inkrementiert und periodisch über die serielle Konsole ausgegeben.
-    *   **Nächste Schritte (Manuelle Hardware-Verifikation UNBEDINGT erforderlich):**
+    *   **Upload-Problem:** Der Versuch, das erstellte Binary auf den XIAO-ESP32-C3 hochzuladen, ist fehlgeschlagen.
+        *   **Gerät identifiziert:** Der XIAO-ESP32-C3 ist am Port `/dev/ttyACM0` als serielles Gerät erkannt worden.
+        *   **Fehlerursache:** Das PlatformIO (`pio`) Kommando konnte nicht gefunden werden. Es wurden mehrere Standardpfade (`/root/.platformio/penv/bin/pio`, `/home/tostmann/.platformio/penv/bin/pio`, `/root/.local/bin/pio`) und die `PATH` Variable überprüft, aber `pio` war nicht auffindbar. Auch der Versuch, `python3 -m platformio` auszuführen, schlug fehl ("No module named platformio").
+        *   **Nächste Schritte zum Upload:** Bevor mit der Hardware-Verifikation fortgefahren werden kann, muss der korrekte Pfad zum `pio`-Executable ermittelt oder PlatformIO korrekt installiert/konfiguriert werden, um den Upload durchzuführen.
+    *   **Nächste Schritte (Manuelle Hardware-Verifikation UNBEDINGT erforderlich - *nach erfolgreichem Upload*):**
         1.  **Flashen des Images:** Flashe das erfolgreich erstellte `XIAO-ESP32-C3-factory.bin` (Version 1.26.65) auf das Board.
         2.  **Hardware-Anschluss:** Stelle sicher, dass der CC1101 am XIAO-ESP32-C3 gemäß dem definierten Pinout angeschlossen ist (SCK=GPIO8, MISO=GPIO9, MOSI=GPIO10, CS=GPIO5, GDO0=GPIO3, GDO2=GPIO4, LED=GPIO21).
         3.  **Monitor beobachten und Interaktion testen:**
