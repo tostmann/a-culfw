@@ -998,5 +998,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "extern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_IT\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "extern \"C\" const t_fntab fntab[] = {\n  { 'C', ccreg },\n  { 'F', fs20send },\n#ifdef HAS_INTERTECHNO\n  { 'i', it_func },\n#endif\n#ifdef HAS_ASKSIN\n"
+          }
+        }
+      }
+    ]
   }
 ]
