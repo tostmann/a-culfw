@@ -47,11 +47,11 @@
 #define TSCALE(x)  (x)      // No scaling on 32-bit platforms
 
 
-#define TDIFF      TSCALE(250) // tolerated diff to previous/avg high/low/total
+#define TDIFF      TSCALE(120) // tolerated diff to previous/avg high/low/total
 
 #define STATE_RESET   0
 
-#define SILENCE    8000        // End of message
+#define SILENCE    15000       // End of message
 
 
 #if defined(HAS_REVOLT) || defined (HAS_IT) || defined (HAS_TCM97001)
