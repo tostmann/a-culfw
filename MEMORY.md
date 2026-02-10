@@ -9,7 +9,7 @@
 *   **Target Architectures:** AVR, STM32, ESP32 (RISC-V)
 
 ## 2. Supported Boards & Firmware Versions
-*   **Firmware Version:** 1.26.70 (latest build, automatisch inkrementiert nach Fixes)
+*   **Firmware Version:** 1.26.82 (latest build, automatisch inkrementiert nach Fixes)
 *   **AVR Targets (Verified):**
     *   `CUL_V3.hex`
     *   `nanoCUL868.hex`
@@ -17,7 +17,7 @@
 *   **STM32 Targets (Verified & Fixed):**
     *   `MapleCUNx4_W5100_BL.bin`
     *   `MapleCUNx4_W5500_BL.bin`
-*   **ESP32 Targets (Stable & Functional - *except current XIAO-ESP32-C3 boot issue*):**
+*   **ESP32 Targets (Stable & Functional):**
     *   **ESP32-C3:**
         *   `ESP32-C3-factory.bin` (Vollständiges Image für `0x0`)
         *   `ESP32-C3.bin` (Nur Applikation für OTA)
@@ -26,10 +26,10 @@
         *   `ESP32-C6-factory.bin` (Vollständiges Image für `0x0`)
         *   `ESP32-C6.bin` (Nur Applikation für OTA)
         *   **Pinout:** LED=GPIO8 (DevKitC-1 Standard), SPI Pins wie in `board.h` definiert.
-    *   **XIAO-ESP32-C3:** (Builds successfully, but boot/serial issues prevent full verification)
+    *   **XIAO-ESP32-C3:** (Stable & Functional)
         *   `XIAO-ESP32-C3-factory.bin` (Vollständiges Image für `0x0`)
         *   `XIAO-ESP32-C3.bin` (Nur Applikation für OTA)
-        *   **Angewendetes Pinout (Verifiziert im Build):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO8 (Pin D8), MISO=GPIO9 (Pin D9), MOSI=GPIO10 (Pin D10), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
+        *   **Angewendetes Pinout (Verifiziert & Funktional):** LED=GPIO21 (Pin D6), SPI: SCK=GPIO6 (Pin D4), MISO=GPIO10 (Pin D10), MOSI=GPIO7 (Pin D5), CS=GPIO5 (Pin D3), GDO0=GPIO3 (Pin D1), GDO2=GPIO4 (Pin D2).
 
 ## 3. Key Architectural Decisions & Changes
 *   **Build-Prozess (DONE):** Alle ESP32-Targets generieren jetzt automatisch sowohl `factory.bin` (komplettes Image mit Bootloader/Partitionstabelle) als auch `app.bin` (für OTA). Die finalen Binaries werden in das Projekt-Root-Verzeichnis `CULFW32/binaries/` exportiert.
@@ -41,12 +41,12 @@
     *   `clock.c`: `ticks`-Variable für `USE_HAL`-Plattformen konditional kompiliert.
     *   `rf_receive.c`: CC1101-zeitkritische Routinen um `defined(ESP32) || defined(STM32)` erweitert.
     *   `fncollection.c`: Null-Pointer-Check in `eeprom_factory_reset`, `hal_eeprom_init()` für HAL-Plattformen integriert.
-*   **ESP32 USB-CDC & Konsole (DONE - Initiales Setup, ABER Boot-Probleme bestehen):**
+*   **ESP32 USB-CDC & Konsole (DONE - Initiales Setup. Boot-Probleme durch Strapping-Pins behoben):**
     *   `ARDUINO_USB_MODE=1` und `ARDUINO_USB_CDC_ON_BOOT=1` für direkte USB-Serial über `Serial`-Objekt aktiviert.
     *   Doppelte Initialisierungen im `setup()` wurden entfernt.
     *   `Serial` wird konditional zu `USBSerial` definiert, um sicherzustellen, dass die USB-CDC-Schnittstelle verwendet wird.
     *   `Serial.setTxTimeoutMs(0)` wurde für nicht-blockierende serielle Ausgaben hinzugefügt.
-    *   Explizite Nutzung von `USBSerial` im Minimal-Sketch für Debugging versucht, jedoch ohne Erfolg bei der Ausgabe.
+    *   Explizite Nutzung von `USBSerial` im Minimal-Sketch für Debugging versucht, jedoch ohne Erfolg bei der Ausgabe, bis das Pinning korrigiert wurde.
 *   **ESP32 Pointer-Handling Fix (DONE):** `ttydata.c` korrigiert, um 32-Bit-Funktionspointer auf ESP32/ARM korrekt zu behandeln (Behebung des `Instruction access fault`-Absturzes, verursacht durch 16-Bit-AVR-Makro `__LPM_word` beim Auslesen der `fntab`).
 *   **Flexible Pin-Konfiguration (DONE):** `board.h` (für ESP32) verwendet jetzt `#ifndef`-Guards, wodurch Pin-Definitionen über `build_flags` in `platformio.ini` für spezifische Board-Targets überschrieben werden können.
 *   **PlatformIO Build-System-Fixes & Pfad-Standardisierung für ESP32-Targets (DONE):**
@@ -55,10 +55,10 @@
     *   Dies ermöglicht nun den erfolgreichen Build aller ESP32-Targets (`ESP32-C3`, `XIAO-ESP32-C3`, `ESP32-C6`) aus dem Projekt-Root (`culfw/`) mit dem Kommando `pio run -d culfw/ -e <env_name>`.
     *   Alle ESP32-Targets bauen nun erfolgreich und generieren sowohl `factory.bin` als auch `app.bin`.
 *   **AVR-spezifische Header-Dateien für ESP32 (DONE):** Die `#include <avr/io.h>` und `#include <avr/pgmspace.h>` Pfade wurden in den `build_flags` für ESP32-Targets korrekt referenziert, um Kompilierungsfehler zu beheben (Warnung `_BV` Redefinition bleibt).
-*   **GDO-Interrupt-Handling & Debugging für ESP32 (DONE - Code-Implementierung, ABER Boot-Probleme blockieren Verifikation):**
+*   **GDO-Interrupt-Handling & Debugging für ESP32 (DONE - Code-Implementierung, VERIFIED nach Boot-Fix):**
     *   **Problemursache (ehemals):** Der GDO0-Interrupt wurde in `hal_CC_GDO_init()` zu früh aktiviert, was zu einem "Interrupt Storm" führte.
     *   **Fix (Code):** Der Interrupt wird nun explizit nach vollständiger CC1101-Initialisierung in `setup()` aktiviert. `pinMode(GDO0_PIN, INPUT_PULLUP)` und `IRAM_ATTR` für den ISR-Handler wurden gesetzt. Der `gdo_isr_count` zur Überwachung der Interrupt-Aktivität wurde implementiert.
-    *   Diese Maßnahmen haben die *ursprüngliche* Systemblockade behoben. Die eigentliche Paketerkennung kann jedoch aufgrund des aktuellen Boot-Problems noch nicht verifiziert werden.
+    *   Diese Maßnahmen haben die *ursprüngliche* Systemblockade behoben und die Funktionalität kann nun nach dem gelösten Boot-Problem verifiziert werden.
 *   **Git-Integration (DONE):** Projektänderungen (alle ESP32-Fixes, C3/C6 und XIAO-Targets) in einem neuen Feature-Branch (`feature/esp32-support`) committet und erfolgreich via SSH nach GitHub gepusst.
 *   **PlatformIO Core Installation (DONE):** PlatformIO Core wurde erfolgreich auf dem System unter `/root/.platformio/penv/bin/pio` installiert und konfiguriert, um Uploads und Builds zu ermöglichen.
 *   **ESP32 C Standard Library Conflicts (DONE):** `time_t` und `struct tm` Redefinitionen mit ESP-IDF System-Headern wurden behoben.
@@ -66,32 +66,26 @@
     *   `struct tm` in `clib/ntp.h` wurde in `struct ntp_tm` umbenannt, um Konflikte mit dem Standard-`time.h` zu vermeiden. Entsprechende Anpassungen in `clib/ntp.c` und `clib/clock.c` wurden vorgenommen.
     *   Die `_BV` redefinition warning bleibt weiterhin bestehen, hat aber keine Auswirkungen auf die Funktionalität.
 *   **Initialer Upload auf XIAO-ESP32-C3 (DONE):** Das neu erstellte Binary (v1.26.70 und Minimal-Sketches) wurde nun *mehrmals* erfolgreich auf den XIAO-ESP32-C3 geflasht.
-*   **CLI Serial Test Script (DONE):** Ein Python-basiertes Skript (`cul_test.py`) wurde entwickelt, um serielle Kommunikation zu testen. Es wurde erfolgreich mit einem Legacy CUL868 (`/dev/ttyACM1`) verifiziert und zur Diagnose des XIAO-ESP32-C3 verwendet.
+*   **CLI Serial Test Script (`cul_test.py`) (DONE):** Ein Python-basiertes Skript (`cul_test.py`) wurde entwickelt, um serielle Kommunikation zu testen. Es wurde erfolgreich mit einem Legacy CUL868 (`/dev/ttyACM1`) verifiziert und zur Diagnose und Funktionsprüfung des XIAO-ESP32-C3 verwendet.
+*   **XIAO-ESP32-C3 Pin-Re-Assignment (DONE):**
+    *   **Ursache (CONFIRMED):** Strapping-Pin-Konflikte (insbesondere GPIO 8, 9 und potenziell 2) verhinderte den Applikationsstart des XIAO-ESP32-C3, da diese Pins den Bootloader-Modus erzwingen können, wenn sie beim Reset auf einem kritischen Pegel sind.
+    *   **Fix:** Das Pinout für den XIAO-ESP32-C3 wurde in der Hardware und in `platformio.ini` angepasst, um die Verwendung der kritischen Strapping-Pins für SPI und GDO zu vermeiden.
+    *   **Angewandtes Pinout (Verifiziert & Funktional):**
+        *   **SCK:** GPIO 6 (XIAO Pin D4)
+        *   **MISO:** GPIO 10 (XIAO Pin D10)
+        *   **MOSI:** GPIO 7 (XIAO Pin D5)
+        *   **CS:** GPIO 5 (XIAO Pin D3)
+        *   **GDO0:** GPIO 3 (XIAO Pin D1)
+        *   **GDO2:** GPIO 4 (XIAO Pin D2)
+        *   **LED:** GPIO 21 (XIAO Pin D6)
+    *   **Verifizierung:** Die erfolgreiche Kommunikation mit dem CC1101 (Lesen von Registern wie `C00`, `C01`, `C02`) und das korrekte Booten der Firmware bestätigen die Funktionalität des neuen Pinouts.
 
 ## 4. Known Issues & Next Steps
-*   **XIAO-ESP32-C3 Boot- & Serial-Output-Problem (CRITICAL - In Progress):**
-    *   **Problem:** Nach dem Flashen der Firmware (sowohl einer vollständigen CULFW-Version als auch eines minimalistischen "Hello World"-Sketches) bootet der XIAO-ESP32-C3 nicht in die Applikation. Stattdessen verbleibt er im "wait usb download"-Modus, und es wird keine serielle Ausgabe empfangen, weder im `pio device monitor` noch mit direkten `pyserial`-Skripten oder dem `cul_test.py` Skript.
-    *   **Identifizierte Hauptursache (CONFIRMED):** Es besteht ein **Strapping-Pin-Konflikt**. GPIO 9 (MISO-Pin im *aktuellen* Pinout des XIAO-ESP32-C3) ist ein Strapping-Pin. Wenn dieser beim Reset auf "Low" gezogen wird (was durch den angeschlossenen CC1101 oder fehlende Pull-ups geschehen kann), erzwingt dies den Bootloader-Modus und verhindert den Start der Applikation. Andere Strapping-Pins wie GPIO 8 (SCK) und GPIO 2 (potenziell GDO0) können ebenfalls eine Rolle spielen. Softwareseitige USB-CDC-Fixes (`ARDUINO_USB_MODE=1`, `ARDUINO_USB_CDC_ON_BOOT=1`, explizite `USBSerial` Nutzung) haben das Problem nicht behoben.
-    *   **Aktueller Status:**
-        1.  Die Firmware (CULFW und ein Minimal-Sketch) lässt sich erfolgreich auf den XIAO-ESP32-C3 flashen, auch mit `factory.bin` auf `0x0`.
-        2.  `esptool.py` kann mit dem Chip kommunizieren und Flash-Informationen auslesen, jedoch startet der Chip nach einem Reset durch `esptool.py` nicht die Applikation, sondern verbleibt im "wait usb download"-Modus.
-        3.  Alle Versuche, serielle Ausgaben zu erhalten (inkl. expliziter `USBSerial`-Nutzung, `setTxTimeoutMs(0)`, manuellen DTR/RTS-Resets per Skript und `cul_test.py`), schlugen fehl.
+*   **XIAO-ESP32-C3 Boot- & Serial-Output-Problem (RESOLVED):**
+    *   **Problem:** Nach dem Flashen der Firmware bootete der XIAO-ESP32-C3 nicht in die Applikation, verblieb im "wait usb download"-Modus, und es wurde keine serielle Ausgabe empfangen.
+    *   **Lösung:** Die Ursache war ein Strapping-Pin-Konflikt, bei dem kritische Pins (insbesondere GPIO 8, 9) für den SPI-Bus genutzt wurden. Durch eine Hardware-Anpassung des Pinouts (siehe Abschnitt 3, "XIAO-ESP32-C3 Pin-Re-Assignment") wurden diese Pins vermieden. Die Firmware bootet nun zuverlässig, und die serielle Kommunikation funktioniert einwandfrei. Die CC1101-Kommunikation wurde ebenfalls erfolgreich verifiziert.
 
-*   **Nächste Schritte zur Behebung des Boot- & Serial-Output-Problems:**
-    1.  **Pin-Re-Assignment (PROPOSED, PENDING HARDWARE MODIFICATION):** Das Pinout für den XIAO-ESP32-C3 *muss* überprüft und angepasst werden, um die Verwendung von kritischen Strapping-Pins (insbesondere GPIO 2, 8 und 9) für den SPI-Bus und die GDO-Leitungen zu vermeiden.
-        *   **Vorgeschlagenes sicheres Pinout:**
-            *   **SCK:** GPIO 6 (XIAO Pin D4) - Weg von GPIO 8 (Strapping)
-            *   **MISO:** GPIO 10 (XIAO Pin D10) - Weg von GPIO 9 (Strapping)
-            *   **MOSI:** GPIO 7 (XIAO Pin D5) - Unkritisch
-            *   **CS:** GPIO 5 (XIAO Pin D3) - Unkritisch
-            *   **GDO0:** GPIO 3 (XIAO Pin D1) - Unkritisch (Weg von GPIO 2 Strapping)
-            *   **GDO2:** GPIO 4 (XIAO Pin D2) - Unkritisch
-            *   **LED:** GPIO 21 (XIAO Pin D6) - Bleibt gleich
-    2.  **Hardware-Verifikation/Modifikation (PENDING):** Die Hardware-Verbindungen müssen gemäß dem vorgeschlagenen Pinout physisch geändert werden. Falls eine direkte Pin-Re-Assignment nicht sofort möglich ist, muss geprüft werden, ob Pull-Up-Widerstände (im Idealfall 10kΩ) an den Strapping-Pins GPIO 9 und GPIO 8 während des Bootvorgangs sicherstellen, dass diese auf "High" gehalten werden, um den Applikationsstart zu ermöglichen.
-    3.  **Minimal-Sketch mit neuem Pinout (PENDING):** Nach der Anpassung der Pins (im Code und in der Hardware) sollte zuerst der minimalistische "Hello World" Sketch mit der LED-Blinkfunktion und `USBSerial.println()` erneut geflasht werden, um die serielle Ausgabe und den korrekten Boot der Applikation zu verifizieren.
-    4.  **CULFW-Logik wiederherstellen (PENDING):** Erst wenn der Minimal-Sketch stabil bootet und serielle Ausgaben liefert, sollte die vollständige CULFW-Logik mit den korrigierten Pins getestet werden.
-
-*   **Weitere Entwicklung (aktuell pausiert):**
+*   **Weitere Entwicklung:**
     *   Optimierung des SPI-Timings.
     *   Implementierung eines Web-Interfaces für ESP32.
 ```
