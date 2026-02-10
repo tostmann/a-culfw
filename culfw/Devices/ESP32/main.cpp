@@ -48,7 +48,7 @@ void eeprom_init(void);
 extern const t_fntab fntab[];
 void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable);
 
-void show_debug(uint8_t *in) {
+void show_debug(char *in) {
     extern volatile uint32_t gdo_isr_count;
     Serial.printf("GDO0_INT_COUNT: %u\n", gdo_isr_count);
 }

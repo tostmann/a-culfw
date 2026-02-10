@@ -1,1 +1,105 @@
-TIMEOUT
+Processing XIAO-ESP32-C3 (platform: espressif32; board: seeed_xiao_esp32c3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*******************************************
+* FIRMWARE VERSION UPDATE                 *
+*******************************************
+* Base Version: 1.26
+* Build Number: 83
+* New Version:  1.26.83
+* Build Date:   2026-02-10 14:45:38
+*******************************************
+
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
+PLATFORM: Espressif 32 (6.12.0) > Seeed Studio XIAO ESP32C3
+HARDWARE: ESP32C3 160MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - tool-mkfatfs @ 2.0.1 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-mkspiffs @ 2.230.0 (2.30) 
+ - toolchain-atmelavr @ 1.50400.190710 (5.4.0) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 33 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- EEPROM @ 2.0.0
+|-- SPI @ 2.0.0
+Building in release mode
+Compiling .pio/build/XIAO-ESP32-C3/src/Devices/ESP32/main.cpp.o
+Compiling .pio/build/XIAO-ESP32-C3/src/ESP32/hal.cpp.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/cc1100.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/cc1101_pllcheck.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/clock.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/display.c.o
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/clock.c:2:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/clock.c:2:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/clock.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fastrf.c.o
+Devices/ESP32/main.cpp:97:1: error: invalid conversion from 'void (*)(uint8_t*)' {aka 'void (*)(unsigned char*)'} to 'void (*)(char*)' [-fpermissive]
+ };
+ ^
+ESP32/hal.cpp:9:30: warning: 'ticks' initialized and declared 'extern'
+ extern "C" volatile uint32_t ticks = 0;
+                              ^~~~~
+ESP32/hal.cpp:10:20: warning: 'SREG' initialized and declared 'extern'
+ extern "C" uint8_t SREG = 0;
+                    ^~~~
+ESP32/hal.cpp:11:20: warning: 'TIMSK0' initialized and declared 'extern'
+ extern "C" uint8_t TIMSK0 = 0;
+                    ^~~~~~
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/cc1100.h:13,
+                 from clib/fastrf.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/cc1100.h:10,
+                 from clib/fastrf.c:7:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+*** [.pio/build/XIAO-ESP32-C3/src/Devices/ESP32/main.cpp.o] Error 1
+========================== [FAILED] Took 2.03 seconds ==========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+XIAO-ESP32-C3  FAILED    00:00:02.034
+==================== 1 failed, 0 succeeded in 00:00:02.034 ====================
