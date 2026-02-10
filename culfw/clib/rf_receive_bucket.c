@@ -62,7 +62,7 @@ void copyData(uint8_t byteidx, uint8_t bitidx, uint8_t *data, uint8_t *obuf, uin
 /*
  * Description in header
  */
-void addbit(bucket_t *b, uint8_t bit)
+void IRAM_ATTR addbit(bucket_t *b, uint8_t bit)
 {
   if(b->byteidx>=sizeof(b->data)){
     reset_input();

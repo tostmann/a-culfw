@@ -1223,5 +1223,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "/*\n * Description in header\n */\nvoid IRAM_ATTR addbit(bucket_t *b, uint8_t bit)\n{\n  if(b->byteidx>=sizeof(b->data)){\n",
+            "path": "culfw/clib/rf_receive_bucket.c",
+            "original_text": "/*\n * Description in header\n */\nvoid addbit(bucket_t *b, uint8_t bit)\n{\n  if(b->byteidx>=sizeof(b->data)){\n"
+          }
+        }
+      }
+    ]
   }
 ]
