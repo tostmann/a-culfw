@@ -501,5 +501,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "  { 't', gettime },\n  { 'x', ccsetpa },\n  { 'y', show_debug },\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "  { 't', gettime },\n  { 'x', ccsetpa },\n  { 'y', [](unsigned char*){ \n      extern volatile uint32_t gdo_isr_count;\n      Serial.printf(\"GDO_ISR_COUNT: %u\\r\\n\", gdo_isr_count);\n  } },\n"
+          }
+        }
+      }
+    ]
   }
 ]
