@@ -1,4 +1,5 @@
-## 1. General Project Information
+```markdown
+        ## 1. General Project Information
 *   **Project Name:** CULFW32 (Portierung der a-culfw auf 32-Bit-Mikrocontroller)
 *   **Repository:** `tostmann/a-culfw.git` (forked)
 *   **Local Codebase:** `/opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/`
@@ -6,7 +7,7 @@
 *   **Target Architectures:** AVR, STM32, ESP32 (RISC-V)
 
 ## 2. Supported Boards & Firmware Versions
-*   **Firmware Version:** 1.26.82 (latest build, automatisch inkrementiert nach Fixes)
+*   **Firmware Version:** 1.26.125 (latest build, automatisch inkrementiert nach Fixes)
 *   **AVR Targets (Verified):**
     *   `CUL_V3.hex`
     *   `nanoCUL868.hex`
@@ -88,14 +89,15 @@
     *   Die Berechnung von `hightime` und `lowtime` in `CC1100_in_callback` und `gdo_interrupt_handler` in `hal.cpp` wurde verfeinert, um `static volatile pulse_t last_isr_time_val = 0;` und `esp_timer_get_time()` für jitterfreie Mikrosekundenpräzision zu verwenden.
     *   Compilerwarnungen im Zusammenhang mit `volatile pulse_t *` für `calcOcrValue`-Argumente wurden durch Type-Casting behoben.
 *   **Concurrency for Shared RF Receive Variables (DONE):** Die Variablen `bucket_in`, `bucket_out` und `bucket_nrused` in `rf_receive.c` (und `rf_receive_bucket.h`) wurden explizit als `volatile` markiert, um einen korrekten und atomaren Zugriff über verschiedene FreeRTOS-Tasks (ISR, `background_task`, `RfAnalyze_Task`) hinweg zu gewährleisten.
-*   **FS20/FHT Protocol Trailing Bit Handling (DONE):** In `RfAnalyze_Task()` innerhalb von `rf_receive.c` wurde vor dem Aufruf von `analyze(b, TYPE_FS20, &oby)` für `TYPE_FS20` ein bedingter manueller `addbit`-Aufruf hinzugefügt. Dies berücksichtigt Szenarien, in denen die fallende Flanke des letzten Bits eines Pakets verpasst werden könnte, und verbessert so die Vollständigkeit der erfassten Pakete.
-*   **Robustness of `analyze()` Function (DONE):** Interne Zähler (`i`, `cnt`, `max`) innerhalb der `analyze()`-Funktion in `rf_receive.c` wurden überprüft und, wo nötig, auf `uint16_t` gecastet, um potenzielle Überläufe bei der Verarbeitung längerer Pakete, insbesondere bei erhöhtem `MAXMSG`-Puffer, zu verhindern.
+*   **FS20/FHT Protocol Trailing Bit Handling (DONE):** In `RfAnalyze_Task()` innerhalb von `rf_receive.c` wurde vor dem Aufruf von `analyze(b, TYPE_FS20, &oby)` für `TYPE_FS20` ein bedingter manueller `addbit`-Aufruf hinzugefügt. Dies berücksichtigt Szenarien, in denen die fallende Flanke des letzten Bits eines Pakets verpasst werden könnte, und verbessert so die Vollständigkeit der erfassten Pakete. Der gleiche Mechanismus wurde auch für `TYPE_KS300` angewendet.
+*   **Robustness of `analyze()` Function (DONE):** Interne Zähler (`cnt`, `max`) innerhalb der `analyze()`-Funktion in `rf_receive.c` wurden auf `uint16_t` geändert, um potenzielle Überläufe bei der Verarbeitung längerer Pakete zu verhindern.
 *   **Enhanced Protocol Debugging (Parity Error Reporting) (DONE):** Die `analyze()`-Funktion in `rf_receive.c` wurde erweitert, um eine explizite Debug-Ausgabe (`P<byte_index><hex_byte>?<expected_parity>`) zu liefern, wenn ein Paritätsfehler bei FS20/FHT-Paketen erkannt wird. Dies unterstützt die präzise Identifizierung von Datenbeschädigungen oder Fehlern in der Paritätsberechnung.
-*   **Increased RF Receive Bucket Capacity (DONE):** Das `RCV_BUCKETS`-Makro (Anzahl der Empfangs-Buckets) wurde in `rf_receive.c` von 8 auf 16 erhöht, um eine größere Pufferkapazität für eingehende RF-Pakete bereitzustellen und die Wahrscheinlichkeit von Überläufen während Phasen hoher Aktivität zu reduzieren.
+*   **Increased RF Receive Bucket Capacity (DONE):** Das `RCV_BUCKETS`-Makro (Anzahl der Empfangs-Buckets) wurde in `rf_receive.c` und `rf_receive_bucket.h` von 8 auf 16 erhöht, um eine größere Pufferkapazität für eingehende RF-Pakete bereitzustellen und die Wahrscheinlichkeit von Überläufen während Phasen hoher Aktivität zu reduzieren.
 
 ## 4. Known Issues & Next Steps
 *   **RF-Datenaustausch (Slow RF - FS20, Intertechno):**
-    *   **Problem:** Bits werden jetzt erfolgreich gesammelt und Roh-Paket-Snapshots werden beobachtet. Trotz Verbesserungen ist die übergeordnete Protokoll-Dekodierung (`analyze()`-Funktion in `rf_receive.c`) für Slow RF-Protokolle (FS20, Intertechno) noch nicht vollständig erfolgreich, d.h. Pakete werden nicht im protokollspezifischen Format (z.B. `F...`) erkannt und gemeldet. Die neue Paritäts-Debug-Ausgabe sollte helfen, den genauen Fehlerpunkt (z.B. Checksummen, Paritätsprüfungen oder Bit-/Byte-Reihenfolge) zu identifizieren.
+    *   **Problem:** Bits werden jetzt erfolgreich gesammelt und Roh-Paket-Snapshots werden beobachtet. Trotz umfassender Verbesserungen in der Timing-Erfassung und Paketpufferung ist die übergeordnete Protokoll-Dekodierung (`analyze()`-Funktion in `rf_receive.c`) für Slow RF-Protokolle (FS20, Intertechno) noch nicht vollständig erfolgreich, d.h. Pakete werden nicht im protokollspezifischen Format (z.B. `F...`) erkannt und gemeldet.
+    *   **Neue Erkenntnis:** Die Debug-Ausgabe `!r... f...` im `X3F`-Monitor-Modus zeigt extrem hohe Werte für `f` (lowtime), z.B. `f32787` oder `f65491`. Dies deutet auf einen potenziellen Timer-Überlauf, einen Skalierungsfehler oder eine falsche Interpretation der Mikrosekunden-Differenzen innerhalb der `RfAnalyze_Task` hin, nachdem ein `SILENCE`-Timeout im `rf_receive_TimerElapsedCallback` aufgetreten ist.
     *   **Status FIFO-basierte Protokolle (MAX!/Moritz):** Bidirektionaler Datenaustausch für MAX!-Pakete funktioniert einwandfrei.
 
 *   **Kompilierungsfehler und Warnungen (UNRESOLVED):**
@@ -107,9 +109,11 @@
     *   Der `i`-Befehl für Intertechno wurde in der `fntab` (`culfw/Devices/ESP32/main.cpp`) korrekt mit `it_func` verknüpft.
 
 *   **Weitere Entwicklung:**
-    *   **Priorität 1: Tiefgehende Analyse der Protokoll-Dekodierung für SlowRF-Protokolle mit Hilfe der neuen Debug-Ausgaben.**
+    *   **Priorität 1: Tiefgehende Analyse der Protokoll-Dekodierung für SlowRF-Protokolle.**
+        *   **Behebung der hohen `lowtime`-Werte:** Untersuchen, warum die `lowtime`-Werte in der `!r... f...` Debug-Ausgabe extrem hoch sind. Dies ist kritisch, da es die Grundlage für die Paketanalyse (`wave_equals`, `makeavg`) beeinflusst. Mögliche Ursachen sind ein Reset des Timers, ein Überlauf oder eine falsche Berechnung der Zeitdifferenz nach einem `SILENCE`-Event.
         *   **Validate `analyze()` logic:** Speziell auf die neue Paritätsfehler-Ausgabe (`P<idx><byte>?<parity>`) konzentrieren, um festzustellen, ob die Datenbits korrekt sind und die Paritätsberechnung fehlschlägt, oder ob die Bits selbst korrumpiert sind.
         *   **Checksum Validation:** Erneut bestätigen, dass die Checksummenberechnungen (`cksum1` für FS20/FHT) für die 32-Bit-Architektur korrekt sind und auf das korrekt gebildete Byte-Array (`obuf`) angewendet werden.
         *   **Check Repeater Logic:** Untersuchen, ob die `checkForRepeatedPackage`-Logik in `rf_receive.c` die *erste* Instanz eines Pakets fälschlicherweise filtert und somit dessen Meldung verhindert.
     *   **Priorität 2: Finalisierung der Kompilierungswarnungen.**
     *   **Langfristig:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
+```
