@@ -81,7 +81,10 @@
 #define HAS_MORITZ
 #define HAS_RWE
 #define HAS_RFNATIVE
-#define HAS_INTERTECHNO
+#define HAS_IT
+#define HAS_HMS
+#define HAS_ESA
+#define HAS_TCM97001
 #define HAS_SOMFY_RTS
 #define HAS_MBUS
 
