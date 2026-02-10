@@ -1144,6 +1144,7 @@ retry_sync:
   #endif
         {
           b->state = STATE_COLLECT;
+          if(TX_REPORT & REP_MONITOR) DC('C');
         }
 
         b->one.hightime = hightime[CC_INSTANCE];

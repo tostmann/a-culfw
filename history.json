@@ -1170,5 +1170,87 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "        } else {\n          b->state = STATE_COLLECT;\n          if(TX_REPORT & REP_MONITOR) DC('C');\n        }\n",
+            "path": "culfw/clib/rf_receive.c",
+            "original_text": "        } else {\n          b->state = STATE_COLLECT;\n        }\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Error: 'original_text' not found. Use exact match."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "execute_shell",
+          "args": {
+            "command": "grep -C 5 \"b->state = STATE_COLLECT;\" culfw/clib/rf_receive.c"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "execute_shell",
+          "response": {
+            "result": "Exit: 0\nOutput:\n\n\n        } else\n  #endif\n        {\n          b->state = STATE_COLLECT;\n        }\n\n        b->one.hightime = hightime[CC_INSTANCE];\n        b->one.lowtime  = lowtime[CC_INSTANCE];\n        b->byteidx = 0;\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "        } else\n  #endif\n        {\n          b->state = STATE_COLLECT;\n          if(TX_REPORT & REP_MONITOR) DC('C');\n        }\n",
+            "path": "culfw/clib/rf_receive.c",
+            "original_text": "        } else\n  #endif\n        {\n          b->state = STATE_COLLECT;\n        }\n"
+          }
+        }
+      }
+    ]
   }
 ]
