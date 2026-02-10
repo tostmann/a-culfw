@@ -105,15 +105,10 @@ void background_task(void *pvParameters) {
 }
 
 void setup() {
-    // USB CDC Initialisierung für ESP32-C3
     Serial.begin(115200);
-    Serial.setTxTimeoutMs(0); // Non-blocking
-    
-    // Warte kurz auf Serial, aber nicht ewig (verhindert hängen ohne USB)
-    unsigned long start = millis();
-    while (!Serial && (millis() - start) < 2000);
-
-    Serial.println("\r\n--- CULFW32 Starting (XIAO Safe Pinning) ---");
+    delay(2000);
+    Serial.println("\r\n--- CULFW32 Starting (Minimal) ---");
+    Serial.flush();
     
     hal_timer_init();
     eeprom_init();
@@ -128,12 +123,8 @@ void setup() {
     // ccInitChip(EE_CC1100_CFG);
     // tx_init();
     
-    // Background task für Timer und Analyse (gleiche Prio wie loop)
-    xTaskCreate(background_task, "bg", 4096, NULL, 1, NULL);
-    vTaskDelay(10); // Geben wir dem Task Zeit zum Starten
-
-    // Interrupt erst nach Initialisierung aktivieren
-    hal_enable_CC_GDOin_int(0, 1);
+    // xTaskCreate(background_task, "bg", 4096, NULL, 1, NULL);
+    // hal_enable_CC_GDOin_int(0, 1);
     
     Serial.println("Ready.");
 }
