@@ -426,14 +426,14 @@ RfAnalyze_Task(void)
 
     if(!datatype) {
       // As there is no last rise, we have to add the last bit by hand
-      // addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
+      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
       if(analyze(b, TYPE_KS300, &oby)) {
         oby--;                                 
         if(cksum3(obuf, oby) == obuf[oby-nibble])
           datatype = TYPE_KS300;
       }
-      // if(!datatype)
-      //  delbit(b);
+      if(!datatype)
+        delbit(b);
     }
   }
 

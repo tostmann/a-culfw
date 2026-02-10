@@ -1229,5 +1229,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "    if(!datatype) {\n      // As there is no last rise, we have to add the last bit by hand\n      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));\n      if(analyze(b, TYPE_KS300, &oby)) {\n        oby--;                                 \n        if(cksum3(obuf, oby) == obuf[oby-nibble])\n          datatype = TYPE_KS300;\n      }\n      if(!datatype)\n        delbit(b);\n    }",
+            "path": "culfw/clib/rf_receive.c",
+            "original_text": "    if(!datatype) {\n      // As there is no last rise, we have to add the last bit by hand\n      // addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));\n      if(analyze(b, TYPE_KS300, &oby)) {\n        oby--;                                 \n        if(cksum3(obuf, oby) == obuf[oby-nibble])\n          datatype = TYPE_KS300;\n      }\n      // if(!datatype)\n      //  delbit(b);\n    }"
+          }
+        }
+      }
+    ]
   }
 ]
