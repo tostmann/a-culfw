@@ -255,8 +255,10 @@ analyze(bucket_t *b, uint8_t t, uint8_t *oby)
 
     if(obi == -1) {                                    // next byte
       if(t == TYPE_FS20) {
-        if(parity_even_bit(obuf[i]) != bit)
+        if(parity_even_bit(obuf[i]) != bit) {
+          if(TX_REPORT & REP_MONITOR) { DC('P'); DH2(obuf[i]); DC('?'); DC(bit+'0'); }
           return 0;
+        }
       }
       if(t == TYPE_EM || t == TYPE_KS300) {
         if(!bit)
