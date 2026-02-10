@@ -1055,6 +1055,7 @@ retry_sync:
       b->zero.lowtime = lowtime[CC_INSTANCE];
       b->sync  = 1;
       b->state = STATE_SYNC;
+      if(TX_REPORT & REP_MONITOR) DC('S');
 #ifdef HAS_MANCHESTER
       if (IS433MHZ && ((hightime[CC_INSTANCE]>lowtime[CC_INSTANCE]-10 && hightime[CC_INSTANCE]<lowtime[CC_INSTANCE]+10)
          || (hightime[CC_INSTANCE]>lowtime[CC_INSTANCE]*2-10 && hightime[CC_INSTANCE]<lowtime[CC_INSTANCE]*2+10)
