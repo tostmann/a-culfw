@@ -21,6 +21,7 @@ extern "C" {
 #include "fht.h"
 
 extern volatile uint32_t gdo_isr_count;
+extern "C" uint8_t bucket_nrused[];
 
 #ifdef HAS_ASKSIN
 #include "rf_asksin.h"
