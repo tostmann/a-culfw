@@ -51,7 +51,7 @@
 
 #define STATE_RESET   0
 
-#define SILENCE    4000        // End of message
+#define SILENCE    8000        // End of message
 
 
 #if defined(HAS_REVOLT) || defined (HAS_IT) || defined (HAS_TCM97001)
