@@ -34,8 +34,8 @@ def listen():
 
     esp.reset_input_buffer()
     
-    print("Setting ESP32 to X07...")
-    esp.write(b'X07\r\n')
+    print("Setting ESP32 to X1F...")
+    esp.write(b'X1F\r\n')
     time.sleep(0.5)
     
     # Flush output
