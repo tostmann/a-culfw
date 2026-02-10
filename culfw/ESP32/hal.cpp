@@ -18,9 +18,9 @@ extern "C" {
 // Forward declarations of CULFW functions
 void rf_receive_TimerElapsedCallback(void);
 void CC1100_in_callback(void);
+}
 
 void IRAM_ATTR gdo_interrupt_handler();
-}
 
 // Timer for system ticks (1ms)
 static hw_timer_t * tick_timer = NULL;

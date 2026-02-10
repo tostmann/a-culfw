@@ -1166,5 +1166,59 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "read_file",
+          "args": {
+            "path": "culfw/ESP32/hal.cpp"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "read_file",
+          "response": {
+            "result": "#include <Arduino.h>\n#include <SPI.h>\n#include <EEPROM.h>\n#include \"hal_gpio.h\"\n#include \"hal_spi.h\"\n#include \"hal_timer.h\"\n#include \"board.h\"\n\nextern \"C\" volatile uint32_t ticks = 0;\nextern \"C\" uint8_t SREG = 0;\nextern \"C\" uint8_t TIMSK0 = 0;\nvolatile uint32_t gdo_isr_count = 0;\n\nextern \"C\" {\n#include \"delay.h\"\n#include \"rf_receive.h\"\n\n// Forward declarations of CULFW functions\nvoid rf_receive_TimerElapsedCallback(void);\nvoid CC1100_in_callback(void);\n\nvoid IRAM_ATTR gdo_interrupt_handler();\n}\n\n// Timer for system ticks (1ms)\nstatic hw_timer_t * tick_timer = NULL;\nvoid IRAM_ATTR onTickTimer() {\n    ticks++;\n}\n\n// Timer for RF Silence timeout\nstatic hw_timer_t * rf_timer = NULL;\nstatic volatile uint32_t rf_reload_val = 0;\nstatic bool rf_timer_enabled = false;\n\nvoid IRAM_ATTR onRfTimer() {\n    rf_receive_TimerElapsedCallback();\n}\n\nvoid hal_timer_init(void) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    tick_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer);\n    timerAlarm(tick_timer, 1000, true, 0); // 1ms\n    \n    rf_timer = timerBegin(1000000); // 1MHz\n    timerAttachInterrupt(rf_timer, &onRfTimer);\n#else\n    tick_timer = timerBegin(0, 80, true); // 1MHz\n    timerAttachInterrupt(tick_timer, &onTickTimer, true);\n    timerAlarmWrite(tick_timer, 1000, true);\n    timerAlarmEnable(tick_timer);\n\n    rf_timer = timerBegin(1, 80, true); // 1MHz\n    timerAttachInterrupt(rf_timer, &onRfTimer, true);\n#endif\n}\n\nuint32_t hal_get_ticks(void) {\n    return ticks;\n}\n\n// RF Timer HAL\nvoid hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {\n    if (enable) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerAlarm(rf_timer, rf_reload_val, false, 0);\n        timerStart(rf_timer);\n#else\n        timerAlarmWrite(rf_timer, rf_reload_val, false);\n        timerAlarmEnable(rf_timer);\n        timerStart(rf_timer);\n#endif\n        rf_timer_enabled = true;\n    } else {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n        timerStop(rf_timer);\n#else\n        timerAlarmDisable(rf_timer);\n        timerStop(rf_timer);\n#endif\n        rf_timer_enabled = false;\n    }\n}\n\nuint32_t HAL_timer_get_reload_register(uint8_t instance) {\n    return rf_reload_val;\n}\n\nvoid HAL_timer_set_reload_register(uint8_t instance, uint32_t value) {\n    rf_reload_val = value;\n    if (rf_timer_enabled) {\n        hal_enable_CC_timer_int(instance, true);\n    }\n}\n\nstatic uint32_t rf_counter_offset = 0;\nuint32_t HAL_timer_get_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    return (uint32_t)timerRead(rf_timer) - rf_counter_offset;\n#else\n    return timerRead(rf_timer) - rf_counter_offset;\n#endif\n}\n\nvoid HAL_timer_set_counter_value(uint8_t instance, uint32_t value) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    rf_counter_offset = (uint32_t)timerRead(rf_timer) - value;\n#else\n    rf_counter_offset = timerRead(rf_timer) - value;\n#endif\n}\n\nvoid HAL_timer_reset_counter_value(uint8_t instance) {\n#if ESP_ARDUINO_VERSION_MAJOR >= 3\n    timerWrite(rf_timer, 0);\n#else\n    timerWrite(rf_timer, 0);\n#endif\n    rf_counter_offset = 0;\n}\n\n// GPIO stuff\nvoid HAL_LED_Init(void) {\n    pinMode(LED_PIN, OUTPUT);\n}\n\nvoid HAL_LED_Set(LED_List led, LED_State state) {\n    digitalWrite(LED_PIN, state == LED_on ? HIGH : LOW);\n}\n\nvoid HAL_LED_Toggle(LED_List led) {\n    digitalWrite(LED_PIN, !digitalRead(LED_PIN));\n}\n\nvoid hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {\n    pinMode(GDO0_PIN, INPUT);\n    pinMode(GDO2_PIN, INPUT);\n    attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler() {\n    gdo_isr_count++;\n    CC1100_in_callback();\n}\n\nvoid hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {\n    if (enable) {\n        attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);\n    } else {\n        detachInterrupt(digitalPinToInterrupt(GDO0_PIN));\n    }\n}\n\nvoid hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {\n    if (pin == CC_Pin_CS) {\n        digitalWrite(CC1100_CS_PIN, state);\n    }\n}\n\nuint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {\n    if (pin == CC_Pin_In) {\n        return digitalRead(GDO0_PIN);\n    }\n    return 0;\n}\n\n// SPI stuff\nvoid spi_init(void) {\n    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);\n    pinMode(SPI_SS, OUTPUT);\n    digitalWrite(SPI_SS, HIGH);\n}\n\nuint8_t spi_send(uint8_t data) {\n    return SPI.transfer(data);\n}\n\n// Delay\nextern \"C\" void my_delay_ms(uint8_t ms) {\n    delay(ms);\n}\n\nextern \"C\" void my_delay_us(uint16_t us) {\n    delayMicroseconds(us);\n}\n\n// EEPROM emulation\nextern \"C\" void hal_eeprom_init(void) {\n    if (!EEPROM.begin(512)) {\n    }\n}\n\nextern \"C\" uint8_t eeprom_read_byte(uint8_t *addr) {\n    return EEPROM.read((size_t)addr);\n}\n\nextern \"C\" void eeprom_write_byte(uint8_t *addr, uint8_t value) {\n    EEPROM.write((size_t)addr, value);\n    EEPROM.commit();\n}\n"
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "// Forward declarations of CULFW functions\nvoid rf_receive_TimerElapsedCallback(void);\nvoid CC1100_in_callback(void);\n}\n\nvoid IRAM_ATTR gdo_interrupt_handler();",
+            "path": "culfw/ESP32/hal.cpp",
+            "original_text": "// Forward declarations of CULFW functions\nvoid rf_receive_TimerElapsedCallback(void);\nvoid CC1100_in_callback(void);\n\nvoid IRAM_ATTR gdo_interrupt_handler();\n}"
+          }
+        }
+      }
+    ]
   }
 ]
