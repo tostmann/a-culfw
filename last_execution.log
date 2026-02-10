@@ -6,9 +6,9 @@ Verbose mode can be enabled via `-v, --verbose` option
 * FIRMWARE VERSION UPDATE                 *
 *******************************************
 * Base Version: 1.26
-* Build Number: 111
-* New Version:  1.26.111
-* Build Date:   2026-02-10 15:36:00
+* Build Number: 112
+* New Version:  1.26.112
+* Build Date:   2026-02-10 15:36:28
 *******************************************
 
 CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
@@ -109,7 +109,6 @@ ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/fht.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
 ESP32/hal.cpp:10:30: warning: 'ticks' initialized and declared 'extern'
  extern "C" volatile uint32_t ticks = 0;
                               ^~~~~
@@ -119,6 +118,7 @@ ESP32/hal.cpp:11:20: warning: 'SREG' initialized and declared 'extern'
 ESP32/hal.cpp:12:20: warning: 'TIMSK0' initialized and declared 'extern'
  extern "C" uint8_t TIMSK0 = 0;
                     ^~~~~~
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/hw_autodetect.c.o
 In file included from ESP32/avr/avr/pgmspace.h:3,
                  from clib/fncollection.c:6:
@@ -147,6 +147,7 @@ In file included from clib/fncollection.c:5:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/intertechno.c.o
 clib/fncollection.c: In function 'read_eeprom':
 clib/fncollection.c:162:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
      d = erb((uint8_t *)addr);
@@ -158,7 +159,7 @@ clib/fncollection.c:226:9: warning: cast to pointer from integer of different si
 clib/fncollection.c:236:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
        ewb((uint8_t*)++addr, hb[0]);
            ^
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/intertechno.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/kopp-fc.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -172,7 +173,6 @@ In file included from clib/cc1100.h:10,
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/kopp-fc.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/lacrosse.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
@@ -195,6 +195,7 @@ ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definit
  #define cli()
  
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/3outof6.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/crc.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -206,7 +207,6 @@ In file included from clib/kopp-fc.c:62:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/crc.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/manchester.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/mbus_packet.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/multi_CC.c.o
@@ -215,6 +215,7 @@ Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_asksin.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_maico.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_mbus.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_mode.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_moritz.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -226,7 +227,7 @@ In file included from clib/rf_asksin.c:1:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_moritz.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_native.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -238,7 +239,6 @@ In file included from clib/rf_mbus.c:7:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_native.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -250,6 +250,7 @@ In file included from clib/rf_moritz.c:1:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -261,10 +262,7 @@ In file included from clib/rf_native.c:11:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_bucket.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_esa.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_hms.c.o
 In file included from ESP32/avr/avr/pgmspace.h:3,
                  from clib/rf_receive.c:25:
 /root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
@@ -283,10 +281,15 @@ In file included from clib/rf_receive.c:24:
 ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
  #define cli()
  
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_esa.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_hms.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_it.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_revolt.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tcm97001.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tx3.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_router.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_rwe.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_send.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/rf_receive_revolt.c:28:
@@ -300,10 +303,8 @@ In file included from clib/rf_receive.h:4,
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_router.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_rwe.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_send.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_zwave.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/ringbuffer.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/led.h:19,
@@ -352,7 +353,6 @@ In file included from clib/rf_zwave.c:1:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/ringbuffer.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/somfy_rts.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/stringfunc.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/ttydata.c.o
@@ -429,7 +429,7 @@ Retrieving maximum program size .pio/build/XIAO-ESP32-C3/firmware.elf
 Checking size .pio/build/XIAO-ESP32-C3/firmware.elf
 Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
 RAM:   [=         ]   5.6% (used 18468 bytes from 327680 bytes)
-Flash: [==        ]  20.3% (used 265476 bytes from 1310720 bytes)
+Flash: [==        ]  20.3% (used 265482 bytes from 1310720 bytes)
 Building .pio/build/XIAO-ESP32-C3/firmware.bin
 esptool.py v4.9.0
 Creating esp32c3 image...
@@ -443,7 +443,7 @@ SHA digest in image updated
 Wrote 0x54140 bytes to file /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin, ready to flash to offset 0x0
 Factory Image erfolgreich erstellt: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin
 collect_binaries([".pio/build/XIAO-ESP32-C3/firmware.bin"], [".pio/build/XIAO-ESP32-C3/firmware.elf"])
-[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.111)
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.112)
 Configuring upload protocol...
 AVAILABLE: cmsis-dap, esp-bridge, esp-builtin, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
 CURRENT: upload_protocol = esptool
@@ -469,43 +469,43 @@ Flash will be erased from 0x00010000 to 0x00054fff...
 SHA digest in image updated
 Compressed 12464 bytes to 9064...
 Writing at 0x00000000... (100 %)
-Wrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 437.2 kbit/s)...
+Wrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 439.1 kbit/s)...
 Hash of data verified.
 Compressed 3072 bytes to 146...
 Writing at 0x00008000... (100 %)
-Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.1 seconds (effective 482.1 kbit/s)...
+Wrote 3072 bytes (146 compressed) at 0x00008000 in 0.0 seconds (effective 536.0 kbit/s)...
 Hash of data verified.
 Compressed 8192 bytes to 47...
 Writing at 0x0000e000... (100 %)
-Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 781.4 kbit/s)...
+Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 721.3 kbit/s)...
 Hash of data verified.
 Compressed 278848 bytes to 155727...
 Writing at 0x00010000... (10 %)
-Writing at 0x0001b114... (20 %)
-Writing at 0x00022fa8... (30 %)
-Writing at 0x0002a18b... (40 %)
-Writing at 0x0003004b... (50 %)
-Writing at 0x000364c8... (60 %)
-Writing at 0x0003c1fa... (70 %)
-Writing at 0x00043d43... (80 %)
-Writing at 0x0004a8f0... (90 %)
-Writing at 0x00050ae5... (100 %)
-Wrote 278848 bytes (155727 compressed) at 0x00010000 in 2.1 seconds (effective 1038.5 kbit/s)...
+Writing at 0x0001b11d... (20 %)
+Writing at 0x00022fb5... (30 %)
+Writing at 0x0002a195... (40 %)
+Writing at 0x00030059... (50 %)
+Writing at 0x000364d0... (60 %)
+Writing at 0x0003c201... (70 %)
+Writing at 0x00043d4a... (80 %)
+Writing at 0x0004a8fb... (90 %)
+Writing at 0x00050aee... (100 %)
+Wrote 278848 bytes (155727 compressed) at 0x00010000 in 2.1 seconds (effective 1043.8 kbit/s)...
 Hash of data verified.
 
 Leaving...
 Hard resetting via RTS pin...
-========================= [SUCCESS] Took 23.52 seconds =========================
+========================= [SUCCESS] Took 20.53 seconds =========================
 
 Environment    Status    Duration
 -------------  --------  ------------
-XIAO-ESP32-C3  SUCCESS   00:00:23.524
-========================= 1 succeeded in 00:00:23.524 =========================
+XIAO-ESP32-C3  SUCCESS   00:00:20.527
+========================= 1 succeeded in 00:00:20.527 =========================
 Testing Serial on /dev/ttyACM0...
 Received: ESP-ROM:esp32c3-api1-20210207
 Received: Build:Feb  7 2021
 Received: rst:0x15 (USB_UART_CHIP_RESET),boot:0xe (SPI_FAST_FLASH_BOOT)
-Received: Saved PC:0x420157b2
+Received: Saved PC:0x40387c96
 Received: SPIWP:0xee
 Received: mode:DIO, clock div:2
 Received: load:0x3fcd5810,len:0x38c

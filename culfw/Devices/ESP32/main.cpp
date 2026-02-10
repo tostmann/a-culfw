@@ -106,9 +106,12 @@ void background_task(void *pvParameters) {
 
 void setup() {
     Serial.begin(115200);
-    delay(2000);
-    Serial.println("\r\n--- CULFW32 Starting (Minimal) ---");
-    Serial.flush();
+    Serial.setTxTimeoutMs(0); 
+    
+    unsigned long start = millis();
+    while (!Serial && (millis() - start) < 2000);
+
+    Serial.println("\r\n--- CULFW32 Starting (Full) ---");
     
     hal_timer_init();
     eeprom_init();
@@ -130,11 +133,10 @@ void setup() {
 }
 
 void loop() {
-    static uint32_t last_print = 0;
-    if (millis() - last_print > 1000) {
-        last_print = millis();
-        Serial.println("Heartbeat...");
-        digitalWrite(LED_PIN, !digitalRead(LED_PIN));
+    static uint32_t last_isr_print = 0;
+    if (millis() - last_isr_print > 1000) {
+        last_isr_print = millis();
+        Serial.printf("ISR Count: %u, Ticks: %u, BucketUsed: %u\n", gdo_isr_count, ticks, bucket_nrused[0]);
     }
 
     // 1. Read from Serial into Rx Buffer
@@ -148,6 +150,28 @@ void loop() {
         analyze_ttydata(DISPLAY_USB);
     }
     
+    // 3. Background Tasks
+    Minute_Task();
+    
+#ifdef HAS_FASTRF
+    FastRF_Task();
+#endif
+#ifdef HAS_ASKSIN
+    rf_asksin_task();
+#endif
+#ifdef HAS_MORITZ
+    rf_moritz_task();
+#endif
+#ifdef HAS_RWE
+    rf_rwe_task();
+#endif
+#ifdef HAS_MBUS
+    rf_mbus_task();
+#endif
+#ifdef HAS_RFNATIVE
+    native_task();
+#endif
+
     // 4. Write from Tx Buffer to Serial
     while (!rb_is_empty(&TTY_Tx_Buffer)) {
         Serial.write(rb_get(&TTY_Tx_Buffer));
