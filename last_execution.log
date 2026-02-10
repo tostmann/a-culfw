@@ -6,9 +6,9 @@ Verbose mode can be enabled via `-v, --verbose` option
 * FIRMWARE VERSION UPDATE                 *
 *******************************************
 * Base Version: 1.26
-* Build Number: 90
-* New Version:  1.26.90
-* Build Date:   2026-02-10 15:00:44
+* Build Number: 91
+* New Version:  1.26.91
+* Build Date:   2026-02-10 15:02:17
 *******************************************
 
 CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
@@ -109,7 +109,6 @@ ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/fht.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
 ESP32/hal.cpp:10:30: warning: 'ticks' initialized and declared 'extern'
  extern "C" volatile uint32_t ticks = 0;
                               ^~~~~
@@ -119,6 +118,7 @@ ESP32/hal.cpp:11:20: warning: 'SREG' initialized and declared 'extern'
 ESP32/hal.cpp:12:20: warning: 'TIMSK0' initialized and declared 'extern'
  extern "C" uint8_t TIMSK0 = 0;
                     ^~~~~~
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/hw_autodetect.c.o
 In file included from ESP32/avr/avr/pgmspace.h:3,
                  from clib/fncollection.c:6:
@@ -168,12 +168,12 @@ In file included from ESP32/hal_gpio.h:4,
 /root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
  #define _BV(b) (1UL << (b))
  
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/lacrosse.c.o
 In file included from clib/cc1100.h:10,
                  from clib/hw_autodetect.c:2:
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/lacrosse.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/mbus/3outof6.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
@@ -263,7 +263,6 @@ ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_bucket.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_esa.c.o
 In file included from ESP32/avr/avr/pgmspace.h:3,
                  from clib/rf_receive.c:25:
 /root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
@@ -274,6 +273,7 @@ ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definiti
  #define sei()
  
 In file included from ESP32/avr/avr/pgmspace.h:3,
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_esa.c.o
                  from clib/rf_receive.c:25:
 /root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
  #define cli() portDISABLE_INTERRUPTS()
@@ -289,7 +289,6 @@ Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tcm97001.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_receive_tx3.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_router.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_rwe.c.o
-Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_send.c.o
 In file included from ESP32/hal_gpio.h:4,
                  from ESP32/hal.h:4,
                  from clib/rf_receive_revolt.c:28:
@@ -303,6 +302,7 @@ In file included from clib/rf_receive.h:4,
 ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
  #define _BV(bit) (1UL << (bit))
  
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_send.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/rf_zwave.c.o
 Compiling .pio/build/XIAO-ESP32-C3/src/clib/ringbuffer.c.o
 In file included from ESP32/hal_gpio.h:4,
@@ -429,7 +429,7 @@ Retrieving maximum program size .pio/build/XIAO-ESP32-C3/firmware.elf
 Checking size .pio/build/XIAO-ESP32-C3/firmware.elf
 Advanced Memory Usage is available via "PlatformIO Home > Project Inspect"
 RAM:   [=         ]   5.6% (used 18380 bytes from 327680 bytes)
-Flash: [==        ]  20.6% (used 270206 bytes from 1310720 bytes)
+Flash: [==        ]  20.6% (used 270254 bytes from 1310720 bytes)
 Building .pio/build/XIAO-ESP32-C3/firmware.bin
 esptool.py v4.9.0
 Creating esp32c3 image...
@@ -440,10 +440,10 @@ merge_bin([".pio/build/XIAO-ESP32-C3/firmware.bin"], [".pio/build/XIAO-ESP32-C3/
 Ausführung: /root/.platformio/penv/bin/python /root/.platformio/packages/tool-esptoolpy/esptool.py --chip esp32c3 merge_bin -o /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin --flash_mode dio --flash_freq 40m --flash_size 4MB 0x0000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/bootloader.bin 0x8000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/partitions.bin 0xe000 /root/.platformio/packages/framework-arduinoespressif32/tools/partitions/boot_app0.bin 0x10000 /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/firmware.bin
 esptool.py v4.9.0
 SHA digest in image updated
-Wrote 0x553d0 bytes to file /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin, ready to flash to offset 0x0
+Wrote 0x55400 bytes to file /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin, ready to flash to offset 0x0
 Factory Image erfolgreich erstellt: /opt/ai_builder_data/users/763684262/projects/CULFW32/culfw/.pio/build/XIAO-ESP32-C3/XIAO-ESP32-C3-factory.bin
 collect_binaries([".pio/build/XIAO-ESP32-C3/firmware.bin"], [".pio/build/XIAO-ESP32-C3/firmware.elf"])
-[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.90)
+[DONE] Artifacts collected: /opt/ai_builder_data/users/763684262/projects/CULFW32/binaries/XIAO-ESP32-C3.bin (v1.26.91)
 Configuring upload protocol...
 AVAILABLE: cmsis-dap, esp-bridge, esp-builtin, esp-prog, espota, esptool, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa
 CURRENT: upload_protocol = esptool
@@ -469,7 +469,7 @@ Flash will be erased from 0x00010000 to 0x00055fff...
 SHA digest in image updated
 Compressed 12464 bytes to 9064...
 Writing at 0x00000000... (100 %)
-Wrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 457.4 kbit/s)...
+Wrote 12464 bytes (9064 compressed) at 0x00000000 in 0.2 seconds (effective 449.0 kbit/s)...
 Hash of data verified.
 Compressed 3072 bytes to 146...
 Writing at 0x00008000... (100 %)
@@ -479,28 +479,28 @@ Compressed 8192 bytes to 47...
 Writing at 0x0000e000... (100 %)
 Wrote 8192 bytes (47 compressed) at 0x0000e000 in 0.1 seconds (effective 789.1 kbit/s)...
 Hash of data verified.
-Compressed 283600 bytes to 158570...
+Compressed 283648 bytes to 158563...
 Writing at 0x00010000... (10 %)
-Writing at 0x0001b115... (20 %)
-Writing at 0x000230ca... (30 %)
-Writing at 0x0002a359... (40 %)
-Writing at 0x00030238... (50 %)
-Writing at 0x0003642d... (60 %)
-Writing at 0x0003c2d8... (70 %)
-Writing at 0x000440b7... (80 %)
-Writing at 0x0004ac24... (90 %)
-Writing at 0x00050d36... (100 %)
-Wrote 283600 bytes (158570 compressed) at 0x00010000 in 2.2 seconds (effective 1035.9 kbit/s)...
+Writing at 0x0001b15c... (20 %)
+Writing at 0x000230dd... (30 %)
+Writing at 0x0002a35f... (40 %)
+Writing at 0x000302d6... (50 %)
+Writing at 0x000364d2... (60 %)
+Writing at 0x0003c491... (70 %)
+Writing at 0x000440ef... (80 %)
+Writing at 0x0004ac46... (90 %)
+Writing at 0x00050d84... (100 %)
+Wrote 283648 bytes (158563 compressed) at 0x00010000 in 2.2 seconds (effective 1031.8 kbit/s)...
 Hash of data verified.
 
 Leaving...
 Hard resetting via RTS pin...
-========================= [SUCCESS] Took 15.59 seconds =========================
+========================= [SUCCESS] Took 19.48 seconds =========================
 
 Environment    Status    Duration
 -------------  --------  ------------
-XIAO-ESP32-C3  SUCCESS   00:00:15.587
-========================= 1 succeeded in 00:00:15.587 =========================
+XIAO-ESP32-C3  SUCCESS   00:00:19.484
+========================= 1 succeeded in 00:00:19.484 =========================
 Setting ESP32 to X21...
 Sending FS20 from REF...
 Send 1/5
@@ -508,4 +508,4 @@ Send 2/5
 Send 3/5
 Send 4/5
 Send 5/5
-[ESP32 Debug] GDO0_INT_COUNT: 1794
+[ESP32 Debug] GDO0_INT_COUNT: 2125
