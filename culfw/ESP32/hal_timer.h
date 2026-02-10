@@ -10,6 +10,7 @@ extern "C" {
 extern volatile uint32_t ticks;
 void hal_timer_init(void);
 uint32_t hal_get_ticks(void);
+void hal_timer_task(void);
 
 void hal_enable_CC_timer_int(uint8_t instance, uint8_t enable);
 
