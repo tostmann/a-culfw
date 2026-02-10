@@ -1248,9 +1248,7 @@ retry_sync:
       } else if(hightime[CC_INSTANCE] > lowtime[CC_INSTANCE]) {
         addbit(b, 1);*/
       } else {
-      /*  addbit(b, 0);*/
-      /*  b->two.hightime = makeavg(b->zero.hightime, hightime[CC_INSTANCE]);
-        b->two.lowtime  = makeavg(b->zero.lowtime,  lowtime[CC_INSTANCE]);*/
+        if(TX_REPORT & REP_MONITOR) DC('X');
         reset_input();
       }
       break;
