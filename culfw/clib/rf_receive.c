@@ -348,7 +348,7 @@ RfAnalyze_Task(void)
   uint8_t oby = 0;
 
   if(lowtime[CC_INSTANCE]) {
-    // Serial.printf("Lowtime: %d, High: %d\n", lowtime[CC_INSTANCE], hightime[CC_INSTANCE]);
+    if(TX_REPORT & REP_MONITOR) DC('!');
 #ifndef NO_RF_DEBUG
     if(TX_REPORT & REP_LCDMON) {
 #ifdef HAS_LCD
