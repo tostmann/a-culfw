@@ -18,8 +18,8 @@ def listen():
     
     esp.reset_input_buffer()
     
-    print("Setting ESP32 to X21...")
-    esp.write(b'X21\r\n')
+    print("Setting ESP32 to X07...")
+    esp.write(b'X07\r\n')
     time.sleep(0.5)
     
     print("Sending FS20 from REF...")
