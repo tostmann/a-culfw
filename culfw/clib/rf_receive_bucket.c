@@ -71,7 +71,7 @@ void IRAM_ATTR addbit(bucket_t *b, uint8_t bit)
     return;
   }
   
-  // if(TX_REPORT & REP_MONITOR) DC(bit ? '1' : '0');
+  if(TX_REPORT & REP_MONITOR) DC(bit ? '1' : '0');
 
   if(bit)
     b->data[b->byteidx] |= _BV(b->bitidx);

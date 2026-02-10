@@ -1,41 +1,23 @@
+analyze(bucket_t *b, uint8_t t, uint8_t *oby)
+{
+  uint8_t i=0, iby = 0;
+  uint16_t cnt=0, max;
+  int8_t ibi=7, obi=7;
 
+  nibble = 0;
+  
+  max = b->byteidx*8+(7-b->bitidx);
+  obuf[0] = 0;
+  while(cnt++ < max) {
 
-  if(bucket_nrused[CC_INSTANCE] == 0)
-    return;
+    uint8_t bit = (b->data[iby] & _BV(ibi)) ? 1 : 0;     // Input bit
+    if(ibi-- == 0) {
+      iby++;
+      ibi=7;
+    }
 
-  LED_ON();
-
-  b = bucket_array[CC_INSTANCE] + bucket_out[CC_INSTANCE];
-
-#ifdef HAS_IT
-  analyze_intertechno(b, &datatype, obuf, &oby);
-#endif
-#ifdef HAS_TCM97001
-  analyze_tcm97001(b, &datatype, obuf, &oby);
-#endif
-#ifdef HAS_REVOLT
-  analyze_revolt(b, &datatype, obuf, &oby);
-#endif
-#ifdef HAS_ESA
-  analyze_esa(b, &datatype, obuf, &oby);
-#endif
-#ifdef HAS_HMS
-  analyze_hms(b, &datatype, obuf, &oby);
-#endif
-#ifdef HAS_MANCHESTER
-    analyseMC(b, &datatype, obuf, &oby);
-#endif
-#if defined(HAS_IT) || defined(HAS_TCM97001) 
-  if(datatype == 0 && b->state == STATE_SYNC_PACKAGE) {
-    // unknown sync package
-    uint8_t ix;
-    for (ix=0;ix<b->byteidx;ix++)
-      obuf[ix]=b->data[ix];
-
-    if (7-b->bitidx != 0) {
-      obuf[ix]=b->data[ix];
-      ix++; 
-    }    
-    oby = ix;
-  }
-#endif
+    if(t == TYPE_KS300 && obi == 3) {                   // nibble check
+      if(!nibble) {
+        if(!bit)
+          return 0;
+        nibble = !nibble;
