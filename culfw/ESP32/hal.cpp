@@ -147,6 +147,8 @@ void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {
 void hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {
     if (pin == CC_Pin_CS) {
         digitalWrite(CC1100_CS_PIN, state);
+    } else if (pin == CC_Pin_Out) {
+        digitalWrite(GDO0_PIN, state);
     }
 }
 
