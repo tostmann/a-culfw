@@ -420,21 +420,22 @@ RfAnalyze_Task(void)
 #endif
 
   if (b->state == STATE_COLLECT) {
-    if(!datatype && analyze(b, TYPE_FS20, &oby)) { // Can be FS10 (433Mhz) or FS20 (868MHz)
-      oby--;                                  // Separate the checksum byte
-      uint8_t fs_csum = cksum1(6,obuf,oby);
-      if(fs_csum == obuf[oby] && oby >= 4) {
-        datatype = TYPE_FS20;
-
-      } else if(fs_csum+1 == obuf[oby] && oby >= 4) {     // Repeater
-        datatype = TYPE_FS20;
-        obuf[oby] = fs_csum;                  // do not report if we get both
-
-      } else if(cksum1(12, obuf, oby) == obuf[oby] && oby >= 4) {
-        datatype = TYPE_FHT;
-      } else {
-        datatype = 0;
+    if(!datatype) {
+      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
+      if(analyze(b, TYPE_FS20, &oby)) { // Can be FS10 (433Mhz) or FS20 (868MHz)
+        oby--;                                  // Separate the checksum byte
+        uint8_t fs_csum = cksum1(6,obuf,oby);
+        if(fs_csum == obuf[oby] && oby >= 4) {
+          datatype = TYPE_FS20;
+        } else if(fs_csum+1 == obuf[oby] && oby >= 4) {     // Repeater
+          datatype = TYPE_FS20;
+          obuf[oby] = fs_csum;                  // do not report if we get both
+        } else if(cksum1(12, obuf, oby) == obuf[oby] && oby >= 4) {
+          datatype = TYPE_FHT;
+        }
       }
+      if(!datatype)
+        delbit(b);
     }
 
     if(IS868MHZ && !datatype && analyze(b, TYPE_EM, &oby)) {
