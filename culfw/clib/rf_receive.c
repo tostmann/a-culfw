@@ -315,9 +315,9 @@ void checkForRepeatedPackage(uint8_t *datatype, bucket_t *b) {
       }
   } else {
 #endif
-      if (!packetCheckValues[CC_INSTANCE].isrep) {
+      // if (!packetCheckValues[CC_INSTANCE].isrep) {
         packetCheckValues[CC_INSTANCE].packageOK = 1;
-      }
+      // }
 #if defined (HAS_IT) || defined (HAS_TCM97001)
   }
 #endif
