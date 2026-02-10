@@ -597,7 +597,7 @@ RfAnalyze_Task(void)
 #endif
 }
 
-void reset_input(void)
+void IRAM_ATTR reset_input(void)
 {
   maxLevel[CC_INSTANCE]=0;
 #ifdef USE_HAL
