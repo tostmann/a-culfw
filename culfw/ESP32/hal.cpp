@@ -9,6 +9,7 @@
 extern "C" volatile uint32_t ticks = 0;
 extern "C" uint8_t SREG = 0;
 extern "C" uint8_t TIMSK0 = 0;
+volatile uint32_t gdo_isr_count = 0;
 
 extern "C" {
 #include "delay.h"
