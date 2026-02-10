@@ -3,8 +3,8 @@
         "platform": "atmelavr",
         "board": "nanoatmega328",
         "mcu": "atmega328p",
-        "version": "1.26.32",
-        "last_build": "2026-02-06 00:28:43",
+        "version": "1.26.55",
+        "last_build": "2026-02-10 11:24:19",
         "artifacts": [
             {
                 "file": "nanoCUL868.hex",
@@ -16,8 +16,8 @@
         "platform": "atmelavr",
         "board": "nanoatmega328",
         "mcu": "atmega328p",
-        "version": "1.26.33",
-        "last_build": "2026-02-06 00:28:44",
+        "version": "1.26.56",
+        "last_build": "2026-02-10 11:24:20",
         "artifacts": [
             {
                 "file": "nanoCUL433.hex",
@@ -29,8 +29,8 @@
         "platform": "atmelavr",
         "board": "cul_v3",
         "mcu": "atmega32u4",
-        "version": "1.26.31",
-        "last_build": "2026-02-06 00:28:39",
+        "version": "1.26.57",
+        "last_build": "2026-02-10 11:24:21",
         "artifacts": [
             {
                 "file": "CUL_V3.hex",
