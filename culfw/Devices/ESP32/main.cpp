@@ -138,7 +138,7 @@ void loop() {
     static uint32_t last_isr_print = 0;
     if (millis() - last_isr_print > 1000) {
         last_isr_print = millis();
-        Serial.printf("ISR Count: %u, Ticks: %u, BucketUsed: %u\n", gdo_isr_count, ticks, bucket_nrused[0]);
+        Serial.printf("ISR H/L/T: %u/%u/%u, Ticks: %u, BucketUsed: %u\n", gdo_high_count, gdo_low_count, gdo_isr_count, ticks, bucket_nrused[0]);
     }
 
     // 1. Read from Serial into Rx Buffer
