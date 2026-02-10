@@ -691,9 +691,9 @@ ISR(TIMER1_COMPA_vect)
 
 }
 
-uint8_t wave_equals(wave_t *a, uint8_t htime, uint8_t ltime, uint8_t state)
+uint8_t wave_equals(wave_t *a, pulse_t htime, pulse_t ltime, uint8_t state)
 {
-  uint8_t tdiffVal = TDIFF;
+  uint16_t tdiffVal = TDIFF;
   int16_t dlow = a->lowtime-ltime;
   int16_t dhigh = a->hightime-htime;
   int16_t dcomplete  = (a->lowtime+a->hightime) - (ltime+htime);

@@ -1,6 +1,8 @@
-pulse_t IRAM_ATTR makeavg(pulse_t i, pulse_t j)
-{
-  if (i == 0) return j;
-  return (i+i+i+j)/4;
-}
-
+106:uint8_t wave_equals(wave_t *a, pulse_t htime, pulse_t ltime, uint8_t state);
+446:      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
+460:       wave_equals(&b->zero, TSCALE(960), TSCALE(480), b->state)) {
+462:      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], TSCALE(480), b->state));
+694:uint8_t wave_equals(wave_t *a, uint8_t htime, uint8_t ltime, uint8_t state)
+1101:      if(wave_equals(&b->zero, hightime[CC_INSTANCE], lowtime[CC_INSTANCE], b->state)) {
+1238:      if(wave_equals(&b->one, hightime[CC_INSTANCE], lowtime[CC_INSTANCE], b->state)) {
+1242:      } else if(wave_equals(&b->zero, hightime[CC_INSTANCE], lowtime[CC_INSTANCE], b->state)) {
