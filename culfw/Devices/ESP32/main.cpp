@@ -173,11 +173,7 @@ void loop() {
 
     // 4. Write from Tx Buffer to Serial
     while (!rb_is_empty(&TTY_Tx_Buffer)) {
-        if (Serial.availableForWrite() > 0) {
-            Serial.write(rb_get(&TTY_Tx_Buffer));
-        } else {
-            break; 
-        }
+        Serial.write(rb_get(&TTY_Tx_Buffer));
     }
     
     yield();
