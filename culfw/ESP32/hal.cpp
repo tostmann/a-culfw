@@ -157,6 +157,7 @@ uint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {
 // SPI stuff
 void spi_init(void) {
     SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);
+    SPI.setFrequency(2000000); // 2MHz for stability
     pinMode(SPI_SS, OUTPUT);
     digitalWrite(SPI_SS, HIGH);
 }
