@@ -138,6 +138,7 @@ void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
 }
 
 void IRAM_ATTR gdo_interrupt_handler() {
+    gdo_isr_count++;
     CC1100_in_callback();
 }
 
