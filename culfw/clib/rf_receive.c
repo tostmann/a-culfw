@@ -227,7 +227,8 @@ cksum3(uint8_t *buf, uint8_t len)               // KS300
 static uint8_t
 analyze(bucket_t *b, uint8_t t, uint8_t *oby)
 {
-  uint8_t i=0, cnt=0, max, iby = 0;
+  uint8_t i=0, iby = 0;
+  uint16_t cnt=0, max;
   int8_t ibi=7, obi=7;
 
   nibble = 0;
