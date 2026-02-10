@@ -21,6 +21,8 @@ extern "C" {
 #include "fht.h"
 
 extern volatile uint32_t gdo_isr_count;
+extern volatile uint32_t gdo_high_count;
+extern volatile uint32_t gdo_low_count;
 extern "C" uint8_t bucket_nrused[];
 
 #ifdef HAS_ASKSIN

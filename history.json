@@ -1544,5 +1544,33 @@
         }
       }
     ]
+  },
+  {
+    "role": "user",
+    "parts": [
+      {
+        "function_response": {
+          "name": "edit_file",
+          "response": {
+            "result": "Successfully edited file."
+          }
+        }
+      }
+    ]
+  },
+  {
+    "role": "model",
+    "parts": [
+      {
+        "function_call": {
+          "name": "edit_file",
+          "args": {
+            "replacement_text": "extern volatile uint32_t gdo_isr_count;\nextern volatile uint32_t gdo_high_count;\nextern volatile uint32_t gdo_low_count;\nextern \"C\" uint8_t bucket_nrused[];\n",
+            "path": "culfw/Devices/ESP32/main.cpp",
+            "original_text": "extern volatile uint32_t gdo_isr_count;\nextern \"C\" uint8_t bucket_nrused[];\n"
+          }
+        }
+      }
+    ]
   }
 ]
