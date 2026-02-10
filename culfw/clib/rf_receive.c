@@ -413,8 +413,8 @@ RfAnalyze_Task(void)
           datatype = TYPE_FHT;
         }
       }
-      // if(!datatype)
-      //  delbit(b);
+      if(!datatype)
+        delbit(b);
     }
 
     if(IS868MHZ && !datatype && analyze(b, TYPE_EM, &oby)) {

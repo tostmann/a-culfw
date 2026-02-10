@@ -1,42 +1,21 @@
-void checkForRepeatedPackage(uint8_t *datatype, bucket_t *b) {
-#if defined (HAS_IT) && defined (HAS_TCM97001)
-  if ((*datatype == TYPE_IT) || (*datatype == TYPE_TCM97001)) { 
-#elif defined (HAS_TCM97001)
-  if (*datatype == TYPE_TCM97001) {
-#elif defined (HAS_IT)
-  if (*datatype == TYPE_IT) {
-#endif
-#if defined (HAS_IT) || defined (HAS_TCM97001)
-      if (packetCheckValues[CC_INSTANCE].isrep == 1 && packetCheckValues[CC_INSTANCE].isnotrep == 0) {
-        packetCheckValues[CC_INSTANCE].isnotrep = 1;
-        packetCheckValues[CC_INSTANCE].packageOK = 1;
-      } else if (packetCheckValues[CC_INSTANCE].isrep == 1) {
-        packetCheckValues[CC_INSTANCE].packageOK = 0;
-      } else {
-        packetCheckValues[CC_INSTANCE].isnotrep = 0;
-      }
-  } else {
-#endif
-      if (!packetCheckValues[CC_INSTANCE].isrep) {
-        packetCheckValues[CC_INSTANCE].packageOK = 1;
-      }
-#if defined (HAS_IT) || defined (HAS_TCM97001)
-  }
-#endif
-}
 
-#ifdef HAS_MANCHESTER
-static void analyseMC(bucket_t *b, uint8_t *datatype, uint8_t *obuf, uint8_t *oby) {    
-    if (IS433MHZ && *datatype == 0) {
-        if ((b->state == STATE_MC)) {
-	        uint8_t i;
-	        for (i=0;i<b->byteidx;i++) {
-	          obuf[i]=b->data[i];
-	        }
-	        if (7-b->bitidx != 0) {
-		        obuf[i]=b->data[i];
-		        i++;
-	        }
-	        *oby = i;
-	        *datatype = TYPE_MC;
-	    }
+  if (b->state == STATE_COLLECT) {
+    if(!datatype) {
+      addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
+      if(analyze(b, TYPE_FS20, &oby)) { // Can be FS10 (433Mhz) or FS20 (868MHz)
+        oby--;                                  // Separate the checksum byte
+        uint8_t fs_csum = cksum1(6,obuf,oby);
+        if(fs_csum == obuf[oby] && oby >= 4) {
+          datatype = TYPE_FS20;
+        } else if(fs_csum+1 == obuf[oby] && oby >= 4) {     // Repeater
+          datatype = TYPE_FS20;
+          obuf[oby] = fs_csum;                  // do not report if we get both
+        } else if(cksum1(12, obuf, oby) == obuf[oby] && oby >= 4) {
+          datatype = TYPE_FHT;
+        }
+      }
+      // if(!datatype)
+      //  delbit(b);
+    }
+
+    if(IS868MHZ && !datatype && analyze(b, TYPE_EM, &oby)) {
