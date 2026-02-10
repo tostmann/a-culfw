@@ -78,13 +78,24 @@
 *   **Enhanced Debugging Command `y` (DONE - Debugging output includes ISR count, high/low/total GDO0 events and system ticks):** Der `y`-Befehl wurde implementiert, der `show_debug()` aufruft, um aktuelle Debug-Informationen wie den Zähler der GDO0-Interrupts (`GDO0_INT_COUNT`), aufgeschlüsselt in High- und Low-Flanken (`ISR H/L/T`), System `ticks` und den Füllstand des RF-Receive-Buckets (`bucket_nrused`) über die serielle Konsole auszugeben. `display_debug` was renamed to `show_debug` in `main.cpp` and `fncollection.h/c` to avoid conflicts.
 *   **Improved Serial Output Speed (DONE):** Die `loop()`-Logik zum Schreiben des `TTY_Tx_Buffer` an `Serial` wurde optimiert, um so viele Bytes wie möglich in einem Schritt zu schreiben (`Serial.availableForWrite()`), was die Responsivität der Debug-Ausgabe verbessert.
 *   **Global `bucket_nrused` (DONE):** Das `bucket_nrused` Array, das den Füllstand der RF-Receive-Buckets angibt, wurde global zugänglich gemacht, um seinen Status über den Debug-Befehl `y` zu überwachen.
-*   **TSCALE Macro & SlowRF Timing (DONE):** The `TSCALE` macro in `rf_receive_bucket.h` was changed from `(x/16)` to `(x)`, and the `>> 4` scaling factor was removed from `hightime`/`lowtime` calculations in `rf_receive.c`. This allows direct use of microsecond-based pulse durations. The `makeavg` function in `rf_receive_bucket.c` was updated to accept `pulse_t` (uint16_t) types, correctly handling the larger, unscaled time values.
+*   **Full Microsecond Precision for SlowRF Timing (DONE - Re-fixed & Verified):**
+    *   The `TSCALE` macro in `rf_receive_bucket.h` was definitively changed from `(x/16)` back to `(x)`, eliminating the 1/16 scaling factor. This allows direct use of microsecond-based pulse durations.
+    *   All relevant timing variables (`hightime`, `lowtime`, `wave_t` members) and function parameters (`wave_equals`, `makeavg`) were converted to `pulse_t` (uint16_t) or `uint32_t` to handle the unscaled microsecond values without overflow.
+    *   The `>> 4` scaling was explicitly removed from `hightime`/`lowtime` calculations in `rf_receive.c`.
+    *   `makeavg` function in `rf_receive_bucket.c` was updated to accept `pulse_t` types and uses a more precise `((uint32_t)i * 3 + j) / 4` calculation to avoid rounding errors.
+    *   `TDIFF` (tolerance) was adjusted to 160µs.
+    *   `SILENCE` timeout increased to 8000µs to allow for longer packet reception without premature termination.
+    *   The calculation of `hightime` and `lowtime` in `CC1100_in_callback` and `gdo_interrupt_handler` in `hal.cpp` was refined to use `static volatile pulse_t last_isr_time_val = 0;` and `esp_timer_get_time()` for jitter-free microsecond precision.
+    *   Compiler warnings related to `volatile pulse_t *` for `calcOcrValue` arguments were resolved by casting.
+*   **Enhanced Debugging (DONE - Continued improvement):**
+    *   Added `DC(bit ? '1' : '0');` logging within the `addbit` function in `rf_receive_bucket.c` to directly monitor if individual bits are being recognized and added to the bucket (activated with `X3F` monitor mode).
 
 ## 4. Known Issues & Next Steps
 *   **RF-Datenaustausch (Slow RF - FS20, Intertechno):**
-    *   **Problem:** The decoding of Slow RF protocols (FS20, Intertechno) is still not working. Although GDO0 interrupts are triggered and synchronization (`S`, `C` markers) is achieved, `bucket_nrused` remains at 0, indicating that packets are not being successfully collected or validated after synchronization.
-    *   **Ursache (identifiziert):** The core timing interpretation (pulse durations) is now correct, with raw microsecond values (`rXX fYY`) matching expected protocol timings (e.g., ~400µs for FS20 bits). The issue is now suspected to be in the packet collection logic (`addbit`), the `SILENCE` timeout (`rf_receive_TimerElapsedCallback`) prematurely ending a packet, or the final packet validation in `RfAnalyze_Task` rejecting the collected data due to e.g. a checksum mismatch or an unexpected bit sequence.
-    *   **Debugging Status:** The `X07`-Raw-Monitor output now shows unscaled decimal pulse widths. The `y`-debug output shows correct ISR events and high/low counts, and `S`/`C` markers are visible, but `BUCKET_USED` remains 0. Sequences like `C.!r535 f38` suggest the `SILENCE` timer might be triggering prematurely.
+    *   **Problem:** The decoding of Slow RF protocols (FS20, Intertechno) is still not working. Although GDO0 interrupts are triggered and synchronization (`S`, `C` markers) is achieved, `bucket_nrused` remains at 0. Bits are not being collected by `addbit` during `STATE_COLLECT`.
+    *   **Previous Diagnosis:** `SILENCE` timeout prematurely ending a packet, or `RfAnalyze_Task` rejecting collected data.
+    *   **New Diagnosis (Identified):** `wave_equals` is likely failing to identify bits correctly, or the state machine is prematurely resetting (indicated by `.` for silence, or `R` for reset) before `addbit` is invoked. The `C.R` and `C.!rXXX fYYY` (without `0`/`1` bit markers) patterns confirm this.
+    *   **Debugging Status:** The `X3F`-Raw-Monitor output now shows actual microsecond pulse widths (e.g., `!r416 f397` for an FS20 0-bit, `!r590 f612` for an FS20 1-bit), confirming accurate hardware timing. `S` (Sync) and `C` (Collect) markers are seen, but no `0` or `1` bits are logged from `addbit`, despite logging being enabled. `BUCKET_USED` remains 0.
     *   **Status FIFO-basierte Protokolle (MAX!/Moritz):** Bidirektionaler Datenaustausch für MAX!-Pakete funktioniert einwandfrei.
 
 *   **Kompilierungsfehler und Warnungen (UNRESOLVED):**
@@ -97,9 +108,9 @@
 
 *   **Weitere Entwicklung:**
     *   **Priorität 1: Tiefgehende Analyse der Paket-Sammlung und Validierung für SlowRF-Protokolle.**
-        *   Verify `addbit` calls during `STATE_COLLECT` and log the bits being added to the bucket.
-        *   Adjust `SILENCE` value and `rf_hw_timer` reset logic to ensure packets are not cut short during reception.
-        *   Analyze `RfAnalyze_Task`'s validation process to understand why collected data is being rejected (e.g., checksum, unexpected sequence).
+        *   **Validate `wave_equals` logic:** Debug `wave_equals` in `rf_receive.c` to understand why it's not matching subsequent pulses after synchronization. Specifically, check the comparison with `b->zero` and `b->one` and the `TDIFF` tolerance.
+        *   **Bit-Collection Debugging:** Step through the logic in `CC1100_in_callback` immediately after `STATE_SYNC` transitions to `STATE_COLLECT` to pinpoint why `addbit` is not being called or why its conditions are not met.
+        *   **Silence Timer Reset Review:** Re-confirm that the `rf_hw_timer` is consistently and correctly reset within `gdo_interrupt_handler` at every GDO0 edge to prevent premature `SILENCE` timeouts, especially given the new, longer `SILENCE` value.
     *   **Priorität 2: Finalisierung der Kompilierungswarnungen.**
     *   **Langfristig:** Optimierung des SPI-Timings, Implementierung eines Web-Interfaces für ESP32.
 ```
