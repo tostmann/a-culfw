@@ -133,6 +133,7 @@ void HAL_LED_Toggle(LED_List led) {
 void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
     pinMode(GDO0_PIN, INPUT);
     pinMode(GDO2_PIN, INPUT);
+    attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
 }
 
 void IRAM_ATTR gdo_interrupt_handler() {
