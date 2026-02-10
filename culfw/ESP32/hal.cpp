@@ -30,11 +30,11 @@ void IRAM_ATTR onTickTimer() {
 }
 
 // Timer for RF Silence timeout
-static hw_timer_t * rf_timer = NULL;
+static esp_timer_handle_t rf_alarm_timer = NULL;
 static volatile uint32_t rf_reload_val = 0;
 static bool rf_timer_enabled = false;
 
-void IRAM_ATTR onRfTimer() {
+void IRAM_ATTR onRfTimer(void* arg) {
     rf_receive_TimerElapsedCallback();
 }
 
@@ -43,18 +43,17 @@ void hal_timer_init(void) {
     tick_timer = timerBegin(1000000); // 1MHz
     timerAttachInterrupt(tick_timer, &onTickTimer);
     timerAlarm(tick_timer, 1000, true, 0); // 1ms
-    
-    rf_timer = timerBegin(1000000); // 1MHz
-    timerAttachInterrupt(rf_timer, &onRfTimer);
 #else
     tick_timer = timerBegin(0, 80, true); // 1MHz
     timerAttachInterrupt(tick_timer, &onTickTimer, true);
     timerAlarmWrite(tick_timer, 1000, true);
     timerAlarmEnable(tick_timer);
-
-    rf_timer = timerBegin(1, 80, true); // 1MHz
-    timerAttachInterrupt(rf_timer, &onRfTimer, true);
 #endif
+
+    esp_timer_create_args_t rf_timer_args = {};
+    rf_timer_args.callback = onRfTimer;
+    rf_timer_args.name = "rf_silence";
+    esp_timer_create(&rf_timer_args, &rf_alarm_timer);
 }
 
 uint32_t hal_get_ticks(void) {
@@ -63,23 +62,11 @@ uint32_t hal_get_ticks(void) {
 
 // RF Timer HAL
 void hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {
+    esp_timer_stop(rf_alarm_timer);
     if (enable) {
-#if ESP_ARDUINO_VERSION_MAJOR >= 3
-        timerAlarm(rf_timer, rf_reload_val, false, 0);
-        timerStart(rf_timer);
-#else
-        timerAlarmWrite(rf_timer, rf_reload_val, false);
-        timerAlarmEnable(rf_timer);
-        timerStart(rf_timer);
-#endif
+        esp_timer_start_once(rf_alarm_timer, rf_reload_val);
         rf_timer_enabled = true;
     } else {
-#if ESP_ARDUINO_VERSION_MAJOR >= 3
-        timerStop(rf_timer);
-#else
-        timerAlarmDisable(rf_timer);
-        timerStop(rf_timer);
-#endif
         rf_timer_enabled = false;
     }
 }
