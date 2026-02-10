@@ -1,3 +1,174 @@
-culfw/clib/rf_mode.h:#define CC_INSTANCE       CC1101.instance
-culfw/clib/rf_mode.h:#define CC_INSTANCE       0
-culfw/clib/rf_mode.h:#define CC_INSTANCE       0
+Processing XIAO-ESP32-C3 (platform: espressif32; board: seeed_xiao_esp32c3; framework: arduino)
+--------------------------------------------------------------------------------
+Verbose mode can be enabled via `-v, --verbose` option
+
+*******************************************
+* FIRMWARE VERSION UPDATE                 *
+*******************************************
+* Base Version: 1.26
+* Build Number: 97
+* New Version:  1.26.97
+* Build Date:   2026-02-10 15:17:42
+*******************************************
+
+CONFIGURATION: https://docs.platformio.org/page/boards/espressif32/seeed_xiao_esp32c3.html
+PLATFORM: Espressif 32 (6.12.0) > Seeed Studio XIAO ESP32C3
+HARDWARE: ESP32C3 160MHz, 320KB RAM, 4MB Flash
+DEBUG: Current (cmsis-dap) External (cmsis-dap, esp-bridge, esp-builtin, esp-prog, iot-bus-jtag, jlink, minimodule, olimex-arm-usb-ocd, olimex-arm-usb-ocd-h, olimex-arm-usb-tiny-h, olimex-jtag-tiny, tumpa)
+PACKAGES: 
+ - framework-arduinoespressif32 @ 3.20017.241212+sha.dcc1105b 
+ - tool-esptoolpy @ 2.40900.250804 (4.9.0) 
+ - tool-mkfatfs @ 2.0.1 
+ - tool-mklittlefs @ 1.203.210628 (2.3) 
+ - tool-mkspiffs @ 2.230.0 (2.30) 
+ - toolchain-atmelavr @ 1.50400.190710 (5.4.0) 
+ - toolchain-riscv32-esp @ 8.4.0+2021r2-patch5
+LDF: Library Dependency Finder -> https://bit.ly/configure-pio-ldf
+LDF Modes: Finder ~ chain, Compatibility ~ soft
+Found 33 compatible libraries
+Scanning dependencies...
+Dependency Graph
+|-- EEPROM @ 2.0.0
+|-- SPI @ 2.0.0
+Building in release mode
+Compiling .pio/build/XIAO-ESP32-C3/src/Devices/ESP32/main.cpp.o
+Compiling .pio/build/XIAO-ESP32-C3/src/ESP32/hal.cpp.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/cc1100.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/cc1101_pllcheck.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/clock.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/display.c.o
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/clock.c:2:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/clock.c:2:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/clock.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/clock.c:1:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fastrf.c.o
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fband.c.o
+clib/fband.c: In function 'readEEpromValue':
+clib/fband.c:24:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+   d = erb((uint8_t *)addr);
+           ^
+clib/fband.c: In function 'checkFrequency':
+clib/fband.c:52:30: warning: passing argument 1 of 'readEEpromValue' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   value_0D = readEEpromValue("0F");
+                              ^~~~
+clib/fband.c:15:31: note: expected 'char *' but argument is of type 'const char *'
+ uint8_t readEEpromValue(char *rbyte) {
+                         ~~~~~~^~~~~
+clib/fband.c:53:30: warning: passing argument 1 of 'readEEpromValue' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   value_0E = readEEpromValue("10");
+                              ^~~~
+clib/fband.c:15:31: note: expected 'char *' but argument is of type 'const char *'
+ uint8_t readEEpromValue(char *rbyte) {
+                         ~~~~~~^~~~~
+clib/fband.c:54:30: warning: passing argument 1 of 'readEEpromValue' discards 'const' qualifier from pointer target type [-Wdiscarded-qualifiers]
+   value_0F = readEEpromValue("11");
+                              ^~~~
+clib/fband.c:15:31: note: expected 'char *' but argument is of type 'const char *'
+ uint8_t readEEpromValue(char *rbyte) {
+                         ~~~~~~^~~~~
+In file included from ESP32/hal_gpio.h:4,
+                 from ESP32/hal.h:4,
+                 from clib/led.h:19,
+                 from clib/cc1100.h:13,
+                 from clib/fastrf.c:7:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/cc1100.h:10,
+                 from clib/fastrf.c:7:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fht.c.o
+Devices/ESP32/main.cpp: In function 'void show_debug(char*)':
+Devices/ESP32/main.cpp:52:5: error: 'display_debug' was not declared in this scope
+     display_debug(in);
+     ^~~~~~~~~~~~~
+Devices/ESP32/main.cpp:52:5: note: suggested alternative: 'display_hex2'
+     display_debug(in);
+     ^~~~~~~~~~~~~
+     display_hex2
+ESP32/hal.cpp:10:30: warning: 'ticks' initialized and declared 'extern'
+ extern "C" volatile uint32_t ticks = 0;
+                              ^~~~~
+Compiling .pio/build/XIAO-ESP32-C3/src/clib/fncollection.c.o
+ESP32/hal.cpp:11:20: warning: 'SREG' initialized and declared 'extern'
+ extern "C" uint8_t SREG = 0;
+                    ^~~~
+ESP32/hal.cpp:12:20: warning: 'TIMSK0' initialized and declared 'extern'
+ extern "C" uint8_t TIMSK0 = 0;
+                    ^~~~~~
+*** [.pio/build/XIAO-ESP32-C3/src/Devices/ESP32/main.cpp.o] Error 1
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/fncollection.c:6:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:83: warning: "sei" redefined
+ #define sei() portENABLE_INTERRUPTS()
+ 
+In file included from clib/fncollection.c:4:
+ESP32/avr/avr/interrupt.h:9: note: this is the location of the previous definition
+ #define sei()
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/fncollection.c:6:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:84: warning: "cli" redefined
+ #define cli() portDISABLE_INTERRUPTS()
+ 
+In file included from clib/fncollection.c:4:
+ESP32/avr/avr/interrupt.h:12: note: this is the location of the previous definition
+ #define cli()
+ 
+In file included from ESP32/avr/avr/pgmspace.h:3,
+                 from clib/fncollection.c:6:
+/root/.platformio/packages/framework-arduinoespressif32/cores/esp32/Arduino.h:107: warning: "_BV" redefined
+ #define _BV(b) (1UL << (b))
+ 
+In file included from clib/fncollection.c:5:
+ESP32/avr/avr/io.h:12: note: this is the location of the previous definition
+ #define _BV(bit) (1UL << (bit))
+ 
+clib/fncollection.c: In function 'read_eeprom':
+clib/fncollection.c:162:13: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     d = erb((uint8_t *)addr);
+             ^
+clib/fncollection.c: In function 'write_eeprom':
+clib/fncollection.c:226:9: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+     ewb((uint8_t*)addr, hb[d-1]);
+         ^
+clib/fncollection.c:236:11: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+       ewb((uint8_t*)++addr, hb[0]);
+           ^
+========================== [FAILED] Took 1.94 seconds ==========================
+
+Environment    Status    Duration
+-------------  --------  ------------
+XIAO-ESP32-C3  FAILED    00:00:01.941
+==================== 1 failed, 0 succeeded in 00:00:01.941 ====================
