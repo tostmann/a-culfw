@@ -33,6 +33,7 @@ void IRAM_ATTR gdo_interrupt_handler();
 static hw_timer_t * rf_hw_timer = NULL;
 static volatile uint32_t rf_reload_val = 4000;
 static volatile bool rf_timer_enabled = false;
+static int gdo0_current_mode = -1;
 
 void IRAM_ATTR onRfTimer() {
     rf_receive_TimerElapsedCallback();
@@ -42,6 +43,7 @@ void hal_timer_init(void) {
 #if ESP_ARDUINO_VERSION_MAJOR >= 3
     rf_hw_timer = timerBegin(1000000); // 1MHz
     timerAttachInterrupt(rf_hw_timer, &onRfTimer);
+    timerStart(rf_hw_timer);
 #else
     rf_hw_timer = timerBegin(1, 80, true); // 1MHz
     timerAttachInterrupt(rf_hw_timer, &onRfTimer, true);
@@ -65,8 +67,9 @@ void hal_timer_task(void) {
 void IRAM_ATTR hal_enable_CC_timer_int(uint8_t instance, uint8_t enable) {
     if (enable) {
 #if ESP_ARDUINO_VERSION_MAJOR >= 3
-        timerRestart(rf_hw_timer);
         timerAlarm(rf_hw_timer, rf_reload_val, false, 0);
+        timerRestart(rf_hw_timer);
+        timerStart(rf_hw_timer);
 #else
         timerAlarmWrite(rf_hw_timer, rf_reload_val, false);
         timerAlarmEnable(rf_hw_timer);
@@ -135,24 +138,30 @@ void hal_CC_GDO_init(uint8_t cc_num, uint8_t mode) {
     pinMode(CC1100_CS_PIN, OUTPUT);
     digitalWrite(CC1100_CS_PIN, HIGH);
     
-    pinMode(GDO0_PIN, INPUT); 
+    pinMode(GDO0_PIN, INPUT);
+    gdo0_current_mode = INPUT;
     pinMode(GDO2_PIN, INPUT);
 }
 
 void hal_enable_CC_GDOin_int(uint8_t cc_num, uint8_t enable) {
     if (enable) {
-        pinMode(GDO0_PIN, INPUT); 
+        if (gdo0_current_mode != INPUT) {
+            pinMode(GDO0_PIN, INPUT);
+            gdo0_current_mode = INPUT;
+        }
         attachInterrupt(digitalPinToInterrupt(GDO0_PIN), gdo_interrupt_handler, CHANGE);
     } else {
         detachInterrupt(digitalPinToInterrupt(GDO0_PIN));
     }
 }
 
+#include "driver/gpio.h"
+
 void hal_CC_Pin_Set(uint8_t cc_num, CC_PIN pin, uint8_t state) {
     if (pin == CC_Pin_CS) {
         digitalWrite(CC1100_CS_PIN, state);
     } else if (pin == CC_Pin_Out) {
-        pinMode(GDO0_PIN, OUTPUT);
+        // Mode should have been set by ccTX
         digitalWrite(GDO0_PIN, state);
     }
 }
@@ -166,10 +175,25 @@ uint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {
 
 // SPI stuff
 void spi_init(void) {
-    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, SPI_SS);
-    SPI.setFrequency(2000000); // 2MHz for stability
+    // Antenna Switch for XIAO ESP32-C6: GPIO 14
+    // Low = On-board Antenna, High = UFL
+    pinMode(14, OUTPUT);
+    digitalWrite(14, LOW); 
+    Serial.println("Antenna set to PCB (GPIO 14 LOW)");
+
+    pinMode(SPI_SCLK, OUTPUT);
+    pinMode(SPI_MOSI, OUTPUT);
+    pinMode(SPI_MISO, INPUT);
     pinMode(SPI_SS, OUTPUT);
     digitalWrite(SPI_SS, HIGH);
+    
+    // Pass -1 for SS to prevent SPI peripheral from taking over the pin
+    SPI.begin(SPI_SCLK, SPI_MISO, SPI_MOSI, -1);
+    SPI.setFrequency(2000000); // 2MHz for stability
+
+#ifdef MARK433_PIN
+    pinMode(MARK433_PIN, INPUT_PULLUP);
+#endif
 }
 
 uint8_t spi_send(uint8_t data) {

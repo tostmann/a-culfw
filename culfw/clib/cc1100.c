@@ -1,4 +1,5 @@
 #include <avr/pgmspace.h>               // for PROGMEM, __LPM, PSTR
+#include <avr/io.h>
 #include <stdint.h>                     // for uint8_t
 
 #include "cc1100.h"
@@ -55,9 +56,9 @@ const PROGMEM const uint8_t CC1100_PA[] = {
 const PROGMEM const uint8_t CC1100_CFG[EE_CC1100_CFG_SIZE] = {
 // CULFW   IDX NAME     RESET STUDIO COMMENT
 #if defined(ESP32) || defined(STM32)
-   0x2E, // 00 IOCFG2   Tri-State
+   0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
    0x2E, // 01 IOCFG1    2E    2E    Tri-State
-   0x0D, // 02 IOCFG0   Serial Data Output
+   0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input
 #else
    0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
    0x2E, // 01 IOCFG1    2E    2E    Tri-State
@@ -258,7 +259,7 @@ ccInitChip(uint8_t *cfg)
   my_delay_us(45);
 
   ccStrobe( CC1100_SRES );                   // Send SRES command
-  my_delay_us(100);
+  my_delay_ms(10);                           // Wait longer for reset to complete
 
   CC1100_ASSERT;                             // load configuration
   cc1100_sendbyte( 0 | CC1100_WRITE_BURST );
@@ -374,9 +375,13 @@ ccTX(void)
 #else
   EIMSK  &= ~_BV(CC1100_INT);
 #endif
-  // Going from RX to TX does not work if there was a reception less than 0.5
-  // sec ago. Due to CCA? Using IDLE helps to shorten this period(?)
+
   ccStrobe(CC1100_SIDLE);
+
+#if defined(ESP32) || defined(ARM)
+  cc1100_writeReg(CC1100_IOCFG0, 0x0C); // GDO0 as Serial Data Input
+#endif
+
   while(cnt-- &&
         (ccStrobe(CC1100_STX) & CC1100_STATUS_STATE_BM) != CC1100_STATE_TX)
     my_delay_us(10);
@@ -387,6 +392,10 @@ void
 ccRX(void)
 {
   uint8_t cnt = 0xff;
+
+#if defined(ESP32) || defined(ARM)
+  cc1100_writeReg(CC1100_IOCFG0, 0x2D); // Back to GDO0 Interrupt for RX
+#endif
 
   while(cnt-- &&
         (ccStrobe(CC1100_SRX) & CC1100_STATUS_STATE_BM) != CC1100_STATE_RX)

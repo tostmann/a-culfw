@@ -11,7 +11,9 @@ typedef unsigned char uint8_t;
 
 #include "ringbuffer.h"
 
-#ifndef ARM
+#if defined(ESP32) || defined(ARM)
+#define restoreIRQ(sr) sei()
+#else
 #define restoreIRQ(sr)		SREG = sr
 #endif
 
@@ -24,8 +26,10 @@ rb_reset(rb_t *rb)
 void
 rb_put(rb_t *rb, uint8_t data)
 {
-  uint8_t sreg;
+  uint8_t sreg = 0;
+#ifndef ESP32
   sreg = SREG;
+#endif
   cli();
   if(rb->nbytes >= TTY_BUFSIZE) {
 	  restoreIRQ(sreg);
@@ -41,9 +45,11 @@ rb_put(rb_t *rb, uint8_t data)
 uint8_t
 rb_get(rb_t *rb)
 {
-  uint8_t sreg;
+  uint8_t sreg = 0;
   uint8_t ret;
+#ifndef ESP32
   sreg = SREG;
+#endif
   cli();
   if(rb->nbytes == 0) {
 	restoreIRQ(sreg);

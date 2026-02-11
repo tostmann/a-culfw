@@ -28,7 +28,9 @@ typedef enum {
 #ifdef HAS_MULTI_CC
 
 #define CC_INSTANCE       CC1101.instance
+#ifndef TX_REPORT
 #define TX_REPORT         (CC1101.tx_report[CC1101.instance])
+#endif
 
 typedef struct {
   uint8_t     instance;
@@ -41,7 +43,9 @@ typedef struct {
 #else
 
 #define CC_INSTANCE       0
+#ifndef TX_REPORT
 #define TX_REPORT         (CC1101.tx_report[0])
+#endif
 
 typedef struct {
   uint8_t     instance;
@@ -68,7 +72,9 @@ void rf_mode_task(void);
 #else //USE_RF_MODE
 
 #define CC_INSTANCE       0
+#ifndef TX_REPORT
 #define TX_REPORT         (tx_report)
+#endif
 
 #endif //USE_RF_MODE
 #endif

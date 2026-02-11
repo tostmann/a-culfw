@@ -28,6 +28,7 @@
 #include "rf_receive.h"                 // for set_txrestore, tx_report
 #include "rf_mode.h"
 #include "multi_CC.h"
+#include "fband.h"
 
 #ifndef USE_RF_MODE
 #ifdef HAS_ASKSIN
@@ -45,7 +46,7 @@ const PROGMEM const uint8_t CC1100_ITCFG[EE_CC1100_CFG_SIZE] = {
 // CULFW   IDX NAME     RESET STUDIO COMMENT
    0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
    0x2E, // 01 IOCFG1    2E    2E    Tri-State
-   0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input
+   0x0D, // 02 IOCFG0   *3F   *0C    GDO0 for input
    0x07, // 03 FIFOTHR   07   *47    
    0xD3, // 04 SYNC1     D3    D3    
    0x91, // 05 SYNC0     91    91    
@@ -145,6 +146,10 @@ it_tunein(void)
    			cc1100_sendbyte(__LPM(CC1100_ITCFG+i));
  			}
   		CC1100_DEASSERT;
+
+#ifdef USE_HAL
+      frequencyMode = MODE_433_MHZ;
+#endif
 
   		uint8_t *pa = EE_CC1100_PA;
 		  CC1100_ASSERT;                             // setup PA table
@@ -307,6 +312,12 @@ send_IT_bit_V3(uint8_t bit)
 static void
 it_send (char *in, uint8_t datatype) {	
 
+#if defined(ESP32)
+  TaskHandle_t xTask = xTaskGetCurrentTaskHandle();
+  UBaseType_t oldPriority = uxTaskPriorityGet(xTask);
+  vTaskPrioritySet(xTask, configMAX_PRIORITIES - 1);
+#endif
+
     //while (rf_isreceiving()) {
       //_delay_ms(1);
     //}
@@ -465,7 +476,11 @@ it_send (char *in, uint8_t datatype) {
 
     #if defined (HAS_IRRX) || defined (HAS_IRTX) //Activate IR_Reception again
       sei(); 
-    #endif		  
+    #endif
+
+#if defined(ESP32)
+  vTaskPrioritySet(xTask, oldPriority);
+#endif
 
 		LED_OFF();
 		MULTICC_PREFIX();
@@ -580,6 +595,9 @@ it_func(char *in)
 		#endif
 		} else {
 			ccInitChip(EE_CC1100_CFG);										// Set back to Eeprom Values
+#ifdef USE_HAL
+      checkFrequency();
+#endif
 			if(tx_report) {                               // Enable RX
 				ccRX();
 			} else {

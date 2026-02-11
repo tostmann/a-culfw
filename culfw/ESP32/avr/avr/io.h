@@ -12,6 +12,7 @@ extern uint8_t SREG;
 #ifndef _BV
 #define _BV(bit) (1UL << (bit))
 #endif
+#include "sfr_defs.h"
 
 // Dummy registers for compatibility
 extern uint8_t TIMSK0;

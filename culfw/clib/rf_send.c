@@ -56,8 +56,13 @@
 
 uint16_t credit_10ms;
 
+#if defined(ESP32) || defined(ARM)
+#define TMUL(x) ((uint32_t)(x) * 100)
+#define TDIV(x) ((x) / 100)
+#else
 #define TMUL(x) (x<<4)
 #define TDIV(x) (x>>4)
+#endif
 
 
 #if defined(HAS_RAWSEND) || defined(HAS_HOERMANN_SEND)
@@ -110,6 +115,12 @@ sendraw(uint8_t *msg, uint8_t sync, uint8_t nbyte, uint8_t bitoff,
 
   LED_ON();
 
+#if defined(ESP32)
+  TaskHandle_t xTask = xTaskGetCurrentTaskHandle();
+  UBaseType_t oldPriority = uxTaskPriorityGet(xTask);
+  vTaskPrioritySet(xTask, configMAX_PRIORITIES - 1);
+#endif
+
 #if defined (HAS_IRRX) || defined (HAS_IRTX) || defined (HAS_I2CSLAVE) // Block IR_Reception
   cli();
 #  if defined (HAS_I2CSLAVE) // Disable I2C
@@ -155,7 +166,9 @@ sendraw(uint8_t *msg, uint8_t sync, uint8_t nbyte, uint8_t bitoff,
       send_bit(msg[j] & _BV(i));
 
     my_delay_ms(pause);                         // pause
-
+#if defined(ESP32)
+    vTaskDelay(1);
+#endif
   } while(--repeat > 0);
 
   if(TX_REPORT) {                               // Enable RX
@@ -163,6 +176,10 @@ sendraw(uint8_t *msg, uint8_t sync, uint8_t nbyte, uint8_t bitoff,
   } else {
     ccStrobe(CC1100_SIDLE);
   }
+
+#if defined(ESP32)
+  vTaskPrioritySet(xTask, oldPriority);
+#endif
 
 #if defined (HAS_IRRX) || defined (HAS_IRTX) || defined(HAS_I2CSLAVE) // Activate IR_Reception
   sei(); 

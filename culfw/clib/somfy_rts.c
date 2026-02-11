@@ -226,6 +226,11 @@ static uint8_t somfy_rts_calc_checksum(somfy_rts_frame_t *frame) {
 }
 
 static void somfy_rts_send(char *in) {
+#if defined(ESP32)
+  TaskHandle_t xTask = xTaskGetCurrentTaskHandle();
+  UBaseType_t oldPriority = uxTaskPriorityGet(xTask);
+  vTaskPrioritySet(xTask, configMAX_PRIORITIES - 1);
+#endif
 	int8_t i, j;
 
 	// input is in format: Ys_key_ctrl_cks_rollcode_a0_a1_a2
@@ -378,6 +383,10 @@ static void somfy_rts_send(char *in) {
 #ifndef ARM
 	free(unencrypted);
 	free(airdata);
+#endif
+
+#if defined(ESP32)
+  vTaskPrioritySet(xTask, oldPriority);
 #endif
 }
 

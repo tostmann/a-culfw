@@ -85,6 +85,13 @@
 #define HAS_INTERTECHNO
 #define HAS_SOMFY_RTS
 #define HAS_MBUS
+#define HAS_FHT
+#define HAS_HMS
+#define HAS_ESA
+#define HAS_REVOLT
+#define HAS_TCM97001
+#define HAS_TX3
+#define HAS_HOERMANN
 
 #define CDC_BAUD_RATE 115200
 #define TTY_BUFSIZE 1024
@@ -100,5 +107,13 @@
 #define RCV_BUCKETS 16
 
 #define USB_IsConnected 0
+
+#ifdef MARK433_PIN
+  #define MULTI_FREQ_DEVICE
+  #define MARK433_BIT 0 // Dummy for ESP32
+  #ifndef BOARD_ID_STR433
+    #define BOARD_ID_STR433 "ESP32-433"
+  #endif
+#endif
 
 #endif

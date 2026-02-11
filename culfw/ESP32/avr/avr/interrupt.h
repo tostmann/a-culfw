@@ -6,12 +6,12 @@
 extern "C" {
 #endif
 
-#ifndef sei
-#define sei()
-#endif
-#ifndef cli
-#define cli()
-#endif
+// Direct FreeRTOS / ESP32-HAL calls to avoid circularity with Arduino.h
+void vPortEnterCritical();
+void vPortExitCritical();
+
+#define cli() portDISABLE_INTERRUPTS()
+#define sei() portENABLE_INTERRUPTS()
 
 #ifdef __cplusplus
 }

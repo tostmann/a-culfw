@@ -1,11 +1,11 @@
 #include "fband.h"
-
+#include <avr/io.h>
 #include <stdint.h>                     // for uint8_t, uint16_t, uint32_t
 
 #include "fncollection.h"               // for erb
 #include "stringfunc.h"                 // for fromhex
 
-uint8_t frequencyMode = MODE_UNKNOWN;
+uint8_t frequencyMode = MODE_868_MHZ;
 
 
 
@@ -66,6 +66,16 @@ void checkFrequency(void) {
     frequencyMode = MODE_868_MHZ;
   } else {
     frequencyMode = MODE_433_MHZ;
+  }
+#endif
+
+#ifdef MULTI_FREQ_DEVICE
+  if (bit_is_clear(MARK433_PIN, MARK433_BIT)) {
+#ifdef USE_RF_MODE
+    CC1101.frequencyMode[CC1101.instance] = MODE_433_MHZ;
+#else
+    frequencyMode = MODE_433_MHZ;
+#endif
   }
 #endif
 }

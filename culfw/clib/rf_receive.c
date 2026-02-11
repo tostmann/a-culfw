@@ -91,7 +91,7 @@ packetCheckValues_t packetCheckValues[NUM_SLOWRF];
 
 static uint8_t obuf[MAXMSG]; // parity-stripped output
 
-static bucket_t bucket_array[NUM_SLOWRF][RCV_BUCKETS];
+bucket_t bucket_array[NUM_SLOWRF][RCV_BUCKETS];
 volatile uint8_t bucket_in[NUM_SLOWRF];                 // Pointer to the in(terrupt) queue
 volatile uint8_t bucket_out[NUM_SLOWRF];                // Pointer to the out (analyze) queue
 volatile uint8_t bucket_nrused[NUM_SLOWRF];             // Number of unprocessed buckets
@@ -106,7 +106,7 @@ static void delbit(bucket_t *b);
 uint8_t wave_equals(wave_t *a, pulse_t htime, pulse_t ltime, uint8_t state);
 
 
-static volatile pulse_t hightime[NUM_SLOWRF], lowtime[NUM_SLOWRF];
+volatile pulse_t hightime[NUM_SLOWRF], lowtime[NUM_SLOWRF];
 
 void
 tx_init(void)
@@ -602,7 +602,7 @@ void IRAM_ATTR reset_input(void)
 #ifdef SAM7
         HAL_timer_set_reload_register(CC_INSTANCE,0);
 #elif defined STM32 || defined ESP32
-      	HAL_timer_set_reload_register(CC_INSTANCE,0xffff);
+      	HAL_timer_set_reload_register(CC_INSTANCE,SILENCE);
 #else
         OCR1A = 0;
 #endif
@@ -678,7 +678,7 @@ ISR(TIMER1_COMPA_vect)
 
 }
 
-uint8_t wave_equals(wave_t *a, pulse_t htime, pulse_t ltime, uint8_t state)
+uint8_t IRAM_ATTR wave_equals(wave_t *a, pulse_t htime, pulse_t ltime, uint8_t state)
 {
   uint16_t tdiffVal = TDIFF;
   int16_t dlow = a->lowtime-ltime;
@@ -760,7 +760,7 @@ static void calcOcrValue(bucket_t *b, volatile pulse_t *hightime, volatile pulse
         ocrVal = ((ocrVal * 100) / 266);
         HAL_timer_set_reload_register(CC_INSTANCE,ocrVal * 16);
 #elif defined STM32 || defined ESP32
-        HAL_timer_set_reload_register(CC_INSTANCE,ocrVal * 16);
+        HAL_timer_set_reload_register(CC_INSTANCE,ocrVal);
 #else
         OCR1A = ocrVal * 16;
 #endif
@@ -1019,7 +1019,7 @@ retry_sync:
           ocrVal = ((lowtime[CC_INSTANCE] * 100) / 266);
           HAL_timer_set_reload_register(CC_INSTANCE,(ocrVal - 16) * 16);
       #elif defined STM32 || defined ESP32
-          HAL_timer_set_reload_register(CC_INSTANCE,(lowtime[CC_INSTANCE] - 16) * 16); //End of message
+          HAL_timer_set_reload_register(CC_INSTANCE, (lowtime[CC_INSTANCE] > 20) ? (lowtime[CC_INSTANCE] - 20) : 10); //End of message
       #else
           OCR1A = (lowtime[CC_INSTANCE] - 16) * 16; //End of message
          	//OCR1A = 2200; // end of message

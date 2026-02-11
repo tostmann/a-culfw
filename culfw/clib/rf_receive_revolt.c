@@ -74,7 +74,7 @@ bool is_revolt(bucket_t *b, pulse_t *hightime, pulse_t *lowtime)
     b->data[0] = 0;
     #ifdef SAM7
     HAL_timer_set_reload_register(CC_INSTANCE,SILENCE/8*3);
-    #elif defined STM32
+    #elif defined STM32 || defined ESP32
     HAL_timer_set_reload_register(CC_INSTANCE,SILENCE);
     #else
         OCR1A = SILENCE;
