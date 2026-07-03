@@ -151,6 +151,7 @@ moritz_handleAutoAck(uint8_t* enc)
 
   //Send acks to when required by "spec"
   if((autoAckAddr[0] != 0 || autoAckAddr[1] != 0 || autoAckAddr[2] != 0) /* auto-ack enabled */
+      && enc[0] >= 10 /* len: enc[3] + dest enc[7..9] must be filled bytes */
       && (
            enc[3] == 0x30 /* type ShutterContactState */
         || enc[3] == 0x40 /* type SetTemperature */

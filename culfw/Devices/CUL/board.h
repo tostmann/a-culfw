@@ -37,6 +37,7 @@
 #  define HAS_RAWSEND                   //
 #  define HAS_ASKSIN                    // PROGMEM: 1314
 #  define HAS_ASKSIN_FUP                // PROGMEM:   78
+#  define HAS_HMIP                      // PROGMEM:  ~600  (RX-Sniffer, raw 'P')
 #  define HAS_KOPP_FC
 #  define HAS_RWE
 #  define HAS_TX3                       // PROGMEM:  168

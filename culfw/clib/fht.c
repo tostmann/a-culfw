@@ -52,7 +52,7 @@ uint8_t fht_hc0, fht_hc1;
 
 #ifdef HAS_FHT_80b
 
-       uint8_t fht80b_timeout;
+       volatile uint8_t fht80b_timeout;
        uint8_t fht80b_state;    // 80b state machine
        uint8_t fht80b_minute;
 static uint8_t fht80b_ldata;    // last data waiting for ack
@@ -74,7 +74,7 @@ static uint8_t fht_bufspace(void);
 
 #ifdef HAS_FHT_8v
 
-uint16_t fht8v_timeout;
+volatile uint16_t fht8v_timeout;
 uint8_t fht8v_buf[2*FHT_8V_NUM];
 uint8_t fht8v_ctsync;
 #define FHT8V_CMD_SET  0x26
@@ -87,7 +87,7 @@ uint8_t fht8v_ctsync;
 static void    fht_tf_send(uint8_t index); // send date from TF at given index
 static uint8_t send_tk_out[5];  // send raw data last byte is resv for CC
        uint8_t fht_tf_buf[FHT_TF_DATA * FHT_TF_NUM]; //current 4 window sensors
-       int16_t fht_tf_timeout_Array[3 * FHT_TF_NUM]; // timeout,change,count
+       volatile int16_t fht_tf_timeout_Array[3 * FHT_TF_NUM]; // timeout,change,count (ISR)
        uint8_t fht_tf_deactivated; // if tf not used -> value is 1
 #endif
 
@@ -656,7 +656,7 @@ fht_lookbuf(uint8_t *buf)
   uint8_t *p = fht80b_buf;
   uint8_t *bmax = fht80b_buf+FHTBUF_SIZE;
 
-  while(p[0] && p < bmax) {
+  while(p < bmax && p[0]) {
     if(buf != 0 && p[1] == buf[0] && p[2] == buf[1])
       return p;
     p += p[0];
@@ -691,7 +691,7 @@ fht_addbuf(char *in)
   uint8_t l = strlen(in+1)/2+1; // future size of the message
   uint8_t i, j;
 
-  if((p+l-fht80b_buf) > FHTBUF_SIZE)
+  if((p+l-fht80b_buf) >= FHTBUF_SIZE)
     return 0;
 
   p[0] = l;
@@ -738,7 +738,7 @@ fht80b_print(uint8_t full)
 
   if(!p[0])
     DS_P( PSTR("N/A") );
-  while(p[0] && (p < (fht80b_buf+FHTBUF_SIZE))) {
+  while((p < (fht80b_buf+FHTBUF_SIZE)) && p[0]) {
     if(p != fht80b_buf)
       DC(' ');
     uint8_t i = 1;

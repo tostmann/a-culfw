@@ -552,10 +552,10 @@ void rf_mbus_func(char *in) {
 #ifndef MBUS_NO_TX
 
     uint8_t i = 0;
-    while (in[2*i+3] && in [2*i+4]) {
+    while (in[2*i+3] && in [2*i+4] && i < sizeof(MBpacket)) {
       fromhex(in+3+(2*i), &MBpacket[i], 1);
       i++;
-    } 
+    }
 
     /*
     for (uint8_t i=0; i < packetSize(MBpacket[0]); i++) {

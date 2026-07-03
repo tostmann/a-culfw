@@ -15,8 +15,8 @@
 #include "ttydata.h"                    // for TTY_Rx_Buffer, etc
 #include "rf_mode.h"
 
-uint8_t rf_router_status;
-uint8_t rf_router_myid;
+volatile uint8_t rf_router_status;      // set in CC1100 ISR, polled in main loop
+volatile uint8_t rf_router_myid;        // read in CC1100 ISR, written via 'ui'
 uint8_t rf_router_target;
 uint8_t rf_router_hsec;
 uint8_t rf_router_sendtime; // relative ticks
@@ -95,7 +95,7 @@ rf_router_func(char *in)
 #endif
 
   } else if(in[1] == 'i') {      // uiXXYY: set own id to XX and router id to YY
-    fromhex(in+2, &rf_router_myid, 1);
+    fromhex(in+2, (uint8_t*)&rf_router_myid, 1);   // cast: volatile only for ISR read
     ewb(EE_RF_ROUTER_ID, rf_router_myid);
     fromhex(in+4, &rf_router_target, 1);
     ewb(EE_RF_ROUTER_ROUTER, rf_router_target);
@@ -176,10 +176,13 @@ rf_router_send(uint8_t addAddr)
 #ifdef RFR_USBECHO
   uint8_t nbuf = RFR_Buffer.nbytes;
 #endif
-  cc1100_sendbyte(RFR_Buffer.nbytes+l);
+  uint8_t n = RFR_Buffer.nbytes;          // clamp to 64-byte CC1101 TXFIFO
+  if(n > 63-l)                            // 1 length byte + l header + n payload <= 64
+    n = 63-l;
+  cc1100_sendbyte(n+l);
   for(uint8_t i = 0; i < l; i++)
     cc1100_sendbyte(buf[i]);
-  while(RFR_Buffer.nbytes)
+  while(n--)
     cc1100_sendbyte(rb_get(&RFR_Buffer));
   CC1100_DEASSERT;
   ccTX();
@@ -212,6 +215,8 @@ rf_router_task(void)
     uint8_t len = cc1100_readReg(CC1100_RXFIFO);
     uint8_t proto = 0;
 
+    if(len > 63)                          // bogus air length byte: 1 lenbyte + 63 = 64-B RXFIFO
+      len = 63;
     if(len > 5) {
       rb_reset(&TTY_Rx_Buffer);
       CC1100_ASSERT;

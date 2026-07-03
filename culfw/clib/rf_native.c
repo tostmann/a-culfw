@@ -135,7 +135,7 @@ void native_init(uint8_t mode) {
     return;
   
   // load configuration
-  for (uint8_t i = 0; i<60; i += 2) {
+  for (uint8_t i = 0; i<sizeof(NATIVE_CFG); i += 2) {
        
     if (pgm_read_byte( &NATIVE_CFG[i] )>0x40)
       break;
@@ -252,7 +252,11 @@ void native_func(char *in) {
     
     // "Er<x>" - where <x> is mode
     if (in[2])
+#ifdef ARM
       fromdec(in+2, ( uint8_t*)&mode);
+#else
+      fromdec8(in+2, &mode);
+#endif
 
     if (!mode || mode>MAX_MODES) {
       MULTICC_PREFIX();

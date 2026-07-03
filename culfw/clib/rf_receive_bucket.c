@@ -66,7 +66,8 @@ void addbit(bucket_t *b, uint8_t bit)
 
   if(b->bitidx-- == 0) {           // next byte
     b->bitidx = 7;
-    b->data[++b->byteidx] = 0;
+    if(++b->byteidx < sizeof(b->data))
+      b->data[b->byteidx] = 0;
   }
   b->valCount = b->valCount + 1;
 

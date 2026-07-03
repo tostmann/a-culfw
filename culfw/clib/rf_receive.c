@@ -434,7 +434,7 @@ RfAnalyze_Task(void)
       addbit(b, wave_equals(&b->one, hightime[CC_INSTANCE], b->one.lowtime, b->state));
       if(analyze(b, TYPE_KS300, &oby)) {
         oby--;                                 
-        if(cksum3(obuf, oby) == obuf[oby-nibble])
+        if(oby >= nibble && cksum3(obuf, oby) == obuf[oby-nibble])
           datatype = TYPE_KS300;
       }
       if(!datatype)
@@ -459,6 +459,8 @@ RfAnalyze_Task(void)
     packetCheckValues[CC_INSTANCE].isrep = 0;
     packetCheckValues[CC_INSTANCE].packageOK = 0;
     if(!(TX_REPORT & REP_REPEATED)) {      // Filter repeated messages
+      uint32_t now;
+      get_timestamp(&now);               // atomic 32-bit read of ISR-driven ticks
       
       // compare the data
       if(roby[CC_INSTANCE] == oby) {
@@ -467,14 +469,14 @@ RfAnalyze_Task(void)
             packetCheckValues[CC_INSTANCE].isnotrep = 0;
             break;
           }
-        if(roby[CC_INSTANCE] == oby && (ticks - reptime[CC_INSTANCE] < REPTIME)) // 38/125 = 0.3 sec
+        if(roby[CC_INSTANCE] == oby && (now - reptime[CC_INSTANCE] < REPTIME)) // 38/125 = 0.3 sec
           packetCheckValues[CC_INSTANCE].isrep = 1;
       }
 
       // save the data
       for(roby[CC_INSTANCE] = 0; roby[CC_INSTANCE] < oby; roby[CC_INSTANCE]++)
         robuf[CC_INSTANCE][roby[CC_INSTANCE]] = obuf[roby[CC_INSTANCE]];
-      reptime[CC_INSTANCE] = ticks;
+      reptime[CC_INSTANCE] = now;
 
     } else {
       packetCheckValues[CC_INSTANCE].isnotrep = 0;

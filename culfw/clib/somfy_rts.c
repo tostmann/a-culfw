@@ -213,7 +213,7 @@ static void send_somfy_rts_frame(somfy_rts_frame_t *frame, int8_t hwPulses) {
 	// send inter-frame gap
 	// if last bit = 0, silence is 1/2 symbol longer
 	CC1100_CLEAR_OUT;// Low
-	my_delay_us(30415 + ((frame[6] >> 7) & 1) ? 0 : somfy_rts_interval_half);
+	my_delay_us(30415 + (((frame[6] >> 7) & 1) ? 0 : somfy_rts_interval_half));
 }
 
 static uint8_t somfy_rts_calc_checksum(somfy_rts_frame_t *frame) {
@@ -226,7 +226,7 @@ static uint8_t somfy_rts_calc_checksum(somfy_rts_frame_t *frame) {
 }
 
 static void somfy_rts_send(char *in) {
-	int8_t i, j;
+	uint8_t i, j;
 
 	// input is in format: Ys_key_ctrl_cks_rollcode_a0_a1_a2
 	// Ys ad 20 0ae3 a2 98 42
@@ -236,11 +236,7 @@ static void somfy_rts_send(char *in) {
 	// key | ctrl+cks | rolling_code | address
 
 	uint8_t buf = 0;
-#ifdef ARM
 	somfy_rts_frame_t airdata[SOMFY_RTS_FRAME_SIZE];
-#else
-	somfy_rts_frame_t *airdata = malloc(SOMFY_RTS_FRAME_SIZE);
-#endif
 
 	fromhex(in+2, &buf, 1);// key
 	airdata[0] = buf;
@@ -267,11 +263,7 @@ static void somfy_rts_send(char *in) {
 	airdata[1] |= (somfy_rts_calc_checksum(airdata) & 0x0F);
 	
 	// save unencrypted data to return later
-#ifdef ARM
 	somfy_rts_frame_t unencrypted[SOMFY_RTS_FRAME_SIZE];
-#else
-	somfy_rts_frame_t *unencrypted = malloc(SOMFY_RTS_FRAME_SIZE);
-#endif
 	memcpy(unencrypted, airdata, SOMFY_RTS_FRAME_SIZE);
 
 	// "encrypt"
@@ -375,10 +367,6 @@ static void somfy_rts_send(char *in) {
 	}
 	DNL();
 
-#ifndef ARM
-	free(unencrypted);
-	free(airdata);
-#endif
 }
 
 void somfy_rts_func(char *in) {
@@ -386,7 +374,7 @@ void somfy_rts_func(char *in) {
 		somfy_rts_send(in); // Send real data
 
 	} else if (in[1] == 'r') { // Set repetition
-		fromdec (in+2, (uint8_t *)&somfy_rts_repetition);
+		fromdec8(in+2, &somfy_rts_repetition);
 		MULTICC_PREFIX();
 		DC('Y');DC('r');DC(':');
 		DU(somfy_rts_repetition, 0);

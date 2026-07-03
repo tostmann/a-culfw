@@ -372,7 +372,7 @@ uint32_t LastWatchdog;
 
 uint8_t blkTXcode=0x00; 
 uint8_t inhex_dec[kopp_fc_Command_char];						// in_decbin: decimal value of hex commandline
-uint8_t hblen = fromhex(in+2, inhex_dec, strlen(in));	
+uint8_t hblen = fromhex(in+2, inhex_dec, sizeof(inhex_dec));
 strcpy(ErrorMSG,"ok");		
 
 
@@ -387,7 +387,7 @@ if((in[1] == 't') || (in[1] == 's'))
 {
 kopp_fc_tx_on = 1;												// Transmitt activated
 
-if (in[15]=='J') printon[0]='Y'; else printon[0]='N'; 		// Sollen wir Daten ausgeben (Zeitstempel etc)
+if (strlen(in) >= 16 && in[15]=='J') printon[0]='Y'; else printon[0]='N'; 		// Sollen wir Daten ausgeben (Zeitstempel etc)
 
 if(in[1] == 's') SingleBlkOnly=1;								// Command = "s", -> If KeyCode > 0x80 we will send no !! Key Off Code
 

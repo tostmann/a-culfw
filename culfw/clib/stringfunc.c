@@ -23,9 +23,10 @@ fromhex(const char *in, uint8_t *out, uint8_t buflen)
       continue;
     }
     if(step++) {
-      *op++ = h;
-      if(--buflen <= 0)
+      if(buflen == 0)
         return (op-out);
+      *op++ = h;
+      buflen--;
       step = 0;
       h = 0;
     } else {

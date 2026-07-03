@@ -310,7 +310,7 @@ it_send (char *in, uint8_t datatype) {
     //while (rf_isreceiving()) {
       //_delay_ms(1);
     //}
-	  int8_t i, j;//, k;
+	  uint8_t i, j;//, k;
 
 		LED_ON();
 
@@ -512,11 +512,7 @@ it_func(char *in)
 			DU(it_interval,0); DNL();
 	} else if (in[1] == 's') {
         if (in[2] == 'r') {		// Modify Repetition-counter
-#ifdef ARM
             fromdec8(in+3, &it_repetition);
-#else
-            fromdec (in+3, (uint8_t *)&it_repetition);
-#endif
             MULTICC_PREFIX();
             DU(it_repetition,0); DNL();
 #ifdef HAS_HOMEEASY

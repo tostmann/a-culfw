@@ -25,6 +25,10 @@
 uint8_t asksin_on = 0;
 #endif
 
+#ifdef HAS_HMIP
+uint8_t hmip_on = 0;            // 1 = zusaetzlich rohe HmIP 'P'-Zeilen ausgeben
+#endif
+
 const uint8_t PROGMEM ASKSIN_CFG[] = {
      0x00, 0x07,
      0x02, 0x2e,
@@ -72,6 +76,21 @@ static unsigned char asksin_update_mode = 0;
 #endif
 
 static void rf_asksin_reset_rx(void);
+
+// Gemeinsamer Hex-Emitter: <prefix><len><bytes...>[<rssi>].  Genutzt von der
+// BidCos-'A'-Zeile (alle Targets) und (HAS_HMIP) der rohen HmIP-'P'-Zeile.
+// NICHT unter #ifdef HAS_HMIP -- der 'A'-Pfad ruft es auf jedem Target auf.
+static void
+emit_raw(char prefix, uint8_t *m, uint8_t rssi)
+{
+  MULTICC_PREFIX();
+  DC(prefix);
+  for (uint8_t i = 0; i <= m[0]; i++)
+    DH2(m[i]);
+  if (TX_REPORT & REP_RSSI)
+    DH2(rssi);
+  DNL();
+}
 
 void
 rf_asksin_init(void)
@@ -138,7 +157,11 @@ rf_asksin_task(void)
   uint8_t l;
 
 #ifndef USE_RF_MODE
-  if(!asksin_on)
+  if(!asksin_on
+#ifdef HAS_HMIP
+     && !hmip_on                 // Pr allein haelt den Empfangs-Task am Leben
+#endif
+    )
     return;
 #endif
 
@@ -172,34 +195,46 @@ rf_asksin_task(void)
       ccStrobe(CC1100_SRX);
     } while (cc1100_readReg(CC1100_MARCSTATE) != MARCSTATE_RX);
 
-    last_enc = msg[1];
-    msg[1] = (~msg[1]) ^ 0x89;
-    
-    for (l = 2; l < msg[0]; l++) {
-         this_enc = msg[l];
-         msg[l] = (last_enc + 0xdc) ^ msg[l];
-         last_enc = this_enc;
+#ifdef HAS_HMIP
+    // Length-based demux (CULFW32 Ground-Truth hmdual_rf.cpp::classify_by_length):
+    //   <10 Drop, 10..17 nur BidCos('A'), 18..30 beide, >30 nur HmIP('P').
+    // Nur aktiv solange Pr laeuft; sonst verhaelt sich AskSin exakt wie bisher.
+#ifdef USE_RF_MODE
+    uint8_t do_a = 1;
+#else
+    uint8_t do_a = asksin_on;
+#endif
+    uint8_t do_p = 0;
+    if (hmip_on) {
+      do_p = (msg[0] >= 18);                            // 18..30 beide, >30 HmIP-only
+      do_a = (msg[0] >= 10 && msg[0] <= 30) ? do_a : 0; // <10 Drop, >30 kein A
     }
-    
-    msg[l] = msg[l] ^ msg[2];
+    if (do_p)                                           // roh, VOR dem Descramble
+      emit_raw('P', msg, rssi);
+    if (do_a)
+#endif
+    {
+      last_enc = msg[1];
+      msg[1] = (~msg[1]) ^ 0x89;
 
-    MULTICC_PREFIX();
+      for (l = 2; l < msg[0]; l++) {
+           this_enc = msg[l];
+           msg[l] = (last_enc + 0xdc) ^ msg[l];
+           last_enc = this_enc;
+      }
 
-    if (TX_REPORT & REP_BINTIME) {
+      msg[l] = msg[l] ^ msg[2];
 
-      DC('a');
-      for (uint8_t i=0; i<=msg[0]; i++)
-      DC( msg[i] );
-         
-    } else {
-      DC('A');
-      
-      for (uint8_t i=0; i<=msg[0]; i++)
-        DH2( msg[i] );
-      if (TX_REPORT & REP_RSSI)
-        DH2(rssi);
-      
-      DNL();
+      if (TX_REPORT & REP_BINTIME) {
+
+        MULTICC_PREFIX();
+        DC('a');
+        for (uint8_t i=0; i<=msg[0]; i++)
+        DC( msg[i] );
+
+      } else {
+        emit_raw('A', msg, rssi);
+      }
     }
   }
 
@@ -345,5 +380,36 @@ asksin_func(char *in)
 
   }
 }
+
+#ifdef HAS_HMIP
+// 'P' frontend.  HmIP-Sniffer teilt sich PHY + Empfangs-Task mit AskSin; hier
+// wird nur die zusaetzliche rohe 'P'-Ausgabe ein-/ausgeschaltet (kein eigener
+// Init, kein eigener Task -> kein FIFO-Race mit 'Ar').
+void
+hmip_func(char *in)
+{
+  if (in[1] == 'r') {               // raw HmIP RX-Sniff on
+    // Precondition: nutzt die aktuell geladene AskSin-PHY. Bei aktivem AR
+    // (FUP-Update-Mode, ASKSIN_UPDATE_CFG = ~100 kBaud statt 10 kBaud) re-
+    // initialisieren wir nicht und HmIP demoduliert nicht -> dann normal 'Ar'
+    // (nicht 'AR') geben, bevor 'Pr' folgt.
+#ifdef USE_RF_MODE
+    set_RF_mode(RF_mode_asksin);    // gemeinsame PHY-Basis
+#else
+    if (!asksin_on)                 // RX-Engine hochziehen falls 'Ar' nicht laeuft
+      rf_asksin_init();
+#endif
+    hmip_on = 1;
+
+  } else {                          // Off (Px): nur die 'P'-Ausgabe stoppen.
+    hmip_on = 0;                    // RF_mode NICHT anfassen: HmIP hat keinen
+                                    // eigenen Modus, es reitet auf RF_mode_asksin.
+                                    // set_RF_mode(off) wuerde ein parallel aktives
+                                    // 'Ar' (oder den gerade laufenden Modus) mit-
+                                    // abschalten (=Bug). Den RX-Mode raeumt das
+                                    // AskSin-Off-Kommando ab, nicht Px.
+  }
+}
+#endif
 
 #endif

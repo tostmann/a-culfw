@@ -30,7 +30,8 @@
 #include "memory.h"                     // for getfreemem
 #endif
 #ifdef HAS_ASKSIN
-#include "rf_asksin.h"                  // for asksin_func, rf_asksin_task
+#include "rf_asksin.h"                  // for asksin_func, rf_asksin_task,
+                                        // and (HAS_HMIP) hmip_func
 #endif
 #ifdef HAS_MORITZ
 #include "rf_moritz.h"                  // for moritz_func, rf_moritz_task
@@ -105,6 +106,9 @@ const PROGMEM t_fntab fntab[] = {
 #endif
 #ifdef HAS_RFNATIVE
   { 'N', native_func },
+#endif
+#ifdef HAS_HMIP
+  { 'P', hmip_func },
 #endif
   { 'R', read_eeprom },
   { 'T', fhtsend },
@@ -207,7 +211,7 @@ main(void)
     rf_router_task();
 #endif
 #ifdef HAS_ASKSIN
-    rf_asksin_task();
+    rf_asksin_task();               // HAS_HMIP: drains+emits 'P' in same task
 #endif
 #ifdef HAS_MORITZ
     rf_moritz_task();

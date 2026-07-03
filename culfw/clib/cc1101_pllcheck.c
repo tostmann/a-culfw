@@ -91,7 +91,8 @@ cc1101_toRX_PLLcheck(void)
 	n = 2; // noansi: Try to set RX several times before giving up
 	do {
 		// enable RX
-		while ((ccStrobe( CC1100_SRX ) & CC1100_STATUS_STATE_BM) != 0x10);	// Set RX until Status Byte indicates RX
+		uint8_t n2 = 0xff;
+		while (n2-- && (ccStrobe( CC1100_SRX ) & CC1100_STATUS_STATE_BM) != 0x10);	// Set RX until Status Byte indicates RX
 
 		if (!cc1101_checkPLL())	return 0; // PLL Lock ok
 
@@ -120,7 +121,8 @@ cc1101_toTX_PLLcheck(void)
 	n = 2; // noansi: Try to set TX several times before giving up
 	do {
 		// enable TX
-		while ((ccStrobe( CC1100_STX ) & CC1100_STATUS_STATE_BM) != 0x20);	// Set TX until Status Byte indicates TX
+		uint8_t n2 = 0xff;
+		while (n2-- && (ccStrobe( CC1100_STX ) & CC1100_STATUS_STATE_BM) != 0x20);	// Set TX until Status Byte indicates TX
 
 		if (!cc1101_checkPLL()) return 0; // PLL Lock ok
 
@@ -150,7 +152,8 @@ cc1101_RX_check_PLL_wait_task(void)
 	if (cc1100_readReg( CC1100_FSCAL1 ) == 0x3f)							// no PLL Lock?  as described in CC1101 errata
 	{
 		cc1101_checkPLL();													// try calibration to recover, takes about 735us
-		while ((ccStrobe( CC1100_SRX ) & CC1100_STATUS_STATE_BM) != 0x10);	// Set RX again until Status Byte indicates RX, this will take up to 799us depending on AUTOCAL setting! see cc1101 doc
+		uint8_t cnt = 0xff;
+		while (cnt-- && (ccStrobe( CC1100_SRX ) & CC1100_STATUS_STATE_BM) != 0x10);	// Set RX again until Status Byte indicates RX, this will take up to 799us depending on AUTOCAL setting! see cc1101 doc
 	}
   }
 }
@@ -186,7 +189,8 @@ cc1101_TX_check_PLL_wait_task(void)
 	if (cc1100_readReg( CC1100_FSCAL1 ) == 0x3f)							// no PLL Lock?  as described in CC1101 errata
 	{
 		cc1101_checkPLL();													// try calibration to recover, takes about 735us
-		while ((ccStrobe( CC1100_STX ) & CC1100_STATUS_STATE_BM) != 0x20);	// Set RX again until Status Byte indicates RX, this will take up to 799us depending on AUTOCAL setting! see cc1101 doc
+		uint8_t cnt = 0xff;
+		while (cnt-- && (ccStrobe( CC1100_STX ) & CC1100_STATUS_STATE_BM) != 0x20);	// Set RX again until Status Byte indicates RX, this will take up to 799us depending on AUTOCAL setting! see cc1101 doc
 	}
   }
 }

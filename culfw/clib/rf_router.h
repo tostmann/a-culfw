@@ -10,9 +10,9 @@ void rf_router_func(char *);
 void rf_router_task(void);
 void rf_router_flush(void);
 
-extern uint8_t rf_router_status;
+extern volatile uint8_t rf_router_status;
 extern uint8_t rf_router_target;        // id of the router
-extern uint8_t rf_router_myid;          // Own id
+extern volatile uint8_t rf_router_myid;          // Own id
 extern uint8_t rf_router_sendtime;      // relative ticks
 extern uint8_t rf_nr_send_checks;
 

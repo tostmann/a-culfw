@@ -160,13 +160,30 @@ Minute_Task(void)
   // iterate over all TFs
   for(uint8_t i = 0; i < FHT_TF_NUM; i++) {
     // if timed out -> call fht_tf_timer to send out data
-    if(fht_tf_timeout_Array[3 * i] == 0) {
+    // snapshot the 16-bit timeout atomically: TIMER0_COMPA_vect decrements it,
+    // and on AVR a 16-bit load is two byte fetches that the ISR can split (torn read).
+#ifdef ARM
+    int16_t to = fht_tf_timeout_Array[3 * i];
+#else
+    uint8_t s = SREG; cli();
+    int16_t to = fht_tf_timeout_Array[3 * i];
+    SREG = s;
+#endif
+    if(to == 0) {
       fht_tf_timer(i);
     }
   }
 #endif
 #ifdef HAS_FHT_8v
-  if(fht8v_timeout == 0)
+  // snapshot the 16-bit fht8v_timeout atomically (decremented in TIMER0_COMPA_vect)
+#ifdef ARM
+  uint16_t t8v = fht8v_timeout;
+#else
+  uint8_t s8 = SREG; cli();
+  uint16_t t8v = fht8v_timeout;
+  SREG = s8;
+#endif
+  if(t8v == 0)
     fht8v_timer();
 #endif
 #ifdef HAS_FHT_80b

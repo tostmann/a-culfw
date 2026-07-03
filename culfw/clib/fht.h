@@ -10,8 +10,8 @@ void fht8v_timer(void);
 void fht80b_timer(void);
 void fht_init(void);
 
-extern uint16_t fht8v_timeout;
-extern uint8_t  fht80b_timeout;
+extern volatile uint16_t fht8v_timeout;
+extern volatile uint8_t  fht80b_timeout;
 extern uint8_t fht80b_minute;
 
 extern uint8_t fht_hc0, fht_hc1; // Our housecode.
@@ -42,7 +42,7 @@ extern uint8_t fht80b_state;
 #define FHT_TF_NUM         4  // supported window FHT 80 TF
 #define FHT_TF_DISABLED 0xff  // TF not used
 
-// used in clock.c -> keeps the timeout for each TF
-extern int16_t fht_tf_timeout_Array[3 * FHT_TF_NUM];
+// used in clock.c -> keeps the timeout for each TF (decremented in TIMER0 ISR)
+extern volatile int16_t fht_tf_timeout_Array[3 * FHT_TF_NUM];
 
 #endif

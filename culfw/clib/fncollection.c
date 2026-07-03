@@ -300,7 +300,7 @@ eeprom_factory_reset(char *in)
   EE_write_baud(1,CDC_BAUD_RATE);
 #endif
 
-  if(in[1] != 'x')
+  if(!in || in[1] != 'x')
     prepare_boot(0);
 }
 

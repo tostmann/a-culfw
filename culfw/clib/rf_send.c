@@ -99,7 +99,9 @@ static void
 sendraw(uint8_t *msg, uint8_t sync, uint8_t nbyte, uint8_t bitoff,
                 uint8_t repeat, uint8_t pause, uint8_t addH, uint8_t addL)
 {
-  // 12*800+1200+nbyte*(8*1000)+(bits*1000)+800+10000 
+  if(!repeat)                                   // repeat==0 would underflow the
+    return;                                     // do-while below -> 256 sends
+  // 12*800+1200+nbyte*(8*1000)+(bits*1000)+800+10000
   // message len is < (nbyte+2)*repeat in 10ms units.
   int8_t i, j, sum = (nbyte+2)*repeat + addH + addL;
   if (credit_10ms < sum) {
@@ -191,9 +193,11 @@ abit(uint8_t b, uint8_t *obuf, uint8_t *obyp, uint8_t obi)
     obuf[oby] |= _BV(obi);
   if(obi-- == 0) {
     oby++;
-    if(oby < MAX_SNDRAW)
+    if(oby < MAX_SNDRAW) {
       *obyp = oby;
-    obi = 7; obuf[oby] = 0;
+      obuf[oby] = 0;
+    }
+    obi = 7;
   }
   return obi;
 }

@@ -102,11 +102,12 @@ CDC_Task(void)
   Endpoint_SelectEndpoint(CDC_TX_EPNUM);          // Then data out
   if(TTY_Tx_Buffer.nbytes && Endpoint_IsReadWriteAllowed()) {
 
+    uint8_t sreg = SREG;
     cli();
     while(TTY_Tx_Buffer.nbytes &&
           (Endpoint_BytesInEndpoint() < USB_BUFSIZE))
       Endpoint_Write_Byte(rb_get(&TTY_Tx_Buffer));
-    sei();
+    SREG = sreg;
     
     bool IsFull = (Endpoint_BytesInEndpoint() == USB_BUFSIZE);
     Endpoint_ClearIN();                  // Send the data
