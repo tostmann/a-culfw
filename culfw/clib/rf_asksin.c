@@ -209,9 +209,13 @@ rf_asksin_task(void)
       do_p = (msg[0] >= 18);                            // 18..30 beide, >30 HmIP-only
       do_a = (msg[0] >= 10 && msg[0] <= 30) ? do_a : 0; // <10 Drop, >30 kein A
     }
-    if (do_p)                                           // roh, VOR dem Descramble
-      emit_raw('P', msg, rssi);
-    if (do_a)
+    // Descramble EINMAL fuer beide Zweige. HmIP benutzt dasselbe AskSin/BidCoS-
+    // Scrambling (0x89 / +0xdc) wie BidCos; der P-Zweig gab frueher roh aus,
+    // weil der HmIP-Inhalt als verschluesselt galt. Seit 2026-08-10 ist belegt,
+    // dass darunter Klartext liegt (SGTIN + Header). Die Roh-Ausgabe hatte zur
+    // Folge, dass CUL868 und CULFW32 fuer denselben Luftframe verschiedene
+    // Bytes zeigten — bench-gemessen 2026-08-11 gegen CULFW32 0.1.805.
+    if (do_p || do_a)
 #endif
     {
       last_enc = msg[1];
@@ -224,7 +228,14 @@ rf_asksin_task(void)
       }
 
       msg[l] = msg[l] ^ msg[2];
+    }
 
+#ifdef HAS_HMIP
+    if (do_p)
+      emit_raw('P', msg, rssi);
+    if (do_a)
+#endif
+    {
       if (TX_REPORT & REP_BINTIME) {
 
         MULTICC_PREFIX();
