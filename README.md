@@ -7,10 +7,13 @@ This repository contains a port of the well-known *a-culfw* (alternative firmwar
 The goal of this project is to modernize and simplify the development and compilation of the firmware. Instead of relying on complex, hand-written `Makefiles`, this project uses PlatformIO for clean management of dependencies and hardware variants.
 
 **Advantages:**
-* **One-Click-Setup:** Automatic installation of the correct toolchains (AVR, STM32, ESP32).
+* **One-Click-Setup:** Automatic installation of the correct toolchains (AVR, STM32).
 * **Centralized Management:** All finished firmwares are stored uniformly in the `/binaries` folder in the git root (one level above the code).
 * **Automation:** A manifest (`manifest.json`) catalogues all builds including version, date, and hardware platform.
-* **Modernization:** Support for modern hardware like the **XIAO ESP32-C3** (RISC-V).
+
+The port is partial on purpose: the hand written `makefile` in every
+`culfw/Devices/*` directory still exists and is still the only way to build the
+devices that have no PlatformIO environment yet.
 
 ## Supported Hardware
 
@@ -18,29 +21,57 @@ Currently, the following environments are defined:
 
 1.  **nanoCUL868 / nanoCUL433** (ATmega328P)
 2.  **CUL_V3** (ATmega32U4 with native USB)
-3.  **MapleCUN** (STM32F103CB, Quad-CC1101, Ethernet)
-4.  **XIAO_ESP32C3** (ESP32-C3 RISC-V Native Port)
+3.  **MapleCUNx4_W5100_BL / MapleCUNx4_W5500_BL** (STM32F103CB, Quad-CC1101, Ethernet)
+
+Every other device in `culfw/Devices/` — COC, CUN, CUNO/CUNO2, CUBe, SCC,
+megaCUL, miniCUL, CUL-Arduino and the rest — is built with its own `makefile`,
+not with PlatformIO.
+
+There is no ESP32 target. A native port was started in January 2026 and removed
+again in February.
+
+Two toolchains are in play and they are not the same compiler: PlatformIO pins
+`toolchain-atmelavr@~1.50400.0` (avr-gcc 5.4.0), while the makefiles use
+whatever `avr-gcc` is on the PATH (verified against 14.2.0). Code size differs
+measurably between the two.
 
 ## Generating Firmware (Build)
 
-By default, `pio run` only builds the stable AVR targets. ESP32 targets must be selected explicitly.
+By default, `pio run` builds the three AVR targets listed in `default_envs`. The MapleCUN environments must be selected explicitly.
 
 ### Build Commands in the Terminal
 
 ```bash
-# Build only standard devices (AVR)
+# Build the default AVR targets (CUL_V3, nanoCUL868, nanoCUL433)
 pio run
 
-# Build a specific device (including ESP32) explicitly
+# Build one environment explicitly
 pio run -e nanoCUL868
-pio run -e XIAO_ESP32C3
+pio run -e MapleCUNx4_W5500_BL
+```
+
+The MapleCUN environments need an **x86_64** host: on linux_aarch64 PlatformIO
+cannot resolve the ARM toolchain the `ststm32` platform asks for. The AVR
+targets build on both.
+
+### Build profiles
+
+`SLIM_HM_BUILD` builds a CUL_V3 for HomeMatic only (BidCos + HmIP) and drops
+the protocols such a stick does not need. On CUL_V3_868MHZ that is 15736 instead
+of 28202 bytes of flash and 992 instead of 2345 bytes of RAM:
+
+```bash
+cd culfw/Devices/CUL
+make TARGET=CUL_V3 FREQUENCE=_868MHZ MCU=atmega32u4 \
+     FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 \
+     EXTRA_CFLAGS=-DSLIM_HM_BUILD mostly_clean build size
 ```
 
 ### The Result
 After a successful build, all relevant files are located in the `/binaries` directory in the git root:
 * `manifest.json`: Contains metadata for all built versions.
 * `*.hex`: Firmware for AVR-based CULs.
-* `*.bin`: Firmware for STM32 or ESP32 (OTA and factory images).
+* `*.bin`: Firmware for STM32 (DFU images).
 
 ## Flashing Firmware
 
@@ -58,11 +89,6 @@ The CUL V3 must be in bootloader mode.
   dfu-programmer atmega32u4 flash ../binaries/CUL_V3.hex
   dfu-programmer atmega32u4 reset
   ```
-
-### 3. XIAO ESP32-C3
-```bash
-pio run -e XIAO_ESP32C3 -t upload
-```
 
 ## Repository Structure & Git
 

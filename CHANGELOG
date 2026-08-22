@@ -1,5 +1,46 @@
 ## Changelog:
 
+Note on the version numbers: 1.00.00 - 1.26.08 are the historic culfw /
+a-culfw line, the last of them from 2019. Since January 2026 the build runs
+on PlatformIO and the third number is a build counter incremented by the CI
+(1.26.100 and up), so it does not continue the 2019 series. Entries from
+"1.26 (PlatformIO)" downwards belong to the old line.
+
+#### unreleased
+- CUL: SLIM_HM_BUILD, a build profile for HomeMatic-only sticks. Drops the
+  protocols a HomeMatic stick does not need and frees 12.5 KB of flash and
+  1.35 KB of RAM on CUL_V3_868MHZ (28202 -> 15736 B flash, 2345 -> 992 B RAM).
+  Select with EXTRA_CFLAGS=-DSLIM_HM_BUILD; every existing build is unchanged.
+- CUL: the makefile builds with a current avr-gcc again (-fcommon, needed
+  since GCC 10) and passes EXTRA_CFLAGS through. Verified with avr-gcc 14.2.0.
+- HmIP: the 'P' line is now descrambled like the 'A' line. HmIP uses the same
+  AskSin/BidCoS scrambling, so emitting it raw made this device and CULFW32
+  print different bytes for the same frame on air.
+
+#### 1.27 (2026-07-03)
+- HmIP RX sniffer, merged into the AskSin receive task: 'Pr' / 'Px' switch a
+  raw 'P<len><bytes><rssi>' line on and off. No separate module, no second
+  FIFO drain.
+- Length based BidCos/HmIP demux ahead of the descramble: below 10 dropped,
+  10..17 BidCos only, 18..30 both, above 30 HmIP only.
+- HAS_HMIP build toggle per device, enabled on CUL_V3. Sniffer only: no HmIP
+  frame decoder, no TX, no AES-CCM and no pairing.
+- Audit of the translation units active in CUL_V3: 1 critical (stack smash in
+  kopp-fc), 5 medium, 13 low and 8 nit findings fixed.
+- BASE_VERSION raised to 1.27. VERSION_1 / VERSION_2 stay at 1 / 26 on
+  purpose: those two bytes are the EEPROM magic (fncollection.c), bumping
+  them would reset every user's configuration on update.
+
+#### 1.26 (2026-01-24, PlatformIO)
+- Build system moved from the hand written makefiles to PlatformIO. Envs:
+  CUL_V3, nanoCUL868, nanoCUL433, MapleCUNx4_W5100_BL, MapleCUNx4_W5500_BL.
+  The makefiles are still in the tree and still build every other device.
+- CI moved from GitLab to GitHub Actions.
+- Build artifacts collected into /binaries together with a manifest.json.
+- MapleCUN added.
+- A native ESP32 port was started and removed again; a-culfw carries no ESP32
+  target.
+
 #### 1.26.08
 - MapleCUN: Fix serial2net
 

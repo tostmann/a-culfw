@@ -1,6 +1,6 @@
 name: Build Firmware
 
-# Wann soll gebaut werden? (Bei Push auf master/main und bei Pull Requests)
+# Build on pushes to master/main and on pull requests against them.
 on:
   push:
     branches: [ "master", "main" ]
@@ -12,17 +12,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Code auschecken
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      # 2. Python aufsetzen
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: '3.9'
+          python-version: '3.11'
 
-      # 3. PlatformIO Caching (Damit es schneller geht)
       - name: Cache PlatformIO
         uses: actions/cache@v4
         with:
@@ -33,21 +30,33 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pio-
 
-      # 4. PlatformIO installieren
       - name: Install PlatformIO
         run: pip install -U platformio
 
-      # 5. Bauen (Genau wie bei GitLab, erst ins Verzeichnis wechseln!)
-      - name: Run PlatformIO Build
+      # default_envs = the three AVR targets. They build on any host.
+      - name: Build AVR targets
         run: |
           cd culfw
           pio run
 
-      # 6. Artefakte einsammeln und bereitstellen
-      - name: Upload Hex Files
+      # MapleCUN is not in default_envs on purpose: PlatformIO cannot resolve
+      # the ARM toolchain for the ststm32 platform on linux_aarch64, so a
+      # default build would break on an arm64 workstation. The runner is
+      # x86_64, so build it explicitly here.
+      - name: Build MapleCUN targets
+        run: |
+          cd culfw
+          pio run -e MapleCUNx4_W5100_BL -e MapleCUNx4_W5500_BL
+
+      # collect_binaries.py copies every built image into binaries/ and writes
+      # manifest.json. Uploading culfw/Devices/**/*.hex instead would only pick
+      # up the three committed Optiboot images and never the firmware.
+      - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
-          name: culfw-build-${{ github.run_number }}
-          # Pfad relativ zum Git-Root
-          path: culfw/Devices/**/*.hex
+          name: a-culfw-${{ github.run_number }}
+          path: |
+            binaries/*.hex
+            binaries/*.bin
+            binaries/manifest.json
           if-no-files-found: error
