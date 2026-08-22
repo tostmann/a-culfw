@@ -55,6 +55,24 @@ SECTIONS
         *(.data.__ctype_ptr__)
         *(.data.__global_locale)
         . = ALIGN(4);
+    } >flash
+
+    /* Unwind tables. GCC 7 emits .ARM.extab / .ARM.exidx and neither script
+       placed them, so the linker left them as orphans right after .fixed,
+       where their LMA collided with .relocate's AT (_efixed).
+       .ARM.exidx must be an output section of its own: it is SHF_LINK_ORDER,
+       and ld refuses to mix ordered and unordered input sections in one output
+       section. _efixed therefore moves to the end of it — it is the LMA
+       .relocate is copied from, so it has to sit behind everything in flash. */
+    .ARM.extab : {
+        *(.ARM.extab* .gnu.linkonce.armextab.*)
+    } >flash
+
+    .ARM.exidx : {
+        __exidx_start = .;
+        *(.ARM.exidx*)
+        __exidx_end = .;
+        . = ALIGN(4);
         _efixed = .;
     } >flash
 
