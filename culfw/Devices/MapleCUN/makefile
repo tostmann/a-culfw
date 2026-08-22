@@ -180,6 +180,9 @@ endif
 CFLAGS := $(CFLAGS) -std=c99 
 CFLAGS := $(CFLAGS) $(foreach d,$(H_SUBDIRS),-I$(d))
 CFLAGS := $(CFLAGS) $(LTO_FLAGS) -g3 -Wall -fmessage-length=0 -ffunction-sections -c 
+
+include ../modern-gcc.mk
+
 GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
 
 ASMFLAGS := -mcpu=$(CPU) -mthumb 
@@ -200,7 +203,7 @@ COMPILE = $(CC) $(CFLAGS) $(GENDEPFLAGS)
 
 .PHONY: proj
 
-all:
+all: clean-shared-objs
 	make TARGET=MapleCUNx4_W5100_BL BOOTLOADER=TRUE build clean2
 	make TARGET=MapleCUNx4_W5500_BL BOOTLOADER=TRUE build clean2
 
