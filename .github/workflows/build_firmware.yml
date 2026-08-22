@@ -43,10 +43,10 @@ jobs:
       # the ARM toolchain for the ststm32 platform on linux_aarch64, so a
       # default build would break on an arm64 workstation. The runner is
       # x86_64, so build it explicitly here.
-      - name: Build MapleCUN targets
+      - name: Build MapleCUN and SBU targets
         run: |
           cd culfw
-          pio run -e MapleCUNx4_W5100_BL -e MapleCUNx4_W5500_BL
+          pio run -e MapleCUNx4_W5100_BL -e MapleCUNx4_W5500_BL -e CUL_V3_SBU
 
       # collect_binaries.py copies every built image into binaries/ and writes
       # manifest.json. Uploading culfw/Devices/**/*.hex instead would only pick

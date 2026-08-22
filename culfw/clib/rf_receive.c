@@ -55,6 +55,10 @@
 #include "rf_mode.h"
 #include "multi_CC.h"
 
+#ifdef TTYSBU
+#include "sbu_uart.h"
+#endif
+
 #ifdef USE_HAL
 #include "hal.h"
 #endif
@@ -118,8 +122,22 @@ tx_init(void)
   SET_BIT  ( CC1100_OUT_DDR,  CC1100_OUT_PIN);
   CLEAR_BIT( CC1100_OUT_PORT, CC1100_OUT_PIN);
 
+#ifdef TTYSBU
+  /* Only the CUL_V3 has an SBU UART, and only there does ISC21 exist. Keep the
+     whole block inside the guard so devices without INT2 are untouched. */
+  if(sbu_mode) {
+      CLEAR_BIT( DDRD, PD0 );   // PD0 is the CC1101 data line in SBU mode
+      EICRA |= (1<<ISC00);      // INT0 on any logical change
+      EICRA &= ~(1<<ISC01);
+  } else {
+      CLEAR_BIT( CC1100_IN_DDR,   CC1100_IN_PIN);
+      EICRA &= ~(1<<ISC21);               // any edge: ISC21 clear, ISC20 set
+      SET_BIT( CC1100_EICR, CC1100_ISC);
+  }
+#else
   CLEAR_BIT( CC1100_IN_DDR,   CC1100_IN_PIN);
   SET_BIT( CC1100_EICR, CC1100_ISC);  // Any edge of INTx generates an int.
+#endif
 #endif
 
   credit_10ms = MAX_CREDIT/2;
@@ -777,13 +795,8 @@ static void calcOcrValue(bucket_t *b, pulse_t *hightime, pulse_t *lowtime, bool 
 
 //////////////////////////////////////////////////////////////////////
 // "Edge-Detected" Interrupt Handler
-#ifdef USE_HAL
-	void CC1100_in_callback() {
-#else
-ISR(CC1100_INTVECT)
+static inline void rf_receive_interrupt_handler(void)
 {
-#endif
-
 #ifdef HAS_FASTRF
 #ifdef USE_RF_MODE
   if(is_RF_mode(RF_mode_fast)) {
@@ -854,7 +867,11 @@ ISR(CC1100_INTVECT)
 #ifdef USE_HAL
   if (!hal_CC_Pin_Get(CC_INSTANCE,CC_Pin_In)) {
 #else
+#ifdef TTYSBU
+  if(sbu_mode ? !bit_is_set(PIND, PD0) : !bit_is_set(CC1100_IN_PORT,CC1100_IN_PIN)) {
+#else
   if(!bit_is_set(CC1100_IN_PORT,CC1100_IN_PIN)) {
+#endif
 #endif
 
 #if defined (HAS_HMS) || defined (HAS_ESA)
@@ -1243,6 +1260,32 @@ retry_sync:
   }
 
 }
+
+/* One handler, two possible interrupt sources: INT2 in legacy wiring, INT0 when
+   the SBU UART has taken PD2/PD3. */
+#ifdef USE_HAL
+	void CC1100_in_callback() {
+    rf_receive_interrupt_handler();
+  }
+#else
+#ifdef TTYSBU
+ISR(INT0_vect)
+{
+  if (sbu_mode)
+    rf_receive_interrupt_handler();
+}
+ISR(CC1100_INTVECT)
+{
+  if (!sbu_mode)
+    rf_receive_interrupt_handler();
+}
+#else
+ISR(CC1100_INTVECT)
+{
+  rf_receive_interrupt_handler();
+}
+#endif
+#endif
 
 uint8_t
 rf_isreceiving()

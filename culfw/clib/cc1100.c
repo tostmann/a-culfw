@@ -10,6 +10,10 @@
 #include "rf_mode.h"
 #include "multi_CC.h"
 
+#ifdef TTYSBU
+#include "sbu_uart.h"
+#endif
+
 #ifdef HAS_MORITZ
 #include "rf_moritz.h"                  // for moritz_on
 #endif
@@ -52,12 +56,23 @@ const PROGMEM const uint8_t CC1100_PA[] = {
 #endif
 
 
+// No need for separate CFG if we just keep GDO0 as input and GDO2 as serial output.
+// Legacy does exact same configuration!
+#ifdef TTYSBU
 const PROGMEM const uint8_t CC1100_CFG[EE_CC1100_CFG_SIZE] = {
 // CULFW   IDX NAME     RESET STUDIO COMMENT
    0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
    0x2E, // 01 IOCFG1    2E    2E    Tri-State
    0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input
    0x07, // 03 FIFOTHR   07   *47    
+#else
+const PROGMEM const uint8_t CC1100_CFG[EE_CC1100_CFG_SIZE] = {
+// CULFW   IDX NAME     RESET STUDIO COMMENT
+   0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
+   0x2E, // 01 IOCFG1    2E    2E    Tri-State
+   0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input
+   0x07, // 03 FIFOTHR   07   *47    
+#endif
    0xD3, // 04 SYNC1     D3    D3    
    0x91, // 05 SYNC0     91    91    
    0x3D, // 06 PKTLEN   *FF    3D    
@@ -106,11 +121,19 @@ const PROGMEM const uint8_t CC1100_CFG[EE_CC1100_CFG_SIZE] = {
  */
 };
 #if defined(HAS_MULTI_CC) && (NUM_SLOWRF > 1)
+#ifdef TTYSBU
+const PROGMEM const uint8_t CC1100_CFG1[EE_CC1100_CFG_SIZE] = {
+// CULFW   IDX NAME     RESET STUDIO COMMENT
+   0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
+   0x2E, // 01 IOCFG1    2E    2E    Tri-State
+   0x0D, // 02 IOCFG0   *3F   *0C    GDO0 for serial output
+#else
 const PROGMEM const uint8_t CC1100_CFG1[EE_CC1100_CFG_SIZE] = {
 // CULFW   IDX NAME     RESET STUDIO COMMENT
    0x0D, // 00 IOCFG2   *29   *0B    GDO2 as serial output
    0x2E, // 01 IOCFG1    2E    2E    Tri-State
    0x2D, // 02 IOCFG0   *3F   *0C    GDO0 for input
+#endif
    0x07, // 03 FIFOTHR   07   *47
    0xD3, // 04 SYNC1     D3    D3
    0x91, // 05 SYNC0     91    91
@@ -234,7 +257,15 @@ ccInitChip(uint8_t *cfg)
 #ifdef USE_HAL
   hal_CC_GDO_init(CC_INSTANCE,INIT_MODE_IN_CS_IN);
 #else
-  EIMSK &= ~_BV(CC1100_INT);                 
+#ifdef TTYSBU
+  if (sbu_mode) {
+    EIMSK &= ~_BV(INT1);
+  } else {
+    EIMSK &= ~_BV(CC1100_INT);
+  }
+#else
+  EIMSK &= ~_BV(CC1100_INT);
+#endif
   SET_BIT( CC1100_CS_DDR, CC1100_CS_PIN ); // CS as output
 #endif
 
@@ -360,7 +391,16 @@ ccTX(void)
 #ifdef USE_HAL
   hal_enable_CC_GDOin_int(CC_INSTANCE,FALSE);
 #else
+#ifdef TTYSBU
+  if (sbu_mode) {
+    EIMSK &= ~_BV(INT0); // Disable RX Interrupt (INT0/PD0)
+    DDRD |= _BV(PD1);    // Enable PD1 as Output (for TX via GDO0)
+  } else {
+    EIMSK  &= ~_BV(CC1100_INT);
+  }
+#else
   EIMSK  &= ~_BV(CC1100_INT);
+#endif
 #endif
   // Going from RX to TX does not work if there was a reception less than 0.5
   // sec ago. Due to CCA? Using IDLE helps to shorten this period(?)
@@ -382,7 +422,22 @@ ccRX(void)
 #ifdef USE_HAL
     hal_enable_CC_GDOin_int(CC_INSTANCE,TRUE);
 #else
+#ifdef TTYSBU
+  if (sbu_mode) {
+    DDRD &= ~_BV(PD0);  // Set PD0 as Input (RX from GDO2)
+    DDRD &= ~_BV(PD1);  // Set PD1 as Input 
+    EIMSK |= _BV(INT0); // Enable INT0 for RX (PD0)
+    EICRA |= (1<<ISC00); // Any logical change on INT0
+    EICRA &= ~(1<<ISC01);
+  } else {
+    // Force re-config of INT2 just in case
+    EICRA |= (1<<ISC20); // Any logical change on INT2
+    EICRA &= ~(1<<ISC21);
+    EIMSK |= _BV(CC1100_INT);
+  }
+#else
   EIMSK |= _BV(CC1100_INT);
+#endif
 #endif
 }
 

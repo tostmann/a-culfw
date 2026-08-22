@@ -3,6 +3,7 @@ FORMAT = ihex
 OBJDIR = .
 
 SRC =           CUL.c\
+		sbu_uart.c                                           \
 		../../clib/Descriptors.c                             \
 		../../clib/cc1100.c                                  \
 		../../clib/cc1101_pllcheck.c                         \

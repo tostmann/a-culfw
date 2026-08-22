@@ -38,7 +38,9 @@
 #  define HAS_ASKSIN                    // PROGMEM: 1314
 #  define HAS_ASKSIN_FUP                // PROGMEM:   78
 #  define HAS_HMIP                      // PROGMEM:  ~600  (RX-Sniffer, raw 'P')
+#ifndef TTYSBU
 #  define HAS_KOPP_FC
+#endif
 #  define HAS_RWE
 #  define HAS_TX3                       // PROGMEM:  168
 #  define HAS_INTERTECHNO               // PROGMEM: 1352
@@ -75,13 +77,19 @@
 #endif
 
 #if defined(CUL_V3)
+#ifdef TTYSBU
+#  define TTY_BUFSIZE           64      // RAM: TTY_BUFSIZE*4 (smaller: the SBU UART needs the room)
+#else
 #  define TTY_BUFSIZE          128      // RAM: TTY_BUFSIZE*4
+#endif
 #if defined(_868MHZ)
 #  define HAS_MBUS                      // PROGMEM: 2536
 #  define MBUS_NO_TX                       // PROGMEM:  962
 #  define HAS_RFNATIVE                  // PROGMEM:  580
 //#  define LACROSSE_HMS_EMU              // PROGMEM: 2206
+#ifndef TTYSBU
 #  define HAS_KOPP_FC                   // PROGMEM: 3370
+#endif
 #endif
 #endif
 
@@ -189,11 +197,22 @@
 #  define CC1100_CS_PIN		SPI_SS
 #  define CC1100_OUT_DDR        DDRD
 #  define CC1100_OUT_PORT       PORTD
+#ifdef TTYSBU
+   /* In SBU mode the software UART owns PD2/PD3, so the CC1101 data lines move
+      to PD0/PD1. The pin numbers become runtime expressions on sbu_mode. */
+   extern uint8_t sbu_mode;
+#  define CC1100_OUT_PIN        (sbu_mode ? PD1 : PD3)
+#else
 #  define CC1100_OUT_PIN        PD3
+#endif
 #  define CC1100_OUT_IN         PIND
 #  define CC1100_IN_DDR		DDRD
 #  define CC1100_IN_PORT        PIND
+#ifdef TTYSBU
+#  define CC1100_IN_PIN         (sbu_mode ? PD0 : PD2)
+#else
 #  define CC1100_IN_PIN         PD2
+#endif
 #  define CC1100_IN_IN          PIND
 #  define CC1100_INT		INT2
 #  define CC1100_INTVECT        INT2_vect

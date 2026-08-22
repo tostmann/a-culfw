@@ -12,6 +12,10 @@
 
 #include "led.h"                        // for SET_BIT, CLEAR_BIT
 
+#ifdef TTYSBU
+#include "sbu_uart.h"
+#endif
+
 void ccInitChip(uint8_t *cfg);
 void cc_factory_reset(void);
 void ccDump(void);
@@ -190,8 +194,10 @@ extern uint8_t cc_on;
 #else
 #define CC1100_DEASSERT  	SET_BIT( CC1100_CS_PORT, CC1100_CS_PIN )
 #define CC1100_ASSERT    	CLEAR_BIT( CC1100_CS_PORT, CC1100_CS_PIN )
+
 #define CC1100_SET_OUT		CC1100_OUT_PORT |= _BV(CC1100_OUT_PIN)
 #define CC1100_CLEAR_OUT	CC1100_OUT_PORT &= ~_BV(CC1100_OUT_PIN)
+
 #endif
 
 

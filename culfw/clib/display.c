@@ -15,6 +15,9 @@
 #include "pcf8833.h"                    // for TITLE_LINECHARS, etc
 #include "rf_router.h"                  // for RFR_Buffer, etc
 #include "ttydata.h"                    // for TTY_Tx_Buffer, callfn
+#ifdef TTYSBU
+#include "sbu_uart.h"
+#endif
 
 #ifdef HAS_PRIVATE_CHANNEL
 #include "private_channel.h"            // for private_putchar
@@ -75,6 +78,11 @@ FHT_compress(rb_t *rb)
 void
 display_char(char data)
 {
+#ifdef TTYSBU
+  if(display_channel & DISPLAY_SBU)
+     sbu_putc(data);
+#endif
+
 #ifdef RFR_SHADOW
   uint8_t buffer_free = 1;
 # define buffer_used() buffer_free=0

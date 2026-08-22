@@ -25,6 +25,7 @@
 #include "rf_send.h"                    // for em_send, fs20send, hm_send, etc
 #include "spi.h"                        // for spi_init
 #include "ttydata.h"                    // for analyze_ttydata, etc
+#include "sbu_uart.h"
 
 #ifdef HAS_MEMFN
 #include "memory.h"                     // for getfreemem
@@ -185,6 +186,9 @@ main(void)
   led_init();
   spi_init();
   eeprom_init();
+
+  sbu_init();
+
   USB_Init();
   fht_init();
   tx_init();
@@ -196,11 +200,18 @@ main(void)
   display_channel = DISPLAY_USB;
 #endif
 
+#ifdef TTYSBU
+  if (sbu_mode) {
+      display_channel |= DISPLAY_SBU;
+  }
+#endif
+
   checkFrequency(); 
   LED_OFF();
 
   for(;;) {
     USB_USBTask();
+    sbu_task();
     CDC_Task();
     RfAnalyze_Task();
     Minute_Task();

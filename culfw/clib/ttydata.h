@@ -11,6 +11,7 @@ typedef struct _fntab {
 } t_fntab;
 
 void analyze_ttydata(uint8_t channel);
+void analyze_ttydata_from(uint8_t channel, rb_t *buffer);
 uint8_t callfn(char *buf);
 
 void (*input_handle_func)(uint8_t channel);

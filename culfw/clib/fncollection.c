@@ -38,6 +38,10 @@
 #include "mysleep.h"                    // for sleep_time
 #include "multi_CC.h"
 
+#ifdef TTYSBU
+extern uint8_t sbu_mode;
+#endif
+
 uint8_t led_mode = 2;   // Start blinking
 
 #ifdef XLED
@@ -430,6 +434,14 @@ version(char *in)
   } else {
      DS_P( PSTR(" (F-Band: 868MHz)") );
   }
+
+#ifdef TTYSBU
+  if (sbu_mode) {
+    DS_P( PSTR(" (SBU Mode)") );
+  } else {
+    DS_P( PSTR(" (Legacy Mode)") );
+  }
+#endif
 #ifdef HAS_I2CSLAVE
 		DS_P( PSTR(" (I2C: 0x") );
 		display_hex2(i2cSlaveAddr);
