@@ -56,6 +56,11 @@ targets build on both.
 
 ### Build profiles
 
+`TTYSBU` builds a CUL_V3 that talks over a UART on the USB-C SBU pins instead
+of USB — PlatformIO environment `CUL_V3_SBU`. Wiring, the runtime mode
+detection and what it costs are described in
+[`culfw/Devices/CUL/SBU_SUPPORT.md`](culfw/Devices/CUL/SBU_SUPPORT.md).
+
 `SLIM_HM_BUILD` builds a CUL_V3 for HomeMatic only (BidCos + HmIP) and drops
 the protocols such a stick does not need. On CUL_V3_868MHZ that is 15736 instead
 of 28202 bytes of flash and 992 instead of 2345 bytes of RAM:
