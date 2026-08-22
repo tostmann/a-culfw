@@ -66,8 +66,7 @@ jobs:
   # for years — long enough for CUNO to end up 300 bytes over its RAM without
   # anyone noticing. This job builds every one of them on every push.
   #
-  # ARM devices (CUBe, CUL-HM-CFG, MapleCUN) are not in here yet: they need
-  # arm-none-eabi-gcc and CUBe currently fails to link its bootloader.
+  # Covers the ARM devices too (CUBe, CUL-HM-CFG, MapleCUN).
   make-devices:
     runs-on: ubuntu-latest
 
@@ -75,24 +74,23 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install AVR toolchain
+      - name: Install toolchains
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-avr avr-libc
+          sudo apt-get install -y gcc-avr avr-libc gcc-arm-none-eabi
           avr-gcc --version | head -1
+          arm-none-eabi-gcc --version | head -1
 
-      - name: Build every AVR device from its makefile
+      - name: Build every device from its makefile
         run: |
           cd culfw/Devices
-          skip="CUBe CUL-HM-CFG MapleCUN"
           fail=""
           for d in */; do
             n="${d%/}"
-            case " $skip " in *" $n "*) echo "skip $n (needs arm-none-eabi-gcc)"; continue;; esac
             [ -f "$n/makefile" ] || [ -f "$n/Makefile" ] || continue
             echo "::group::$n"
             if ( cd "$n" && make all ); then echo "$n OK"; else echo "$n FAILED"; fail="$fail $n"; fi
             echo "::endgroup::"
           done
           if [ -n "$fail" ]; then echo "failed:$fail"; exit 1; fi
-          echo "all AVR devices built"
+          echo "all devices built"
