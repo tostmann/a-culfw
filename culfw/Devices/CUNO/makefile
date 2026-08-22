@@ -185,7 +185,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 
-all: sizebefore build sizeafter
+all: clean-shared-objs sizebefore build sizeafter
 
 build: elf hex eep lss sym
 

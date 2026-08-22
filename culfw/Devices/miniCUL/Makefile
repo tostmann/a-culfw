@@ -105,7 +105,7 @@ MSG_CLEANING = Cleaning project:
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
 
 
-all: 
+all: clean-shared-objs 
 	make TARGET=miniCUL FREQUENCE=_433MHZ MCU=atmega328p FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
 	make TARGET=miniCUL FREQUENCE=_868MHZ MCU=atmega328p FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
 

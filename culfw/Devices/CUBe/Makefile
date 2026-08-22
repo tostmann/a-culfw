@@ -111,7 +111,7 @@ CUBEx4:
 target:	$(OUTPUT).bin
 	$(SIZE) $(OUTPUT).elf
 	
-all:
+all: clean-shared-objs
 	make clean2
 	make CUBE_BL
 	make clean3

@@ -156,7 +156,7 @@ GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
 
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
 
-all: sizebefore build sizeafter
+all: clean-shared-objs sizebefore build sizeafter
 
 build: elf hex eep lss sym
 

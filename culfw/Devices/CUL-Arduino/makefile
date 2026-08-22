@@ -120,7 +120,7 @@ ifeq ($(GCC_TARGET),$(filter $(GCC_TARGET), CUL_ARDUINO))
 SRC += $(CLIB_DIR)/rf_mbus.c $(CLIB_DIR)/mbus/manchester.c $(CLIB_DIR)/mbus/3outof6.c $(CLIB_DIR)/mbus/mbus_packet.c $(CLIB_DIR)/mbus/crc.c
 endif
 
-all:
+all: clean-shared-objs
 	make TARGET=CUL_ARDUINO FREQUENCE=_433MHZ MCU=atmega32u4 mostly_clean build size
 	make TARGET=CUL_ARDUINO FREQUENCE=_868MHZ MCU=atmega32u4 mostly_clean build size
 

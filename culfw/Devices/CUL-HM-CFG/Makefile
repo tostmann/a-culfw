@@ -102,7 +102,7 @@ target:	$(OUTPUT).bin
 HM_CFG_BL:
 	make OUTPUT=HM_CFG_BL target
 	
-all:
+all: clean-shared-objs
 	make clean2
 	make OUTPUT=HM_CFG_BL target
 	make clean3

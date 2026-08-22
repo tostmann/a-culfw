@@ -190,7 +190,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 
-all: 
+all: clean-shared-objs 
 	make TARGET=nanoCUL868 mostly_clean sizebefore build sizeafter
 	make TARGET=nanoCUL433 mostly_clean sizebefore build sizeafter
 

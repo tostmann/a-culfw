@@ -121,7 +121,7 @@ MSG_CLEANING = Cleaning project:
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
 
 
-all:
+all: clean-shared-objs
 	make TARGET=COC COCVERS=FULL mostly_clean build size
 	make TARGET=COC_radio_only COCVERS=RADIO_ONLY mostly_clean build size
 

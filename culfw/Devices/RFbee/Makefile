@@ -93,7 +93,7 @@ MSG_CLEANING = Cleaning project:
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
 
 
-all: mostly_clean build size
+all: clean-shared-objs mostly_clean build size
 
 build: elf hex eep lss sym
 

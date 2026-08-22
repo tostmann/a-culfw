@@ -189,7 +189,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 
-all:
+all: clean-shared-objs
 	make all-sw
 	make all-hw
 

@@ -130,7 +130,7 @@ endif
 # limit:
 #   make TARGET=CUL_V2 FREQUENCE=_868MHZ MCU=at90usb162 \
 #        FLASH_SIZE=16384 BOOTLOADER_SIZE=4096 mostly_clean build size
-all:
+all: clean-shared-objs
 	make TARGET=CUL_V3 FREQUENCE=_433MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 	make TARGET=CUL_V3 FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 	make TARGET=CUL_V4 FREQUENCE=_433MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
