@@ -72,12 +72,14 @@ CFLAGS += -fpack-struct         #    0
 CFLAGS += -fshort-enums         #    0
 CFLAGS += -mcall-prologues      #  130
 CFLAGS += -finline-limit=20     # 0=>150 10=>12 20=>0 (0: RFR won't work!)
+CFLAGS += -fcommon           # GCC>=10: -fno-common ist Default; culfw braucht das alte Verhalten
 CFLAGS += -Wall
 CFLAGS += -Wstrict-prototypes
 CFLAGS += -Wundef
 CFLAGS += -Wa,-adhlns=$(<:%.c=$(OBJDIR)/%.lst)
 CFLAGS += -I../../lufa -I../../clib
 CFLAGS += -std=gnu99
+CFLAGS += $(EXTRA_CFLAGS)
 #CFLAGS += -Wunreachable-code
 GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
