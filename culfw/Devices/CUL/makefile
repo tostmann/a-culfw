@@ -115,18 +115,25 @@ ifeq ($(TARGET), CUL_V3)
 SRC += ../../clib/rf_mbus.c ../../clib/mbus/manchester.c ../../clib/mbus/3outof6.c ../../clib/mbus/mbus_packet.c ../../clib/mbus/crc.c
 endif
 
+# BOOTLOADER_SIZE is 4096, not 2048. start_bootloader() in CUL.c jumps to word
+# address 0x3800 on CUL_V3/V4 and 0x1800 on CUL_V2, i.e. byte 0x7000 and 0x3000
+# — a 4 KB boot section on both parts. boards/cul_v3.json says the same thing
+# with maximum_size = 28672. With 2048 the size check below passed images that
+# reach into the bootloader.
+#
+# CUL_V2/V2_HM/V2_MAX (at90usb162, 12288 bytes of application flash) are no
+# longer built here: against the correct limit V2_HM overruns it by 396 and
+# V2_MAX by 264 bytes with avr-gcc 14.2 (632 / 502 with 5.4), and plain V2 only
+# fits on the newer compiler. Build them by hand if you need one, and mind the
+# limit:
+#   make TARGET=CUL_V2 FREQUENCE=_868MHZ MCU=at90usb162 \
+#        FLASH_SIZE=16384 BOOTLOADER_SIZE=4096 mostly_clean build size
 all:
-	make TARGET=CUL_V2 FREQUENCE=_433MHZ MCU=at90usb162 FLASH_SIZE=16384 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V2 FREQUENCE=_868MHZ MCU=at90usb162 FLASH_SIZE=16384 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V2_HM FREQUENCE=_433MHZ MCU=at90usb162 FLASH_SIZE=16384 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V2_HM FREQUENCE=_868MHZ MCU=at90usb162 FLASH_SIZE=16384 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V2_MAX FREQUENCE=_433MHZ MCU=at90usb162 FLASH_SIZE=16384 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V2_MAX FREQUENCE=_868MHZ MCU=at90usb162 FLASH_SIZE=16384 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V3 FREQUENCE=_433MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V3 FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V4 FREQUENCE=_433MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V4 FREQUENCE=_868MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
-	make TARGET=CUL_V3_ZWAVE FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
+	make TARGET=CUL_V3 FREQUENCE=_433MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
+	make TARGET=CUL_V3 FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
+	make TARGET=CUL_V4 FREQUENCE=_433MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
+	make TARGET=CUL_V4 FREQUENCE=_868MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
+	make TARGET=CUL_V3_ZWAVE FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 
 build: elf hex eep lss sym
 
