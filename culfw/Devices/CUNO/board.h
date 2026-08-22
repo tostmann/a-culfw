@@ -102,7 +102,11 @@
 #define HAS_NTP                 1
 #define HAS_ONEWIRE						  10		// OneWire Device Buffer, RAM: 10 * 8 Byte
 
-#define TTY_BUFSIZE             512
+/* 448, not 512: TTY_BUFSIZE sizes four RAM buffers on this device
+   (TTY_Rx_Buffer, TTY_Tx_Buffer, RFR_Buffer, cmdbuf), so every byte here costs
+   four. The atmega644p has 4096 bytes and the build was over it. Command lines
+   in culfw are far shorter than 448. */
+#define TTY_BUFSIZE             448
 
 #define BUSWARE_CUNO
 

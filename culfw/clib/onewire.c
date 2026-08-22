@@ -12,7 +12,10 @@
 #include "onewire.h"
 #include "stringfunc.h"
 
-static unsigned char dscrc_table[] = {
+/* Lookup table, never written. Without PROGMEM it is a .data object: 256
+   bytes of RAM on every device that compiles onewire.c, plus 256 bytes of
+   flash for the initialiser that fills it at startup. */
+static const unsigned char PROGMEM dscrc_table[] = {
         0, 94,188,226, 97, 63,221,131,194,156,126, 32,163,253, 31, 65,
       157,195, 33,127,252,162, 64, 30, 95,  1,227,189, 62, 96,130,220,
        35,125,159,193, 66, 28,254,160,225,191, 93,  3,128,222, 60, 98,
@@ -533,7 +536,7 @@ unsigned char docrc8(unsigned char value)
    // See Application Note 27
    
    // TEST BUILD
-   crc8 = dscrc_table[crc8 ^ value];
+   crc8 = __LPM(dscrc_table + (crc8 ^ value));
    return crc8;
 }
 
