@@ -6,16 +6,42 @@ on PlatformIO and the third number is a build counter incremented by the CI
 (1.26.100 and up), so it does not continue the 2019 series. Entries from
 "1.26 (PlatformIO)" downwards belong to the old line.
 
-#### unreleased
-- CUL: SLIM_HM_BUILD, a build profile for HomeMatic-only sticks. Drops the
-  protocols a HomeMatic stick does not need and frees 12.5 KB of flash and
-  1.35 KB of RAM on CUL_V3_868MHZ (28202 -> 15736 B flash, 2345 -> 992 B RAM).
-  Select with EXTRA_CFLAGS=-DSLIM_HM_BUILD; every existing build is unchanged.
-- CUL: the makefile builds with a current avr-gcc again (-fcommon, needed
-  since GCC 10) and passes EXTRA_CFLAGS through. Verified with avr-gcc 14.2.0.
-- HmIP: the 'P' line is now descrambled like the 'A' line. HmIP uses the same
+#### 1.28
+- Every device in culfw/Devices/ builds again with a current toolchain, and CI
+  builds all 27 of them on every push. Only two did before: the rest tripped
+  over -fno-common (GCC 10) and implicit function declarations (GCC 14), both
+  now handled centrally in Devices/modern-gcc.mk.
+- Device builds no longer inherit each other's object files. Sources from
+  ../../clib were compiled into a directory all devices share, so building one
+  device after another linked foreign objects — silently, and in CI it handed
+  AVR objects to the ARM linker.
+- CUL: the flash size check assumed a 2 KB bootloader where the part reserves
+  4 KB, so it passed images reaching into the boot section. Corrected; the
+  three CUL_V2 targets no longer fit against the real limit and are out of
+  'make all'.
+- CUL: SLIM_HM_BUILD, a HomeMatic-only profile. 15736 instead of 28202 bytes
+  of flash and 992 instead of 2345 bytes of RAM on CUL_V3_868MHZ.
+- CUL_V3: SBU UART (TTYSBU / PlatformIO env CUL_V3_SBU) — console over the SBU
+  pins instead of USB, merged from feature/cul-v3-sbu.
+- CUNO: would not link, .bss was 4394 bytes against the 4096 the atmega644p
+  has. onewire.c held its 256-byte CRC table in RAM instead of PROGMEM (that
+  alone saves 270 bytes on every device with HAS_ONEWIRE) and TTY_BUFSIZE went
+  from 512 to 448.
+- CUBe: the ARM unwind tables had no place in the linker scripts, so the
+  bootloader did not link.
+- ntp: own ntp_time_t instead of the platform's time_t, which newer newlib no
+  longer declares through stdio.h — and which was signed where NTP needs
+  unsigned.
+- HmIP: the 'P' line is descrambled like the 'A' line. HmIP uses the same
   AskSin/BidCoS scrambling, so emitting it raw made this device and CULFW32
   print different bytes for the same frame on air.
+- Build with a current avr-gcc: PlatformIO pins 7.3.0 instead of 5.4.0 (which
+  builds smaller — CUL_V3 27354 instead of 27748 bytes), the makefiles use
+  whatever is on the PATH, verified against 14.2.0.
+- CI uploaded three committed Optiboot bootloaders instead of the firmware it
+  had just built, on every run since January. Fixed.
+- README described an ESP32 target that does not exist, and the CHANGELOG
+  stopped in 2019. Both brought up to date.
 
 #### 1.27 (2026-07-03)
 - HmIP RX sniffer, merged into the AskSin receive task: 'Pr' / 'Px' switch a
