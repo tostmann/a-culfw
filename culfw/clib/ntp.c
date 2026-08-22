@@ -12,7 +12,7 @@
 #include "stringfunc.h"                 // for fromhex
 
 // Time of last sync.
-time_t        ntp_sec = 3461476149U; // 2009-09-09 09:09:09 (GMT)
+ntp_time_t        ntp_sec = 3461476149U; // 2009-09-09 09:09:09 (GMT)
 uint8_t       ntp_hsec;
  int8_t       ntp_gmtoff;
 struct uip_udp_conn *ntp_conn = 0;
@@ -101,7 +101,7 @@ bcd2dec(uint8_t in)
 
 
 void
-ntp_sec2tm(time_t sec, tm_t *t)
+ntp_sec2tm(ntp_time_t sec, tm_t *t)
 {
   uint8_t m, y;
   sec += (ntp_gmtoff*3600);
@@ -131,7 +131,7 @@ ntp_sec2tm(time_t sec, tm_t *t)
   t->tm_sec  = sec % 60;
 }
 
-time_t
+ntp_time_t
 ntp_tm2sec(tm_t *t)
 {
   uint8_t m, y;
@@ -145,7 +145,7 @@ ntp_tm2sec(tm_t *t)
 
   day += (t->tm_mday-1);
 
-  return (((time_t)day*24+
+  return (((ntp_time_t)day*24+
                   (t->tm_hour-ntp_gmtoff))*60+
                    t->tm_min)*60+
                    t->tm_sec;

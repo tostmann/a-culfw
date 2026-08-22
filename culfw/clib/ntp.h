@@ -1,11 +1,12 @@
 #ifndef __NTP_H
 #define __NTP_H
 
-#ifdef ARM
-#include <stdio.h>
-#else
-typedef uint32_t time_t;
-#endif
+/* NTP seconds. Deliberately not the platform's time_t: on ARM this header
+   used to lean on <stdio.h> declaring it, which newer newlib no longer does,
+   and pulling in <time.h> instead collides with the struct tm below. It also
+   has to be unsigned - ntp_sec starts at 3461476149, past the range of a
+   signed 32-bit time_t. */
+typedef uint32_t ntp_time_t;
 
 typedef union {
   uint32_t u32;
@@ -47,10 +48,10 @@ void ntp_sendpacket(void);
 void ntp_digestpacket(void);
 void ntp_func(char *in);
 void ntp_get(uint8_t now[6]);
-void ntp_sec2tm(time_t sec, tm_t *t);
-time_t ntp_tm2sec(tm_t *t);
+void ntp_sec2tm(ntp_time_t sec, tm_t *t);
+ntp_time_t ntp_tm2sec(tm_t *t);
 
-extern time_t   ntp_sec;
+extern ntp_time_t   ntp_sec;
 extern uint8_t  ntp_hsec;
 extern  int8_t  ntp_gmtoff;
 extern struct uip_udp_conn *ntp_conn;
