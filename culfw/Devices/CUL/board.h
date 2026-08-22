@@ -238,4 +238,34 @@
 #define MARK915_PIN             PINB
 #define MARK915_BIT             5
 
+
+/* ------------------------------------------------------------------------
+ * SLIM_HM_BUILD — schlanker Build mit Fokus auf HomeMatic (BidCos + HmIP).
+ *
+ * Schaltet Protokolle ab, die neben HomeMatic nicht gebraucht werden, und
+ * schafft damit Luft fuer Erweiterungen. Gemessen auf CUL_V3 (atmega32u4):
+ *   voll:    30250 B Flash (inkl. Bootloader), 2345 B RAM (91,6 % voll)
+ *   schlank: 17784 B Flash,                     992 B RAM (38,8 %)
+ *   => rund 12,5 KB Flash und 1,35 KB RAM frei.
+ * Erhalten bleiben ASKSIN(+FUP), HMIP, FHT, RF_ROUTER, RAWSEND, MEMFN, USB.
+ * Die Groessenangaben je Protokoll stehen in den Kommentaren oben.
+ *
+ * Aufruf:  make ... EXTRA_CFLAGS=-DSLIM_HM_BUILD
+ * ---------------------------------------------------------------------- */
+#ifdef SLIM_HM_BUILD
+#  undef HAS_MBUS          /* 2536 B */
+#  undef HAS_KOPP_FC       /* 3370 B */
+#  undef HAS_SOMFY_RTS     /* 1716 B */
+#  undef HAS_MORITZ        /* 1696 B */
+#  undef HAS_INTERTECHNO   /* 1352 B */
+#  undef HAS_RFNATIVE      /*  580 B */
+#  undef HAS_RWE
+#  undef HAS_UNIROLL       /*   92 B */
+#  undef HAS_HOERMANN
+#  undef HAS_HOERMANN_SEND /*  220 B */
+#  undef HAS_TX3           /*  168 B */
+#  undef HAS_ESA           /*  286 B */
+#  undef HAS_HMS
+#endif
+
 #endif // __BOARD_H__
