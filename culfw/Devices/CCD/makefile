@@ -68,6 +68,9 @@ CFLAGS += -Wundef
 CFLAGS += -Wa,-adhlns=$(<:%.c=$(OBJDIR)/%.lst)
 CFLAGS += -I../../lufa -I../../clib
 CFLAGS += -std=gnu99
+
+include ../modern-gcc.mk
+
 #CFLAGS += -Wunreachable-code
 GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)

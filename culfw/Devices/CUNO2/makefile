@@ -97,6 +97,9 @@ CFLAGS += -Wa,-adhlns=$(<:%.c=$(OBJDIR)/%.lst)
 CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
 CFLAGS += -mcall-prologues
+
+include ../modern-gcc.mk
+
 #CFLAGS += -Wunreachable-code
 
 

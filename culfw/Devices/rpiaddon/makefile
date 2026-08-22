@@ -93,6 +93,9 @@ CPPFLAGS += -fshort-enums
 CPPFLAGS += -fno-exceptions
 CPPFLAGS += -Wall
 CFLAGS += -Wundef
+
+include ../modern-gcc.mk
+
 CPPFLAGS += -Wa,-adhlns=$(<:%.cpp=$(OBJDIR)/%.lst)
 CPPFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 

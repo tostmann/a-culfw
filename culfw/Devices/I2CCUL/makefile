@@ -80,6 +80,9 @@ CFLAGS += $(patsubst %,-I%,$(EXTRAINCDIRS))
 CFLAGS += $(CSTANDARD)
 CFLAGS += -mcall-prologues
 CFLAGS += -DF_CPU=$(F_CPU)UL
+
+include ../modern-gcc.mk
+
 #CFLAGS += -Wunreachable-code
 
 

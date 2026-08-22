@@ -190,6 +190,9 @@ CPPFLAGS += -fshort-enums
 CPPFLAGS += -fno-exceptions
 CPPFLAGS += -Wall
 CFLAGS += -Wundef
+
+include ../modern-gcc.mk
+
 #CPPFLAGS += -mshort-calls
 #CPPFLAGS += -fno-unit-at-a-time
 #CPPFLAGS += -Wstrict-prototypes

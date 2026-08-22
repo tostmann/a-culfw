@@ -92,6 +92,9 @@ CFLAGS += $(CSTANDARD)
 CFLAGS += -mcall-prologues
 CFLAGS += -Wundef
 
+include ../modern-gcc.mk
+
+
 ASFLAGS = $(ADEFS) -Wa,-adhlns=$(<:%.S=$(OBJDIR)/%.lst),-gstabs,--listing-cont-lines=100
 
 LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
