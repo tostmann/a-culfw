@@ -1,7 +1,10 @@
 F_CPU = 8000000
 MCU=atmega1284p
 FORMAT = ihex
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 TARGET = CCD
 
 SRC =           CCD.c\
@@ -114,7 +117,7 @@ MSG_CLEANING = Cleaning project:
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
 
 
-all: clean-shared-objs mostly_clean build size
+all: mostly_clean build size
 
 build: elf hex eep lss sym
 
@@ -179,6 +182,7 @@ program:
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@ 
 

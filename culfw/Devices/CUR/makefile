@@ -2,7 +2,10 @@ include board.mk
 F_CPU = 8000000
 FORMAT = ihex
 TARGET = CUR
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 
 SRC = $(TARGET).c                                                  \
@@ -156,7 +159,7 @@ GENDEPFLAGS = -MMD -MP -MF .dep/$(@F).d
 
 ALL_CFLAGS = -mmcu=$(MCU) -I. $(CFLAGS) $(GENDEPFLAGS)
 
-all: clean-shared-objs sizebefore build sizeafter
+all: sizebefore build sizeafter
 
 build: elf hex eep lss sym
 
@@ -245,11 +248,13 @@ extcoff: $(TARGET).elf
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@ 
 
 
 $(OBJDIR)/%.o : %.cpp
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	$(CC) -c $(ALL_CPPFLAGS) $< -o $@ 

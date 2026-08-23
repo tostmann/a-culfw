@@ -1,6 +1,9 @@
 
 FORMAT = ihex
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 F_CPU = 16000000
 
@@ -120,7 +123,7 @@ ifeq ($(GCC_TARGET),$(filter $(GCC_TARGET), CUL_ARDUINO))
 SRC += $(CLIB_DIR)/rf_mbus.c $(CLIB_DIR)/mbus/manchester.c $(CLIB_DIR)/mbus/3outof6.c $(CLIB_DIR)/mbus/mbus_packet.c $(CLIB_DIR)/mbus/crc.c
 endif
 
-all: clean-shared-objs
+all:
 	make TARGET=CUL_ARDUINO FREQUENCE=_433MHZ MCU=atmega32u4 mostly_clean build size
 	make TARGET=CUL_ARDUINO FREQUENCE=_868MHZ MCU=atmega32u4 mostly_clean build size
 
@@ -188,6 +191,7 @@ do_avdude:
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@mkdir -p $(OBJDIR)
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@

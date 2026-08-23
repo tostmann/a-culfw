@@ -2,7 +2,10 @@ MCU = atmega168
 F_CPU = 8000000
 FORMAT = ihex
 TARGET = RFbee
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 SRC = $(TARGET).c                                                    \
 		../../clib/cc1100.c                                  \
@@ -93,7 +96,7 @@ MSG_CLEANING = Cleaning project:
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
 
 
-all: clean-shared-objs mostly_clean build size
+all: mostly_clean build size
 
 build: elf hex eep lss sym
 
@@ -169,6 +172,7 @@ do_usbprogram:
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@ 
 

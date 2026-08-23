@@ -3,7 +3,10 @@ FLASH_SIZE = 32768
 BOOTLOADER_SIZE = 2048
 F_CPU = 16000000
 FORMAT = ihex
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 DATE=$(shell date +%Y-%m-%d)
 DESTDIR=culfw-I2CCUL
@@ -189,7 +192,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 
-all: clean-shared-objs
+all:
 	make all-sw
 	make all-hw
 
@@ -372,12 +375,14 @@ extcoff: $(TARGET).elf
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@echo $(CC) -c $(ALL_CFLAGS) $< -o $@ 
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@ 
 
 
 $(OBJDIR)/%.o : %.cpp
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	$(CC) -c $(ALL_CPPFLAGS) $< -o $@ 
@@ -392,6 +397,7 @@ $(OBJDIR)/%.o : %.cpp
 
 
 $(OBJDIR)/%.o : %.S
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_ASSEMBLING) $<
 	$(CC) -c $(ALL_ASFLAGS) $< -o $@

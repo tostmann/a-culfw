@@ -1,6 +1,9 @@
 F_CPU = 8000000
 FORMAT = ihex
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 SRC =           CUL.c\
 		sbu_uart.c                                           \
@@ -131,7 +134,7 @@ endif
 # limit:
 #   make TARGET=CUL_V2 FREQUENCE=_868MHZ MCU=at90usb162 \
 #        FLASH_SIZE=16384 BOOTLOADER_SIZE=4096 mostly_clean build size
-all: clean-shared-objs
+all:
 	make TARGET=CUL_V3 FREQUENCE=_433MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 	make TARGET=CUL_V3 FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 	make TARGET=CUL_V4 FREQUENCE=_433MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
@@ -245,6 +248,7 @@ do_usbprogram:
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@
 

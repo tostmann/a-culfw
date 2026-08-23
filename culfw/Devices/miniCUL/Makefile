@@ -2,7 +2,10 @@ MCU = atmega328p
 F_CPU = 8000000
 FORMAT = ihex
 TARGET = miniCUL
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 SRC = $(TARGET).c                                                    \
 		../../clib/cc1100.c                                  \
@@ -105,7 +108,7 @@ MSG_CLEANING = Cleaning project:
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
 
 
-all: clean-shared-objs 
+all: 
 	make TARGET=miniCUL FREQUENCE=_433MHZ MCU=atmega328p FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
 	make TARGET=miniCUL FREQUENCE=_868MHZ MCU=atmega328p FLASH_SIZE=32768 BOOTLOADER_SIZE=2048 mostly_clean build size
 
@@ -180,6 +183,7 @@ do_avdude:
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@ 
 

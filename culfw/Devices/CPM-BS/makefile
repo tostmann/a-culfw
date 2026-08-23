@@ -82,7 +82,10 @@ TARGET = bsfw
 # Object files directory
 #     To put object files in current directory, use a dot (.), do NOT make
 #     this an empty or blank macro!
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 
 # List C source files here. (C dependencies are automatically generated.)
@@ -408,7 +411,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 # Default target.
-all: clean-shared-objs begin gccversion sizebefore build checkhooks checklibmode sizeafter end
+all: begin gccversion sizebefore build checkhooks checklibmode sizeafter end
 
 # Change the build target to build a HEX file or a library.
 build: elf hex eep lss sym
@@ -579,6 +582,7 @@ extcoff: $(TARGET).elf
 
 # Compile: create object files from C source files.
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_COMPILING) $<
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@
@@ -586,6 +590,7 @@ $(OBJDIR)/%.o : %.c
 
 # Compile: create object files from C++ source files.
 $(OBJDIR)/%.o : %.cpp
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	@$(CC) -c $(ALL_CPPFLAGS) $< -o $@
@@ -603,6 +608,7 @@ $(OBJDIR)/%.o : %.cpp
 
 # Assemble: create object files from assembler source files.
 $(OBJDIR)/%.o : %.S
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_ASSEMBLING) $<
 	$(CC) -c $(ALL_ASFLAGS) $< -o $@

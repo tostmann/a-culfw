@@ -18,17 +18,19 @@ CFLAGS += -fcommon
 CFLAGS += -Wno-error=implicit-function-declaration
 
 # --- build isolation -------------------------------------------------------
-# Every device sets OBJDIR = . while its sources live in ../../clib and the
-# other shared trees, so an object file ends up next to its source, in a
-# directory all devices share. make then reuses it by timestamp: build device A
-# and then device B, and B silently links A's objects, compiled against A's
-# board.h. The symptom is a link that fails with "undefined reference" to a
-# function the board.h of B does enable — or, worse, one that succeeds and
-# produces a wrong image.
+# Historically every device set OBJDIR = . while compiling sources from
+# ../../clib and the other shared trees, so objects landed next to their source
+# in a directory all devices share, and make reused them by timestamp: build
+# device A then device B, and B silently linked A's objects, compiled against
+# A's board.h.
 #
-# Until the object directory is per device, drop the shared objects before a
-# build. Costs a full recompile of the shared code each time; that is cheap
-# next to a wrong binary.
+# The 24 AVR devices no longer do this — they use OBJDIR = build/_/_, which puts
+# every object under the device's own directory. The two dummy levels absorb the
+# ../.. from the source paths, so the pattern rules stay unchanged.
+#
+# This target remains for the three ARM devices (CUBe, CUL-HM-CFG, MapleCUN),
+# which still compile into the shared trees and therefore still need the sweep
+# before a build.
 .PHONY: clean-shared-objs
 clean-shared-objs:
 	@for d in ../../clib ../../lufa ../../at91lib ../../avr-uip ../../Wiznet ../../STM32; do \

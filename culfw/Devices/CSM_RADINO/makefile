@@ -3,7 +3,10 @@ BOARD  =
 F_CPU = 8000000
 FORMAT = ihex
 TARGET = RADINO
-OBJDIR = .
+# Objekte je Geraet statt gemeinsam in clib/: die zwei Dummy-Ebenen fangen das
+# '../..' aus den Quellpfaden ab, damit ../../clib/foo.c nach build/clib/foo.o
+# geht statt nach clib/foo.o. Die Pattern-Regeln bleiben dadurch unveraendert.
+OBJDIR = build/_/_
 
 SRC = $(TARGET).c                                                    \
 		../../clib/cc1100.c                                  \
@@ -183,7 +186,7 @@ ALL_ASFLAGS = -mmcu=$(MCU) -I. -x assembler-with-cpp $(ASFLAGS)
 
 
 
-all: clean-shared-objs build sizeafter
+all: build sizeafter
 
 build: elf hex eep lss sym
 
@@ -351,11 +354,13 @@ extcoff: $(TARGET).elf
 
 
 $(OBJDIR)/%.o : %.c
+	@mkdir -p $(dir $@)
 	@echo $(MSG_COMPILING) $<
 	@$(CC) -c $(ALL_CFLAGS) $< -o $@
 
 
 $(OBJDIR)/%.o : %.cpp
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_COMPILING_CPP) $<
 	$(CC) -c $(ALL_CPPFLAGS) $< -o $@
@@ -370,6 +375,7 @@ $(OBJDIR)/%.o : %.cpp
 
 
 $(OBJDIR)/%.o : %.S
+	@mkdir -p $(dir $@)
 	@echo
 	@echo $(MSG_ASSEMBLING) $<
 	$(CC) -c $(ALL_ASFLAGS) $< -o $@
