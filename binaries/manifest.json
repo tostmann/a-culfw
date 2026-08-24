@@ -3,8 +3,8 @@
         "platform": "atmelavr",
         "board": "nanoatmega328",
         "mcu": "atmega328p",
-        "version": "1.28.20",
-        "last_build": "2026-08-24 10:20:28",
+        "version": "1.29.1",
+        "last_build": "2026-08-24 11:10:16",
         "artifacts": [
             {
                 "file": "nanoCUL868.hex",
@@ -16,8 +16,8 @@
         "platform": "atmelavr",
         "board": "nanoatmega328",
         "mcu": "atmega328p",
-        "version": "1.28.21",
-        "last_build": "2026-08-24 10:20:31",
+        "version": "1.29.1",
+        "last_build": "2026-08-24 11:10:20",
         "artifacts": [
             {
                 "file": "nanoCUL433.hex",
@@ -29,8 +29,8 @@
         "platform": "atmelavr",
         "board": "cul_v3",
         "mcu": "atmega32u4",
-        "version": "1.28.23",
-        "last_build": "2026-08-24 10:22:56",
+        "version": "1.29.1",
+        "last_build": "2026-08-24 11:10:26",
         "artifacts": [
             {
                 "file": "CUL_V3.hex",
@@ -42,8 +42,8 @@
         "platform": "ststm32",
         "board": "genericSTM32F103CB",
         "mcu": "stm32f103cbt6",
-        "version": "1.28.23",
-        "last_build": "2026-08-22 13:20:11",
+        "version": "1.29.1",
+        "last_build": "2026-08-24 11:11:10",
         "artifacts": [
             {
                 "file": "MapleCUNx4_W5100_BL.bin",
@@ -55,8 +55,8 @@
         "platform": "ststm32",
         "board": "genericSTM32F103CB",
         "mcu": "stm32f103cbt6",
-        "version": "1.28.24",
-        "last_build": "2026-08-22 13:20:15",
+        "version": "1.29.1",
+        "last_build": "2026-08-24 11:11:14",
         "artifacts": [
             {
                 "file": "MapleCUNx4_W5500_BL.bin",
@@ -68,8 +68,8 @@
         "platform": "atmelavr",
         "board": "cul_v3",
         "mcu": "atmega32u4",
-        "version": "1.28.24",
-        "last_build": "2026-08-24 10:35:42",
+        "version": "1.29.1",
+        "last_build": "2026-08-24 11:10:31",
         "artifacts": [
             {
                 "file": "CUL_V3_SBU.hex",
