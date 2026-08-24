@@ -47,6 +47,7 @@
 #  define HAS_UNIROLL                   // PROGMEM:   92
 #  define HAS_MEMFN                     // PROGMEM:  168
 #  define HAS_SOMFY_RTS                 // PROGMEM: 1716
+#  define HAS_CHIPID                    // PROGMEM:   78  ('VS', Signature-Row)
 
 #  if defined(_433MHZ)
 #    define HAS_TCM97001                  // PROGMEM:  264

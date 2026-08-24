@@ -32,6 +32,9 @@
 #endif
 #endif
 #include <avr/wdt.h>                    // for WDTO_15MS, wdt_enable
+#ifdef HAS_CHIPID
+#include <avr/boot.h>                   // for boot_signature_byte_get
+#endif
 
 #include "ethernet.h"                   // for ethernet_reset
 #include "fswrapper.h"                  // for fs
@@ -414,6 +417,31 @@ version(char *in)
 #if defined(CUL_HW_REVISION)
   if (in[1] == 'H') {
     DS_P( PSTR(CUL_HW_REVISION) );
+    DNL();
+    return;
+  }
+#endif
+#ifdef HAS_CHIPID
+  // VS: die unveraenderliche Chip-Kennung aus der Signature-Row.  Anders als
+  // die Geraetenummer im EEPROM laesst sie sich nicht schreiben, taugt also
+  // als Merkmal fuer ein echtes Geraet.
+  //
+  // Ausgegeben werden genau die 20 Zeichen, die LUFA als USB-iSerial liefern
+  // wuerde (USB_Device_GetInternalSerialDescriptor): 10 Byte ab 0x0E, je Byte
+  // niederwertiges Nibble zuerst.  Beide Wege muessen denselben String
+  // ergeben -- sonst stehen fuer denselben Chip zwei Kennungen im Umlauf.
+  if (in[1] == 'S') {
+    uint8_t addr = 0x0E;
+    DS_P( PSTR("VS ") );
+    for (uint8_t i = 0; i < 20; i++) {
+      uint8_t n = boot_signature_byte_get(addr);
+      if (i & 1) {                      // ungerade: hohes Nibble, dann weiter
+        n >>= 4;
+        addr++;
+      }
+      n &= 0x0F;
+      DC(n < 10 ? '0' + n : 'A' + n - 10);
+    }
     DNL();
     return;
   }
