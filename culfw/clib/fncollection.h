@@ -40,6 +40,9 @@ void do_wdt_enable(uint8_t t);
 #define EE_DUDETTE_MAC       (uint8_t *)(E2END-5)		// UNIQUE MAC ADDRESS
 #define EE_DUDETTE_PRIV      (EE_DUDETTE_MAC-16)		// 128bit RSA private key 
 #define EE_DUDETTE_PUBL      (EE_DUDETTE_PRIV-16)		// 128bit RSA public key
+// busware section, below the Dudette data: crystal calibration of this unit,
+// measured at the factory - FSCTRL0 and its complement, see cc_freqcal()
+#define EE_BUSWARE_FREQCAL   (EE_DUDETTE_PUBL-2)
 
 #if defined(HAS_ETHERNET) | defined(HAS_WIZNET)
 # define EE_MAC_ADDR         (EE_RF_ROUTER_ROUTER+1)

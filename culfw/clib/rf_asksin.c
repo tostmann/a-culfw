@@ -129,6 +129,7 @@ rf_asksin_init(void)
   }
 #endif
   
+  cc_freqcal();
   ccStrobe( CC1100_SCAL );
 
   my_delay_ms(4);

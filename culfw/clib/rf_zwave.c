@@ -207,6 +207,7 @@ rf_zwave_init(void)
 
   }
 
+  cc_freqcal();
   ccStrobe( CC1100_SCAL );
 
   my_delay_ms(4);

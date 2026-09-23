@@ -244,6 +244,22 @@ cc1100_sendbyte(uint8_t data)
 #endif
 }
 
+//--------------------------------------------------------------------
+// FSCTRL0 from the crystal calibration measured at the factory (busware
+// section of the EEPROM: value and complement). Anything else, an erased
+// 0xFF 0xFF included, means "not calibrated" and leaves FSCTRL0 as the mode
+// set it. The crystal pulls differently on every unit, so every mode calls
+// this after loading its registers and before SCAL. AVR only: the ARM builds
+// emulate a small EEPROM and have no busware section.
+void
+cc_freqcal(void)
+{
+#ifdef __AVR__
+  uint8_t v = erb(EE_BUSWARE_FREQCAL);
+  if((uint8_t)(v ^ erb(EE_BUSWARE_FREQCAL+1)) == 0xFF)
+    cc1100_writeReg(CC1100_FSCTRL0, v);
+#endif
+}
 
 void
 ccInitChip(uint8_t *cfg)
@@ -279,12 +295,15 @@ ccInitChip(uint8_t *cfg)
   ccStrobe( CC1100_SRES );                   // Send SRES command
   my_delay_us(100);
 
+  uint8_t fsctrl0 = erb(cfg+CC1100_FSCTRL0);
   CC1100_ASSERT;                             // load configuration
   cc1100_sendbyte( 0 | CC1100_WRITE_BURST );
   for(uint8_t i = 0; i < EE_CC1100_CFG_SIZE; i++) {
     cc1100_sendbyte(erb(cfg++));
   }
   CC1100_DEASSERT;
+  if(!fsctrl0)                               // an FSCTRL0 set by hand wins
+    cc_freqcal();
 
   uint8_t *pa = EE_CC1100_PA;
   CC1100_ASSERT;                             // setup PA table

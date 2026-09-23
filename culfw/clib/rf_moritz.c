@@ -115,6 +115,7 @@ rf_moritz_init(void)
                      pgm_read_byte(&MORITZ_CFG[i+1]) );
   }
 
+  cc_freqcal();
   ccStrobe( CC1100_SCAL );
 
   my_delay_ms(4); // 4ms: Found by trial and error

@@ -98,6 +98,7 @@ rf_maico_init(void)
                      pgm_read_byte(&MAICO_CFG[i+1]) );
   }
 
+  cc_freqcal();
   ccStrobe( CC1100_SCAL );
 
   my_delay_ms(4); // 4ms: Found by trial and error

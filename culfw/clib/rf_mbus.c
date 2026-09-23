@@ -205,6 +205,7 @@ void rf_mbus_init(uint8_t mmode, uint8_t rmode) {
   mbus_mode  = mmode;
   radio_mode = rmode;
 
+  cc_freqcal();
   ccStrobe( CC1100_SCAL );
 
   memset( &RXinfo, 0, sizeof( RXinfo ));

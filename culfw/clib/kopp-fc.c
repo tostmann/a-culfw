@@ -238,6 +238,7 @@ kopp_fc_init(void)
 
 
 // Set CC_ON
+	cc_freqcal();
 	ccStrobe( CC1100_SCAL);						// Calibrate Synthesizer and turn it of. ##Claus brauchen wir das
 	my_delay_ms(1);
 #ifndef USE_RF_MODE

@@ -157,6 +157,7 @@ void somfy_rts_tunein(void) {
 	CC1100_DEASSERT;
 
 	// Set CC_ON
+	cc_freqcal();
 	ccStrobe( CC1100_SCAL);
 	my_delay_ms(1);
 #ifndef USE_RF_MODE

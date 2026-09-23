@@ -155,6 +155,7 @@ void native_init(uint8_t mode) {
   }
 
   
+  cc_freqcal();
   ccStrobe( CC1100_SCAL );
 
 #ifndef USE_RF_MODE

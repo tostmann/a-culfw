@@ -18,6 +18,7 @@
 
 void ccInitChip(uint8_t *cfg);
 void cc_factory_reset(void);
+void cc_freqcal(void);
 void ccDump(void);
 void ccTX(void);
 void ccRX(void);

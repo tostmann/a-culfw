@@ -85,6 +85,7 @@ rf_rwe_init(void)
                      pgm_read_byte(&RWE_CFG[i+1]) );
   }
   
+  cc_freqcal();
   ccStrobe( CC1100_SCAL );
 
   my_delay_ms(1);

@@ -154,6 +154,7 @@ it_tunein(void)
   		}
   		CC1100_DEASSERT;
 
+  		cc_freqcal();
   		ccStrobe( CC1100_SCAL );
   		my_delay_ms(1);
 #ifndef USE_RF_MODE
