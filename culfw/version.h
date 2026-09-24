@@ -10,7 +10,7 @@
 #define VERSION_2               26
 
 /* Das ist unsere Basis-Version (statisch) */
-#define BASE_VERSION            "1.29"
+#define BASE_VERSION            "1.30"
 #define FW_NAME                 "a-culfw"
 
 /* Der finale VERSION String wird normalerweise vom Build-Script 

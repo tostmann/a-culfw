@@ -6,6 +6,20 @@ on PlatformIO and the third number is a build counter incremented by the CI
 (1.26.100 and up), so it does not continue the 2019 series. Entries from
 "1.26 (PlatformIO)" downwards belong to the old line.
 
+#### 1.30
+- Factory crystal calibration. The 26 MHz crystal pulls differently on every
+  unit; CUL V3 units sit around 30 kHz below 868.3 MHz with FSCTRL0 = 0. The
+  factory now measures each unit and stores the FSCTRL0 value that puts it on
+  frequency at E2END-39 (0x3D8 on 1 KB parts), its complement in the next
+  byte. Every mode writes it after loading its registers and before SCAL;
+  in SlowRF an FSCTRL0 set by hand in the EEPROM configuration still wins.
+  Anything but a value/complement pair, an erased 0xFF 0xFF included, means
+  "not calibrated", and FSCTRL0 stays as before. The factory reset leaves the
+  value alone. AVR only.
+
+#### 1.29
+- CUL_V3: `VS` prints the 80-bit chip identity from the signature row.
+
 #### 1.28
 - Every device in culfw/Devices/ builds again with a current toolchain, and CI
   builds all 27 of them on every push. Only two did before: the rest tripped
