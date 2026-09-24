@@ -53,8 +53,7 @@ binaries/*
 
 # Ausnahmen (Whitelist): Diese Dateien explizit erlauben
 !binaries/manifest.json
-!binaries/*.hex
-!binaries/*.bin
+!binaries/CUL_V3.hex
 
 # PlatformIO Build-Ordner im culfw-Unterverzeichnis komplett ignorieren
 culfw/.pio/

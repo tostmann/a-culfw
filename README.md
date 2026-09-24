@@ -37,22 +37,18 @@ measurably between the two.
 
 ## Generating Firmware (Build)
 
-By default, `pio run` builds the three AVR targets listed in `default_envs`. The MapleCUN environments must be selected explicitly.
+By default, `pio run` builds `CUL_V3`, the only image this repository ships.
+Other environments build only when selected explicitly.
 
 ### Build Commands in the Terminal
 
 ```bash
-# Build the default AVR targets (CUL_V3, nanoCUL868, nanoCUL433)
+# Build CUL_V3 (default_envs)
 pio run
 
-# Build one environment explicitly
+# Build another environment explicitly
 pio run -e nanoCUL868
-pio run -e MapleCUNx4_W5500_BL
 ```
-
-The MapleCUN environments need an **x86_64** host: on linux_aarch64 PlatformIO
-cannot resolve the ARM toolchain the `ststm32` platform asks for. The AVR
-targets build on both.
 
 ### Build profiles
 
@@ -73,14 +69,14 @@ make TARGET=CUL_V3 FREQUENCE=_868MHZ MCU=atmega32u4 \
 ```
 
 ### The Result
-After a successful build, all relevant files are located in the `/binaries` directory in the git root:
-* `manifest.json`: Contains metadata for all built versions.
-* `*.hex`: Firmware for AVR-based CULs.
-* `*.bin`: Firmware for STM32 (DFU images).
+A build copies each image it produces into the `/binaries` directory in the
+git root and records it in `manifest.json`. Only `binaries/CUL_V3.hex` and
+`manifest.json` are part of the repository.
 
 ## Flashing Firmware
 
 ### 1. nanoCUL (Arduino Nano)
+Build the image first (`pio run -e nanoCUL868`), it is not shipped.
 ```bash
 avrdude -p atmega328p -c arduino -P /dev/ttyUSB0 -b 57600 -D -U flash:w:../binaries/nanoCUL868.hex:i
 ```
@@ -100,7 +96,7 @@ The CUL V3 must be in bootloader mode.
 To keep the repository clean, only the final products in the `binaries/` folder are tracked. Temporary build files are ignored.
 
 **Git Whitelist Principle:**
-Only `.hex`, `.bin` and the `manifest.json` in the `/binaries/` folder are explicitly allowed in the `.gitignore`. All other artifacts in the `.pio/` folder remain local.
+Only `binaries/CUL_V3.hex` and `binaries/manifest.json` are explicitly allowed in the `.gitignore`. Images of other environments and all artifacts in the `.pio/` folder remain local.
 
 ## Version Numbering
 

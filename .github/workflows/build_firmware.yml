@@ -33,40 +33,31 @@ jobs:
       - name: Install PlatformIO
         run: pip install -U platformio
 
-      # default_envs = the three AVR targets. They build on any host.
-      - name: Build AVR targets
+      # CUL_V3 is the only image this repository ships (default_envs).
+      - name: Build CUL_V3
         run: |
           cd culfw
-          pio run
+          pio run -e CUL_V3
 
-      # MapleCUN is not in default_envs on purpose: PlatformIO cannot resolve
-      # the ARM toolchain for the ststm32 platform on linux_aarch64, so a
-      # default build would break on an arm64 workstation. The runner is
-      # x86_64, so build it explicitly here.
-      - name: Build MapleCUN and SBU targets
-        run: |
-          cd culfw
-          pio run -e MapleCUNx4_W5100_BL -e MapleCUNx4_W5500_BL -e CUL_V3_SBU
-
-      # collect_binaries.py copies every built image into binaries/ and writes
-      # manifest.json. Uploading culfw/Devices/**/*.hex instead would only pick
-      # up the three committed Optiboot images and never the firmware.
+      # collect_binaries.py copies the built image into binaries/ and writes
+      # manifest.json.
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
           name: a-culfw-${{ github.run_number }}
           path: |
-            binaries/*.hex
-            binaries/*.bin
+            binaries/CUL_V3.hex
             binaries/manifest.json
           if-no-files-found: error
 
-  # The PlatformIO job above covers four devices. Everything else in
+  # The PlatformIO job above builds CUL_V3 only. Everything else in
   # culfw/Devices/ is built only by its own makefile, and nothing checked those
   # for years — long enough for CUNO to end up 300 bytes over its RAM without
-  # anyone noticing. This job builds every one of them on every push.
+  # anyone noticing. This job compiles them on every push; nothing it builds
+  # is uploaded.
   #
-  # Covers the ARM devices too (CUBe, CUL-HM-CFG, MapleCUN).
+  # Covers the ARM devices CUBe and CUL-HM-CFG too. MapleCUN is skipped: no
+  # images are built for it.
   make-devices:
     runs-on: ubuntu-latest
 
@@ -87,6 +78,7 @@ jobs:
           fail=""
           for d in */; do
             n="${d%/}"
+            [ "$n" = "MapleCUN" ] && continue
             [ -f "$n/makefile" ] || [ -f "$n/Makefile" ] || continue
             echo "::group::$n"
             if ( cd "$n" && make all ); then echo "$n OK"; else echo "$n FAILED"; fail="$fail $n"; fi
