@@ -35,6 +35,7 @@
 #include "fht.h"                        // for fht_hook, FHT_ACK, FHT_ACK2, etc
 #include "led.h"                        // for CLEAR_BIT, SET_BIT, LED_OFF, etc
 #include "rf_receive.h"
+#include "timebase.h"
 #include "rf_receive_bucket.h"          // for bucket_t, wave_t, TSCALE, etc
 #include "rf_receive_esa.h"             // for STATE_ESA, analyze_esa
 #include "rf_receive_hms.h"             // for STATE_HMS, analyze_hms
@@ -661,7 +662,7 @@ ISR(TIMER1_COMPA_vect)
   TIMSK1 = 0;                           // Disable "us"
 #ifdef LONG_PULSE
   tmp=OCR1A;
-  OCR1A = TWRAP;                        // Wrap Timer
+  OCR1A = US2TICK(TWRAP);               // Wrap Timer
   TCNT1=tmp;                            // reinitialize timer to measure times > SILENCE
 #endif
 #endif
@@ -781,7 +782,7 @@ static void calcOcrValue(bucket_t *b, pulse_t *hightime, pulse_t *lowtime, bool 
 #elif defined STM32
         HAL_timer_set_reload_register(CC_INSTANCE,ocrVal * 16);
 #else
-        OCR1A = ocrVal * 16;
+        OCR1A = US2TICK(ocrVal * 16);
 #endif
 
     }   
@@ -822,7 +823,7 @@ static inline void rf_receive_interrupt_handler(void)
   #elif defined STM32
   uint16_t c = HAL_timer_get_counter_value(CC_INSTANCE)>>4;;
   #else
-  uint16_t c = (TCNT1>>4);               // catch the time and make it smaller
+  uint16_t c = TICK2US16(TCNT1);         // catch the time and make it smaller
   #endif
 #else
   #ifdef SAM7
@@ -830,7 +831,7 @@ static inline void rf_receive_interrupt_handler(void)
   #elif defined STM32
   uint8_t c = HAL_timer_get_counter_value(CC_INSTANCE)>>4;
   #else
-  uint8_t c = (TCNT1>>4);               // catch the time and make it smaller
+  uint8_t c = TICK2US16(TCNT1);          // catch the time and make it smaller
   #endif
 #endif
 
@@ -1039,7 +1040,7 @@ retry_sync:
       #elif defined STM32
           HAL_timer_set_reload_register(CC_INSTANCE,(lowtime[CC_INSTANCE] - 16) * 16); //End of message
       #else
-          OCR1A = (lowtime[CC_INSTANCE] - 16) * 16; //End of message
+          OCR1A = US2TICK((lowtime[CC_INSTANCE] - 16) * 16); //End of message
          	//OCR1A = 2200; // end of message
           //OCR1A = b->syncbit.lowtime*16 - 1000;
       #endif
@@ -1086,7 +1087,7 @@ retry_sync:
         #elif defined STM32
             HAL_timer_set_reload_register(CC_INSTANCE,SILENCE);
         #else
-            OCR1A = SILENCE;
+            OCR1A = US2TICK(SILENCE);
         #endif
         #ifdef USE_HAL
             hal_enable_CC_timer_int(CC_INSTANCE,TRUE);
@@ -1113,7 +1114,7 @@ retry_sync:
 #elif defined STM32
       	HAL_timer_set_reload_register(CC_INSTANCE,SILENCE);
 #else
-        OCR1A = SILENCE;
+        OCR1A = US2TICK(SILENCE);
 #endif
 #ifdef HAS_HMS
         if (b->sync >= 12 && (b->zero.hightime + b->zero.lowtime) > TSCALE(1600)) {
@@ -1130,7 +1131,7 @@ retry_sync:
 #elif defined STM32
           HAL_timer_set_reload_register(CC_INSTANCE,1000);
 #else
-          OCR1A = 1000;
+          OCR1A = US2TICK(1000);
 #endif
 
         } else 

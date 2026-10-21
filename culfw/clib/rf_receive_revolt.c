@@ -19,6 +19,7 @@
  */
 
 #include "rf_receive_revolt.h"
+#include "timebase.h"
 
 #include <avr/io.h>                     // for _BV
 #include <stdint.h>                     // for uint8_t
@@ -77,7 +78,7 @@ bool is_revolt(bucket_t *b, pulse_t *hightime, pulse_t *lowtime)
     #elif defined STM32
     HAL_timer_set_reload_register(CC_INSTANCE,SILENCE);
     #else
-        OCR1A = SILENCE;
+        OCR1A = US2TICK(SILENCE);
     #endif
     #ifdef USE_HAL
         hal_enable_CC_timer_int(CC_INSTANCE,TRUE);
