@@ -1,0 +1,51 @@
+SHC2 - radio co-processor of the RWE / innogy SmartHome Controller 2.0 (SHC2)
+
+The SHC2 main board (Actions S500) carries a plug-in extension board (S500B-EXT) with an
+ATmega328P and a CC110L module (26 MHz reference, 868 MHz). The S500 talks to it over a
+UART and programs it in-circuit. This device target makes that radio part run culfw.
+It is a copy of Devices/SHC (SHC v1) - same pin-out, different host and baud rate.
+
+HARDWARE (measured 2026-10-21)
+
+  MCU              ATmega328P, 11.0592 MHz crystal
+  Transceiver      CC110L, 26 MHz reference (PARTNUM 0x00, VERSION 0x17)
+  CC110L CS        PB2   (pulled up on the board)
+  CC110L GDO0      PD2   (default CLK_XOSC/192 toggles there after power-on)
+  CC110L GDO2      PD3   -> RX interrupt is INT1
+  SPI              PB3 / PB4 / PB5 (MOSI / MISO / SCK), shared with the host
+  Serial           57600 8N1 on the ATmega UART, wired to the host UART0 (ttyS0)
+  LED              none
+
+HOST SIDE (S500)
+
+  - Supply: S500 GPIO 36 switches the 5 V EN line of the extension. Keep it on.
+  - ISP: RESET = S500 GPIO 28, SCK/MOSI/MISO = S500 GPIO 72/71/70 (DSI pads).
+  - While culfw runs, the S500 DSI pads must be high impedance: set GPIO INEN for
+    GPIOC6..8 first, then the MFP fields to a digital function. In DSI mode the pads
+    pull the SPI lines low and the ATmega cannot talk to the CC110L reliably.
+
+CLOCK: the clib was written for an 8 MHz core. board.h sets CULFW_CORE_HZ = F_CPU, and
+clib/timebase.h scales the SlowRF time base to 11.0592 MHz: Timer1 pulse measurement and
+timeouts, my_delay_us(), and the Timer0 tick (125.58 Hz, +0.47 %). Verified 2026-10-21
+against a CUL868 and with a HackRF: FS20 pulses 400/600 us, FS20 and AskSin in both
+directions.
+
+FACTORY STATE OF THE ATmega328P
+
+The unit examined came with an empty flash and EEPROM (all 0xFF) and lock bits 0xFF.
+Its fuses select the internal RC oscillator divided by 8: low 0x62, high 0xD9,
+extended 0xFF. culfw needs the crystal, so set the low fuse to 0xFF before flashing.
+EESAVE is unprogrammed: every chip erase clears the EEPROM as well.
+
+CRYSTAL CALIBRATION
+
+As on a CUL, the FSCTRL0 value that puts the unit on frequency goes to EEPROM 0x3D8,
+its complement to 0x3D9 (W03D8xx, W03D9yy), and every mode applies it. The chip
+erase of an in-circuit flash clears it with the rest of the EEPROM, so write it back
+afterwards. FSCTRL0 works on the CC110L: the unit examined sent 2.2 kHz below
+868.3 MHz with FSCTRL0 = 0 and 0.5 kHz below with the stored value 1.
+
+BUILD
+
+  make TARGET=shc2CUL868 mostly_clean build
+  make TARGET=shc2CUL868 bin
