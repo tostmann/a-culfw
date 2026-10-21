@@ -32,7 +32,8 @@ TWO THINGS THAT WILL COST YOU AN AFTERNOON IF YOU MISS THEM
    CULFW_CORE_HZ, and clib/timebase.h scales the SlowRF time base to it: Timer1 pulse
    measurement and timeouts, my_delay_us(), and the Timer0 tick (125.58 Hz, +0.47 %).
    Without that, Timer0/Timer1 and every SlowRF pulse were a factor of 1.3824 off
-   (measured on air on the SHC2, 2026-10-21: FS20 bit periods 0.71x nominal).
+   (measured on air on the SHC2, 2026-10-21: FS20 bit periods 0.71x nominal). With it,
+   an SHC v1 exchanged FS20 and AskSin with a CUL868 in both directions (2026-10-21).
 
 BUILDING
 
@@ -49,4 +50,12 @@ The devices ship with lock bits 0xFC (LB mode 3): the original firmware can be n
 read out nor verified, and a chip erase - which is required before writing anything -
 destroys it for good. The fuses survive that erase (low 0xFF, high 0xD9, extended 0xFD),
 so crystal operation and brown-out level stay as they were. EESAVE is unprogrammed, so
-the erase takes the EEPROM with it.
+the erase takes the EEPROM with it. Program EESAVE (high fuse 0xD9 -> 0xD1) before the
+next erase: on the unit examined the EEPROM then survived the chip erase of a reflash.
+
+CRYSTAL CALIBRATION
+
+As on a CUL, the FSCTRL0 value that puts the unit on frequency goes to EEPROM 0x3D8,
+its complement to 0x3D9 (W03D8xx, W03D9yy), and every mode applies it. The unit
+examined sent 3.0 kHz below 868.3 MHz with FSCTRL0 = 0 and 0.2 kHz above with the
+stored value 2.
