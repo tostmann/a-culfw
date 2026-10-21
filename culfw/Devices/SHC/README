@@ -1,0 +1,52 @@
+SHC - RF part of an RWE / innogy / LIVISI SmartHome Controller (SHC v1)
+
+The central unit of that system contains, next to its AT91SAM9G20 main processor, a
+small radio subsystem that is electrically a nanoCUL: an ATmega328P with a CC1100
+module (26 MHz reference, 868 MHz). The main processor talks to it over a plain UART.
+This device target makes that radio part run culfw.
+
+HARDWARE
+
+  MCU              ATmega328P, 11.0592 MHz crystal
+  Transceiver      CC1100 (reports VERSION 0x03), 26 MHz reference
+  CC1100 CS        PB2   (ATmega pin 14, pulled up on the board)
+  CC1100 GDO0      PD2   (ATmega pin 32)
+  CC1100 GDO2      PD3   (ATmega pin 1) -> RX interrupt is INT1, not INT0
+  SPI              PB3 / PB4 / PB5 (MOSI / MISO / SCK), shared with the host, see below
+  Serial           38400 8N1 on the ATmega UART, wired to the host
+  LED              none
+
+TWO THINGS THAT WILL COST YOU AN AFTERNOON IF YOU MISS THEM
+
+1. The SPI bus is shared with the in-circuit programmer.
+   The host programs this ATmega over the same MOSI/MISO/SCK lines that carry the
+   CC1100 traffic. As long as the host SPI controller owns those pins it holds SCK at
+   its idle level, and the ATmega cannot clock the transceiver: every register read
+   comes back 0x00, including the status byte, which looks exactly like a dead or
+   unpowered chip. After programming, the host must hand the pins back - switch them
+   to high-impedance GPIO inputs - before the firmware can use the radio.
+
+2. The core runs at 11.0592 MHz, the clib was written for 8 MHz.
+   16 MHz boards divide by two via clock_prescale_set(); 11.0592 MHz cannot be divided
+   into 8 MHz, so HAS_16MHZ_CLOCK stays off and F_CPU is 11059200. board.h therefore sets
+   CULFW_CORE_HZ, and clib/timebase.h scales the SlowRF time base to it: Timer1 pulse
+   measurement and timeouts, my_delay_us(), and the Timer0 tick (125.58 Hz, +0.47 %).
+   Without that, Timer0/Timer1 and every SlowRF pulse were a factor of 1.3824 off
+   (measured on air on the SHC2, 2026-10-21: FS20 bit periods 0.71x nominal).
+
+BUILDING
+
+	make TARGET=shcCUL868 build
+	make TARGET=shcCUL868 bin
+
+The second step produces a raw binary; the ATmega has no bootloader (BOOTRST is
+unprogrammed on the factory device) and no USB, so it is flashed in-circuit from the
+host rather than by avrdude over a serial port.
+
+FACTORY STATE OF THE ATmega328P
+
+The devices ship with lock bits 0xFC (LB mode 3): the original firmware can be neither
+read out nor verified, and a chip erase - which is required before writing anything -
+destroys it for good. The fuses survive that erase (low 0xFF, high 0xD9, extended 0xFD),
+so crystal operation and brown-out level stay as they were. EESAVE is unprogrammed, so
+the erase takes the EEPROM with it.
