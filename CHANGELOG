@@ -12,6 +12,12 @@ on PlatformIO and the third number is a build counter incremented by the CI
   the `D` commands. It reports `Dudette=1` in its version line. The module needs
   about 9.7 KB of flash, so the image is built on SLIM_HM_BUILD and meant for
   flashing, not for everyday use. CUL_V3 is unchanged. AVR only, 868 MHz.
+- Boards whose core does not run at 8 MHz can define CULFW_CORE_HZ: the SlowRF
+  time base then scales to the real clock (clib/timebase.h). Boards without it
+  build as before.
+- New devices SHC and SHC2: the radio parts of the RWE / innogy SmartHome
+  Controllers (ATmega328P, 11.0592 MHz). They build from their makefiles, no
+  images are shipped. CI now builds 29 devices.
 
 #### 1.30
 - Factory crystal calibration. The 26 MHz crystal pulls differently on every
