@@ -443,7 +443,7 @@ int main(void)
         break;
 
       case 'w':
-        ewb(0x1e, 0x55);
+        ewb((uint8_t *)0x1e, 0x55);
         break;
       case 'S':
         USBD_Disconnect();
