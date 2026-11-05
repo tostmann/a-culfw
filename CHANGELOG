@@ -6,6 +6,13 @@ on PlatformIO and the third number is a build counter incremented by the CI
 (1.26.100 and up), so it does not continue the 2019 series. Entries from
 "1.26 (PlatformIO)" downwards belong to the old line.
 
+#### 1.31
+- New image CUL_V3_DUDETTE: a CUL868 that installs firmware on devices with the
+  Dudette radio bootloader, through the web installer or any other client of
+  the `D` commands. It reports `Dudette=1` in its version line. The module needs
+  about 9.7 KB of flash, so the image is built on SLIM_HM_BUILD and meant for
+  flashing, not for everyday use. CUL_V3 is unchanged. AVR only, 868 MHz.
+
 #### 1.30
 - Factory crystal calibration. The 26 MHz crystal pulls differently on every
   unit; CUL V3 units sit around 30 kHz below 868.3 MHz with FSCTRL0 = 0. The

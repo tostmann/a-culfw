@@ -37,13 +37,14 @@ measurably between the two.
 
 ## Generating Firmware (Build)
 
-By default, `pio run` builds `CUL_V3`, the only image this repository ships.
+By default, `pio run` builds `CUL_V3` and `CUL_V3_DUDETTE`, the two images this
+repository ships.
 Other environments build only when selected explicitly.
 
 ### Build Commands in the Terminal
 
 ```bash
-# Build CUL_V3 (default_envs)
+# Build the shipped images (default_envs)
 pio run
 
 # Build another environment explicitly
@@ -68,10 +69,24 @@ make TARGET=CUL_V3 FREQUENCE=_868MHZ MCU=atmega32u4 \
      EXTRA_CFLAGS=-DSLIM_HM_BUILD mostly_clean build size
 ```
 
+`CUL_V3_DUDETTE` builds a CUL_V3 that installs firmware on devices with the
+Dudette radio bootloader, from the
+[web installer](https://install.busware.de/dudette/) or any other client of its
+`D` commands. Its version line ends in `Dudette=1`. The module takes about 9.7 KB
+of flash, so this build sits on `SLIM_HM_BUILD`: it is a firmware to flash with,
+not one for everyday use. 868 MHz only. PlatformIO environment `CUL_V3_DUDETTE`,
+or:
+
+```bash
+cd culfw/Devices/CUL
+make TARGET=CUL_V3_DUDETTE FREQUENCE=_868MHZ MCU=atmega32u4 \
+     FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
+```
+
 ### The Result
 A build copies each image it produces into the `/binaries` directory in the
-git root and records it in `manifest.json`. Only `binaries/CUL_V3.hex` and
-`manifest.json` are part of the repository.
+git root and records it in `manifest.json`. Only `binaries/CUL_V3.hex`,
+`binaries/CUL_V3_DUDETTE.hex` and `manifest.json` are part of the repository.
 
 ## Flashing Firmware
 
@@ -96,7 +111,7 @@ The CUL V3 must be in bootloader mode.
 To keep the repository clean, only the final products in the `binaries/` folder are tracked. Temporary build files are ignored.
 
 **Git Whitelist Principle:**
-Only `binaries/CUL_V3.hex` and `binaries/manifest.json` are explicitly allowed in the `.gitignore`. Images of other environments and all artifacts in the `.pio/` folder remain local.
+Only `binaries/CUL_V3.hex`, `binaries/CUL_V3_DUDETTE.hex` and `binaries/manifest.json` are explicitly allowed in the `.gitignore`. Images of other environments and all artifacts in the `.pio/` folder remain local.
 
 ## Version Numbering
 

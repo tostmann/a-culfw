@@ -33,13 +33,13 @@ jobs:
       - name: Install PlatformIO
         run: pip install -U platformio
 
-      # CUL_V3 is the only image this repository ships (default_envs).
-      - name: Build CUL_V3
+      # CUL_V3 and CUL_V3_DUDETTE are the images this repository ships (default_envs).
+      - name: Build CUL_V3 and CUL_V3_DUDETTE
         run: |
           cd culfw
-          pio run -e CUL_V3
+          pio run -e CUL_V3 -e CUL_V3_DUDETTE
 
-      # collect_binaries.py copies the built image into binaries/ and writes
+      # collect_binaries.py copies the built images into binaries/ and writes
       # manifest.json.
       - name: Upload firmware
         uses: actions/upload-artifact@v4
@@ -47,10 +47,11 @@ jobs:
           name: a-culfw-${{ github.run_number }}
           path: |
             binaries/CUL_V3.hex
+            binaries/CUL_V3_DUDETTE.hex
             binaries/manifest.json
           if-no-files-found: error
 
-  # The PlatformIO job above builds CUL_V3 only. Everything else in
+  # The PlatformIO job above builds the shipped images only. Everything else in
   # culfw/Devices/ is built only by its own makefile, and nothing checked those
   # for years — long enough for CUNO to end up 300 bytes over its RAM without
   # anyone noticing. This job compiles them on every push; nothing it builds
