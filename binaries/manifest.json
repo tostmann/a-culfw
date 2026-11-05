@@ -3,11 +3,24 @@
         "platform": "atmelavr",
         "board": "cul_v3",
         "mcu": "atmega32u4",
-        "version": "1.30.1",
-        "last_build": "2026-09-24 12:53:33",
+        "version": "1.31.1",
+        "last_build": "2026-11-05 14:53:10",
         "artifacts": [
             {
                 "file": "CUL_V3.hex",
+                "type": "app"
+            }
+        ]
+    },
+    "CUL_V3_DUDETTE": {
+        "platform": "atmelavr",
+        "board": "cul_v3",
+        "mcu": "atmega32u4",
+        "version": "1.31.1",
+        "last_build": "2026-11-05 14:53:12",
+        "artifacts": [
+            {
+                "file": "CUL_V3_DUDETTE.hex",
                 "type": "app"
             }
         ]
