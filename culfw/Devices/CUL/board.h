@@ -24,8 +24,16 @@
 #undef  RFR_DEBUG                       // PROGMEM:  354b  RAM: 14b
 #undef  HAS_FASTRF                      // PROGMEM:  468b  RAM:  1b
 
-#if defined(CUL_V3_ZWAVE)
+#if (defined(CUL_V3_ZWAVE) || defined(CUL_V3_DUDETTE)) && !defined(CUL_V3)
 #  define CUL_V3
+#endif
+
+// Stick for the Dudette radio bootloader (D commands). The module needs about
+// 9.7 KB of flash, which only the slim build has free: this is a firmware to flash
+// with, not one for everyday use.
+#if defined(CUL_V3_DUDETTE)
+#  define HAS_DUDETTE
+#  define SLIM_HM_BUILD
 #endif
 
 #if defined(CUL_V3) || defined(CUL_V4)

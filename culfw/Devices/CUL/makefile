@@ -117,6 +117,10 @@ MSG_CLEANING = Cleaning project:
 
 OBJ = $(SRC:%.c=$(OBJDIR)/%.o)
 
+ifeq ($(TARGET), CUL_V3_DUDETTE)
+SRC += ../../clib/dudette_stick.c ../../clib/dudette_hal.c
+endif
+
 ifeq ($(TARGET), CUL_V3)
 SRC += ../../clib/rf_mbus.c ../../clib/mbus/manchester.c ../../clib/mbus/3outof6.c ../../clib/mbus/mbus_packet.c ../../clib/mbus/crc.c
 endif
@@ -140,6 +144,7 @@ all:
 	make TARGET=CUL_V4 FREQUENCE=_433MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 	make TARGET=CUL_V4 FREQUENCE=_868MHZ MCU=atmega32u2 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 	make TARGET=CUL_V3_ZWAVE FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
+	make TARGET=CUL_V3_DUDETTE FREQUENCE=_868MHZ MCU=atmega32u4 FLASH_SIZE=32768 BOOTLOADER_SIZE=4096 mostly_clean build size
 
 build: elf hex eep lss sym
 

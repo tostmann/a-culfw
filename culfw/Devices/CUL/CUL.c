@@ -61,6 +61,9 @@
 #ifdef HAS_ZWAVE
 #include "rf_zwave.h"                   // for rf_zwave_task, zwave_func
 #endif
+#ifdef HAS_DUDETTE
+#include "dudette_stick.h"              // for dud_befehl, dud_task, dud_funk
+#endif
 
 const PROGMEM t_fntab fntab[] = {
 
@@ -72,6 +75,9 @@ const PROGMEM t_fntab fntab[] = {
   { 'b', rf_mbus_func },
 #endif
   { 'C', ccreg },
+#ifdef HAS_DUDETTE
+  { 'D', (void (*)(char *))dud_befehl },
+#endif
 #ifdef HAS_RWE
   { 'E', rwe_func },
 #endif
@@ -208,11 +214,21 @@ main(void)
 
   checkFrequency(); 
   LED_OFF();
+#ifdef HAS_DUDETTE
+  dud_init();
+#endif
 
   for(;;) {
     USB_USBTask();
     sbu_task();
     CDC_Task();
+#ifdef HAS_DUDETTE
+    if(dud_funk() != DUD_FUNK_HMIP) {   // Dudette owns the radio
+      Minute_Task();
+      dud_task();
+      continue;
+    }
+#endif
     RfAnalyze_Task();
     Minute_Task();
 #ifdef HAS_FASTRF

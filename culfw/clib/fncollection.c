@@ -475,6 +475,9 @@ version(char *in)
 		display_hex2(i2cSlaveAddr);
 		DS_P( PSTR(")") );
 #endif	
+#ifdef HAS_DUDETTE
+  DS_P( PSTR(" Dudette=1") );   // grammar version, last word of the line
+#endif
   DNL();
 }
 
