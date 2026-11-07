@@ -5,6 +5,7 @@
 #include "display.h"
 #include "ds1339.h"
 #include "i2cmaster.h"
+#include "stringfunc.h"                 // for fromhex
 
 
 unsigned char rtc_read(unsigned char addr);
@@ -61,7 +62,7 @@ rtc_init(void)
 }
 
 void
-rtc_get(uint8_t data[6])
+rtc_get(uint8_t *data)
 {
   data[0] = rtc_read(6);         // year
   data[1] = rtc_read(5);         // month

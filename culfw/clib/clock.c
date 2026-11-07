@@ -30,6 +30,12 @@
 #include "mysleep.h"
 #endif
 #include "hw_autodetect.h"
+#if defined(HAS_SLEEP) && defined(JOY_PIN1)
+#include "pcf8833.h"                    // for lcd_switch
+#endif
+#if defined(HAS_LCD) && defined(BAT_PIN)
+#include "battery.h"                    // for bat_drawstate
+#endif
 
 #if defined (HAS_IRRX) || defined (HAS_IRTX)
 #include "ir.h"                         // for ir_sample, ir_send_data

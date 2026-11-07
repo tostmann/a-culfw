@@ -21,7 +21,7 @@ uint8_t readEEpromValue(char *rbyte) {
     addr = (hb[0] << 8) | hb[1];
   else
     addr = hb[0];
-  d = erb((uint8_t *)addr);
+  d = erb((uint8_t *)(uintptr_t)addr);
   return d;
 }
 

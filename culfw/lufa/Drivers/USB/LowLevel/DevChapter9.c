@@ -218,7 +218,7 @@ void USB_Device_GetConfiguration(void)
 }
 
 #if !defined(NO_INTERNAL_SERIAL) && (defined(USB_SERIES_6_AVR) || defined(USB_SERIES_7_AVR))
-static char USB_Device_NibbleToASCII(uint8_t Nibble)
+static inline char USB_Device_NibbleToASCII(uint8_t Nibble)
 {
 	Nibble = ((Nibble & 0x0F) + '0');
 	return (Nibble > '9') ? (Nibble + ('A' - '9' - 1)) : Nibble;

@@ -158,7 +158,7 @@ read_eeprom(char *in)
 #endif
 #endif
 
-    d = erb((uint8_t *)addr);
+    d = erb((uint8_t *)(uintptr_t)addr);
     DC('R');                    // prefix
     DH(addr,4);                 // register number
     DS_P( PSTR(" = ") );
@@ -222,7 +222,7 @@ write_eeprom(char *in)
 #endif
 #endif
 
-    ewb((uint8_t*)addr, hb[d-1]);
+    ewb((uint8_t*)(uintptr_t)addr, hb[d-1]);
 
     if (addr == 15 || addr == 16 || addr == 17)
       checkFrequency();
@@ -232,7 +232,7 @@ write_eeprom(char *in)
     while(in[0]) {
       if(!fromhex(in, hb, 1))
         return;
-      ewb((uint8_t*)++addr, hb[0]);
+      ewb((uint8_t*)(uintptr_t)++addr, hb[0]);
       in += 2;
     }
   }
@@ -353,8 +353,9 @@ prepare_boot(char *in)
   if(in)
     fromhex(in+1, &bl, 1);
 
-  if(bl == 0xff)             // Allow testing
+  if(bl == 0xff) {           // Allow testing
     while(1);
+  }
     
 #ifdef SAM7
 

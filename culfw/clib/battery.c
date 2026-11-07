@@ -5,6 +5,7 @@
 #include "display.h"
 #ifdef HAS_LCD
 #include "pcf8833.h"
+#include "stringfunc.h"                 // for fromhex
 #endif
 #include <Drivers/USB/USB.h>     // USB_IsConnected
 

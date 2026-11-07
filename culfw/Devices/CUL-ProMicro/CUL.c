@@ -66,10 +66,10 @@
 #include "rf_zwave.h"
 #endif
 #ifdef HAS_CC1100_433					// we don't used the HW feature from org. CUL
-  #warning "## 433MHz Build ##"
+  #pragma message "## 433MHz Build ##"
   const uint8_t mark433_pin = 0x00;
 #else
-  #warning "## 868MHz Build ##"
+  #pragma message "## 868MHz Build ##"
   const uint8_t mark433_pin = 0xff;
 #endif
 

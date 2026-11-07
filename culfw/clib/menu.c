@@ -9,6 +9,7 @@
 #include "battery.h"            // bat_drawstate
 #include "display.h"            // debugging
 #include "fht.h"                // fht_hc
+#include "stringfunc.h"         // fromhex, tohex
 #include "fncollection.h"       // EEPROM offsets
 #include "fswrapper.h"          // global fs ponter
 #include "joy.h"                // input

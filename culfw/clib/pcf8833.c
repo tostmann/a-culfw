@@ -16,6 +16,7 @@
 
 #include "board.h"
 #include "clock.h"
+#include "stringfunc.h"                 // for fromhex
 #include "delay.h"
 #include "display.h"
 #include "fncollection.h"          // EEPROM OFFSETS

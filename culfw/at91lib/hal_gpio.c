@@ -42,7 +42,7 @@ void HAL_LED_Set(LED_List led, LED_State state) {
   }
 }
 
-void HAL_LED_Toggle(uint8_t led) {
+void HAL_LED_Toggle(LED_List led) {
   if(led < LED_COUNT) {
     if(PIO_GetOutputDataStatus(&pinsLeds[led]))
       PIO_Clear(&pinsLeds[led]);
@@ -161,7 +161,7 @@ uint32_t hal_CC_Pin_Get(uint8_t cc_num, CC_PIN pin) {
 void hal_CC_move_transceiver_pins(uint8_t source, uint8_t dest) {
   transceiver_t tempCC;
   memcpy(&tempCC, &CCtransceiver[dest], sizeof(transceiver_t));
-  memcpy(&CCtransceiver[dest], &CCtransceiver[source], sizeof(transceiver_t));
+  memmove(&CCtransceiver[dest], &CCtransceiver[source], sizeof(transceiver_t));
   memcpy(&CCtransceiver[source], & tempCC, sizeof(transceiver_t));
 }
 

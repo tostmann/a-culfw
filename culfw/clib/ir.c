@@ -16,6 +16,7 @@
 #include "irmpconfig.h"
 #include "irsnd.h"
 #include "irsndconfig.h"
+#include "stringfunc.h"                 // for fromhex
 #include "led.h"
 
 uint8_t ir_mode = 0;

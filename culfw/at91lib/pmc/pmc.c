@@ -142,7 +142,7 @@ void PMC_DisablePeripheral(unsigned int id)
 void PMC_EnableAllPeripherals(void)
 {
     AT91C_BASE_PMC->PMC_PCER = MASK_STATUS;
-    while( (AT91C_BASE_PMC->PMC_PCSR & MASK_STATUS) != MASK_STATUS);
+    while( (AT91C_BASE_PMC->PMC_PCSR & MASK_STATUS) != MASK_STATUS) {}
     TRACE_INFO("Enable all periph clocks\n\r"); 
 }
 
@@ -153,7 +153,7 @@ void PMC_EnableAllPeripherals(void)
 void PMC_DisableAllPeripherals(void)
 {
     AT91C_BASE_PMC->PMC_PCDR = MASK_STATUS;
-    while((AT91C_BASE_PMC->PMC_PCSR & MASK_STATUS) != 0);
+    while((AT91C_BASE_PMC->PMC_PCSR & MASK_STATUS) != 0) {}
     TRACE_INFO("Disable all periph clocks\n\r");
 }
 

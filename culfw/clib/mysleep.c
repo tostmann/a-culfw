@@ -7,6 +7,7 @@
 
 #include "battery.h"
 #include "cc1100.h"
+#include "stringfunc.h"                 // for fromhex
 #include "display.h"
 #include "fncollection.h"
 #include "joy.h"

@@ -24,13 +24,13 @@
 #define IRMP_TIMEOUT_TIME                       16500.0e-6                  // timeout after 16.5 ms darkness
 #define IRMP_TIMEOUT_TIME_MS                    16500L                      // timeout after 16.5 ms darkness
 
-#if IRMP_SUPPORT_NIKON_PROTOCOL == 1
+#if defined(IRMP_SUPPORT_NIKON_PROTOCOL) && IRMP_SUPPORT_NIKON_PROTOCOL == 1
 #define IRMP_TIMEOUT_NIKON_TIME                 29500.0e-6                  // 2nd timeout after 29.5 ms darkness (only for NIKON!)
 #define IRMP_TIMEOUT_NIKON_TIME_MS              29500L                      // 2nd timeout after 29.5 ms darkness
 typedef uint16_t    PAUSE_LEN;
 #define IRMP_TIMEOUT_NIKON_LEN                  (PAUSE_LEN)(F_INTERRUPTS * IRMP_TIMEOUT_NIKON_TIME + 0.5)
 #else
-#if (F_INTERRUPTS * IRMP_TIMEOUT_TIME_MS) / 1000000 >= 254
+#if defined(F_INTERRUPTS) && (F_INTERRUPTS * IRMP_TIMEOUT_TIME_MS) / 1000000 >= 254
 typedef uint16_t    PAUSE_LEN;
 #else
 typedef uint8_t     PAUSE_LEN;
@@ -495,11 +495,11 @@ extern uint8_t                          irmp_get_data (IRMP_DATA *);
 extern uint8_t                          irmp_is_busy (void);
 extern uint8_t                          irmp_ISR (void);
 
-#if IRMP_PROTOCOL_NAMES == 1
+#if defined(IRMP_PROTOCOL_NAMES) && IRMP_PROTOCOL_NAMES == 1
 extern char *                           irmp_protocol_names[IRMP_N_PROTOCOLS + 1];
 #endif
 
-#if IRMP_USE_CALLBACK == 1
+#if defined(IRMP_USE_CALLBACK) && IRMP_USE_CALLBACK == 1
 extern void                             irmp_set_callback_ptr (void (*cb)(uint8_t));
 #endif // IRSND_USE_CALLBACK == 1
 

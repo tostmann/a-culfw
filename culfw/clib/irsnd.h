@@ -55,7 +55,7 @@ extern void                         irsnd_stop (void);
  */
 extern uint8_t                      irsnd_ISR (void);
 
-#if IRSND_USE_CALLBACK == 1
+#if defined(IRSND_USE_CALLBACK) && IRSND_USE_CALLBACK == 1
 extern void                         irsnd_set_callback_ptr (void (*cb)(uint8_t));
 #endif // IRSND_USE_CALLBACK == 1
 
