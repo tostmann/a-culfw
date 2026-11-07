@@ -478,7 +478,9 @@ void USBDDriver_Initialize(
     // Initialize interfaces array if not null
     if (pInterfaces != 0) {
     
-        memset(pInterfaces, sizeof(pInterfaces), 0);
+        // One alternate setting per interface of the configuration (the
+        // arguments were swapped and sized by the pointer: nothing was cleared).
+        memset(pInterfaces, 0, pDescriptors->pFsConfiguration->bNumInterfaces);
     }
 }
 
