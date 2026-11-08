@@ -85,7 +85,10 @@ CDC_Task(void)
     return;
 
   Endpoint_SelectEndpoint(CDC_RX_EPNUM);          // First data in
-  if(!inCDC_TASK && Endpoint_IsReadWriteAllowed()){ // USB -> RingBuffer
+  // Test RXOUTI, not RWAL: a zero-length packet sets RXOUTI with RWAL clear,
+  // and a bank that is never released blocks the OUT endpoint for good.
+  // Hosts may send one after a transfer of a multiple of 64 bytes.
+  if(!inCDC_TASK && Endpoint_IsOUTReceived()){    // USB -> RingBuffer
 
     while (Endpoint_BytesInEndpoint()) {          // Discard data on buffer full
       rb_put(&TTY_Rx_Buffer, Endpoint_Read_Byte());
