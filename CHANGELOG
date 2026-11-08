@@ -6,6 +6,22 @@ on PlatformIO and the third number is a build counter incremented by the CI
 (1.26.100 and up), so it does not continue the 2019 series. Entries from
 "1.26 (PlatformIO)" downwards belong to the old line.
 
+#### 1.31.2
+- USB: a zero-length packet from the host no longer blocks the CUL's input.
+  The OUT bank of such a packet was never released, so the CUL took no more
+  commands until it lost power, while its LED kept blinking. macOS sends such
+  packets during longer transfers (seen with 10.14); the same transfers from
+  Linux did not trigger it.
+  Affects every image that uses clib/cdcLUFA.c, CUL_V3 and CUL_V3_DUDETTE among
+  them (clib/cdcLUFA.c).
+- MAX! and Maico: the receive init waits for RX state like ccRX() instead of
+  strobing SRX 255 times (rf_moritz.c, rf_maico.c).
+- CUBe, CUL-HM-CFG: USBDDriver_Initialize clears its interface array as
+  intended; both callers pass NULL, so nothing changes in practice.
+- Builds are free of GCC 14 warnings; CI runs on Node 24 actions and a pinned
+  Ubuntu 26.04 runner.
+- VERSION_1/VERSION_2 stay at 1/26: updating keeps the configuration.
+
 #### 1.31
 - New image CUL_V3_DUDETTE: a CUL868 that installs firmware on devices with the
   Dudette radio bootloader, through the web installer or any other client of
