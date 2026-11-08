@@ -98,7 +98,7 @@ avrdude -p atmega328p -c arduino -P /dev/ttyUSB0 -b 57600 -D -U flash:w:../binar
 
 ### 2. CUL V3 (ATmega32U4)
 The CUL V3 must be in bootloader mode.
-* **Web Flasher (Recommended):** Use the [busware CUL Flasher](https://prov.busware.de/culflasher/) to transfer the `.hex` file directly from the browser.
+* **Web Flasher (Recommended):** Use the [busware CUL Flasher](https://install.busware.de/cul/) to transfer the `.hex` file directly from the browser.
 * **Manual (Linux/Mac):**
   ```bash
   dfu-programmer atmega32u4 erase
