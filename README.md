@@ -2,6 +2,8 @@
 
 This repository contains a port of the well-known *a-culfw* (alternative firmware for CUL devices) to the **PlatformIO** build system.
 
+Bug reports and questions about this version go here: [Issues](https://github.com/tostmann/a-culfw/issues) for problems, [Discussions](https://github.com/tostmann/a-culfw/discussions) for questions and ideas.
+
 ## Aim (Intent)
 
 The goal of this project is to modernize and simplify the development and compilation of the firmware. Instead of relying on complex, hand-written `Makefiles`, this project uses PlatformIO for clean management of dependencies and hardware variants.
